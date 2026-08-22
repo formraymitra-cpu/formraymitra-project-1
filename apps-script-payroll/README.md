@@ -35,8 +35,13 @@ pun ke sana, jadi aman dijalankan berdampingan dengan otomasi yang sudah ada
      lain perlu buka tanpa login Google)
    - **Deploy**, lalu **Authorize access**. Karena script ini baca 2
      spreadsheet lain by ID (bukan spreadsheet aktifnya sendiri) dan mencari
-     file lewat Drive, akan diminta izin **Spreadsheets** dan **Drive**
-     (read-only) — ini wajar dan sesuai `oauthScopes` di `appsscript.json`.
+     file lewat Drive, akan diminta izin **Google Sheets** (lihat & kelola)
+     dan **Google Drive** (read-only) — ini wajar dan sesuai `oauthScopes` di
+     `appsscript.json`. Meski script ini hanya *membaca* isi spreadsheet,
+     scope Sheets di Apps Script tidak punya varian read-only yang cukup
+     untuk `SpreadsheetApp.openById()` + `getRange().getValues()`, jadi
+     scope yang diminta memang scope penuh — script-nya sendiri tidak
+     pernah memanggil fungsi yang menulis/mengubah data.
 6. Dapat **Web app URL** (`https://script.google.com/macros/s/XXXXX/exec`) —
    itu link dashboard live-nya.
 
