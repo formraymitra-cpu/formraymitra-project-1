@@ -1,7 +1,13 @@
-import raw from "./data/dashboard-data.json";
+import fallback from "./data/dashboard-data.json";
 import type { Dataset } from "./types";
 
-const dataset = raw as unknown as Dataset;
+declare global {
+  interface Window {
+    __DASHBOARD_DATA__?: Dataset;
+  }
+}
+
+const dataset: Dataset = (typeof window !== "undefined" && window.__DASHBOARD_DATA__) || (fallback as unknown as Dataset);
 
 export function useDataset(): Dataset {
   return dataset;
