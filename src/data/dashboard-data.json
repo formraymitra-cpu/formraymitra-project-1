@@ -1,0 +1,4773 @@
+{
+  "generatedAt": "2026-08-22T03:30:55",
+  "sourceFile": "721dc0d1-CEKLIS_LAPORAN_BULANAN.xlsx",
+  "asOfDate": "2026-08-22",
+  "currentMonth": "2026-08",
+  "months": [
+    {
+      "code": "2026-02",
+      "label": "Februari 2026",
+      "isClosed": true,
+      "totalLokasi": 115,
+      "laporanSelesai": 114,
+      "laporanPct": 0.9913,
+      "absensiSelesai": 38,
+      "absensiPct": 0.3304,
+      "keduanyaSelesai": 38,
+      "overdueCount": 77
+    },
+    {
+      "code": "2026-03",
+      "label": "Maret 2026",
+      "isClosed": true,
+      "totalLokasi": 96,
+      "laporanSelesai": 95,
+      "laporanPct": 0.9896,
+      "absensiSelesai": 25,
+      "absensiPct": 0.2604,
+      "keduanyaSelesai": 25,
+      "overdueCount": 71
+    },
+    {
+      "code": "2026-04",
+      "label": "April 2026",
+      "isClosed": true,
+      "totalLokasi": 94,
+      "laporanSelesai": 92,
+      "laporanPct": 0.9787,
+      "absensiSelesai": 23,
+      "absensiPct": 0.2447,
+      "keduanyaSelesai": 23,
+      "overdueCount": 71
+    },
+    {
+      "code": "2026-05",
+      "label": "Mei 2026",
+      "isClosed": true,
+      "totalLokasi": 94,
+      "laporanSelesai": 93,
+      "laporanPct": 0.9894,
+      "absensiSelesai": 24,
+      "absensiPct": 0.2553,
+      "keduanyaSelesai": 24,
+      "overdueCount": 70
+    },
+    {
+      "code": "2026-06",
+      "label": "Juni 2026",
+      "isClosed": true,
+      "totalLokasi": 67,
+      "laporanSelesai": 61,
+      "laporanPct": 0.9104,
+      "absensiSelesai": 26,
+      "absensiPct": 0.3881,
+      "keduanyaSelesai": 26,
+      "overdueCount": 41
+    },
+    {
+      "code": "2026-07",
+      "label": "Juli 2026",
+      "isClosed": true,
+      "totalLokasi": 89,
+      "laporanSelesai": 82,
+      "laporanPct": 0.9213,
+      "absensiSelesai": 41,
+      "absensiPct": 0.4607,
+      "keduanyaSelesai": 39,
+      "overdueCount": 50
+    },
+    {
+      "code": "2026-08",
+      "label": "Agustus 2026",
+      "isClosed": false,
+      "totalLokasi": 89,
+      "laporanSelesai": 51,
+      "laporanPct": 0.573,
+      "absensiSelesai": 0,
+      "absensiPct": 0.0,
+      "keduanyaSelesai": 0,
+      "overdueCount": 0
+    }
+  ],
+  "totalLokasiAktif": 89,
+  "totalLokasiDikecualikan": 101,
+  "tipeCounts": {
+    "LAMA": 13,
+    "BARU": 14,
+    "TIDAK_DIKETAHUI": 62
+  },
+  "picCoveragePct": 18,
+  "locations": [
+    {
+      "nama": "BPS BLORA SATPAM",
+      "baseKey": "BPS BLORA",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-11",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "DEMPUL"
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPS BOYOLALI SATPAM",
+      "baseKey": "BPS BOYOLALI",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-11",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "ADA DI EPICOLLECT"
+      },
+      "catatan": "TUNGGU SELESAI SAMPAI TGL 31",
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPS GROBOGAN SATPAM",
+      "baseKey": "BPS GROBOGAN",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-11",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "DEMPUL"
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPS JEPARA SATPAM",
+      "baseKey": "BPS JEPARA",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-11",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "ADA DI EPICOLLECT"
+      },
+      "catatan": "TUNGGU SELESAI SAMPAI TGL 31",
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPS JEPARA CS",
+      "baseKey": "BPS JEPARA",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-15",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "ADA DI EPICOLLECT"
+      },
+      "catatan": "TUNGGU SELESAI SAMPAI TGL 31",
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPS KAB BATANG CS",
+      "baseKey": "BPS KAB BATANG",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-11",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "DEMPUL"
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPS KAB BREBES CS",
+      "baseKey": "BPS KAB BREBES",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-11",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "DEMPUL"
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPS KAB DEMAK CS",
+      "baseKey": "BPS KAB DEMAK",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-12",
+        "keterangan": "KURANG FOTO ABSEN 8"
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "DEMPUL"
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPS KAB PEMALANG SATPAM",
+      "baseKey": "BPS KAB PEMALANG",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-12",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "DEMPUL"
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPS KAB REMBANG SATPAM",
+      "baseKey": "BPS KAB REMBANG",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-15",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": "TUNGGU SELESAI SAMPAI TGL 31",
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPS KAB REMBANG CS",
+      "baseKey": "BPS KAB REMBANG",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-12",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "DEMPUL"
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPS KAB SRAGEN SATPAM",
+      "baseKey": "BPS KAB SRAGEN",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-12",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "DEMPUL"
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPS KAB SRAGEN CS",
+      "baseKey": "BPS KAB SRAGEN",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-12",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "DEMPUL"
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPS SUKOHARJO KAB SATPAM",
+      "baseKey": "BPS SUKOHARJO KAB",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-13",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "DEMPUL"
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPS SUKOHARJO KAB CS",
+      "baseKey": "BPS SUKOHARJO KAB",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-13",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "DEMPUL"
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPS KAB TEGAL SATPAM",
+      "baseKey": "BPS KAB TEGAL",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-13",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "DEMPUL"
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPS KAB WONOGIRI SATPAM",
+      "baseKey": "BPS KAB WONOGIRI",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-15",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "ADA DI EPICOLLECT"
+      },
+      "catatan": "TUNGGU SELESAI SAMPAI TGL 31",
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPS KAB WONOGIRI PRAMUBAKTI",
+      "baseKey": "BPS KAB WONOGIRI PRAMUBAKTI",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-15",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "ADA DI EPICOLLECT"
+      },
+      "catatan": "TUNGGU SELESAI SAMPAI TGL 31",
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPS KENDAL SATPAM",
+      "baseKey": "BPS KENDAL",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-18",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "DEMPUL"
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPS KOTA PEKALONGAN SATPAM",
+      "baseKey": "BPS KOTA PEKALONGAN",
+      "tipeClient": "LAMA",
+      "metode": "MANUAL",
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-18",
+        "keterangan": "PROSES FOTO MASIH KURANG 16"
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "DEMPUL"
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPS KOTA PEKALONGAN CS",
+      "baseKey": "BPS KOTA PEKALONGAN",
+      "tipeClient": "LAMA",
+      "metode": "MANUAL",
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-18",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "DEMPUL"
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPS KUDUS SATPAM",
+      "baseKey": "BPS KUDUS",
+      "tipeClient": null,
+      "metode": null,
+      "pic": "RENDY",
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "FOTO TERLALU SEDIKIT"
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "DEMPUL"
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPS PATI CS",
+      "baseKey": "BPS PATI",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-18",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "DEMPUL"
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPS SALATIGA SATPAM",
+      "baseKey": "BPS SALATIGA",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-19",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "DEMPUL"
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "PENGADILAN NEGERI PATI SATPAM",
+      "baseKey": "PENGADILAN NEGERI PATI",
+      "tipeClient": "BARU",
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-04",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "PENGADILAN NEGERI PATI CS",
+      "baseKey": "PENGADILAN NEGERI PATI",
+      "tipeClient": "BARU",
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-04",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "PENGADILAN NEGERI KUDUS SATPAM",
+      "baseKey": "PENGADILAN NEGERI KUDUS",
+      "tipeClient": "BARU",
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-05",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "PENGADILAN NEGERI KUDUS CS",
+      "baseKey": "PENGADILAN NEGERI KUDUS",
+      "tipeClient": "BARU",
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-05",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "PENGADILAN NEGERI JEPARA SATPAM",
+      "baseKey": "PENGADILAN NEGERI JEPARA",
+      "tipeClient": "BARU",
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-04",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "PENGADILAN NEGERI JEPARA CS",
+      "baseKey": "PENGADILAN NEGERI JEPARA",
+      "tipeClient": "BARU",
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "HARUS CHAT PRIBADI CS DULU"
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BKK BOYOLALI SATPAM",
+      "baseKey": "BKK BOYOLALI",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-19",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BKK BOYOLALI CS",
+      "baseKey": "BKK BOYOLALI",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-19",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BKK SEMARANG CS",
+      "baseKey": "BKK SEMARANG",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-19",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPKAD BREBES SATPAM",
+      "baseKey": "BPKAD BREBES",
+      "tipeClient": "LAMA",
+      "metode": "INDAKU",
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-19",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPKAD BREBES CS",
+      "baseKey": "BPKAD BREBES",
+      "tipeClient": "LAMA",
+      "metode": "INDAKU",
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-20",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPOM SURAKARTA SATPAM",
+      "baseKey": "BPOM SURAKARTA",
+      "tipeClient": "LAMA",
+      "metode": "EPICOLLECT",
+      "pic": "MASUDI",
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-10",
+        "keterangan": "KURANG FOTO KUNJUNGAN"
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "ADA DI EPICOLLECT"
+      },
+      "catatan": "TUNGGU SELESAI SAMPAI TGL 31",
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPOM SURAKARTA CS",
+      "baseKey": "BPOM SURAKARTA",
+      "tipeClient": "LAMA",
+      "metode": "EPICOLLECT",
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-07",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "ADA DI EPICOLLECT"
+      },
+      "catatan": "TUNGGU SELESAI SAMPAI TGL 31",
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPOM SURAKARTA DRIVER",
+      "baseKey": "BPOM SURAKARTA DRIVER",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-07",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "ADA DI EPICOLLECT"
+      },
+      "catatan": "TUNGGU SELESAI SAMPAI TGL 31",
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "DISPORA SALATIGA SATPAM",
+      "baseKey": "DISPORA SALATIGA",
+      "tipeClient": "LAMA",
+      "metode": "MANUAL",
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "DISPORA SALATIGA CS",
+      "baseKey": "DISPORA SALATIGA",
+      "tipeClient": "LAMA",
+      "metode": "MANUAL",
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "DISPERINAKER KAB KENDAL",
+      "baseKey": "DISPERINAKER KAB KENDAL",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "DISHUB KOTA SEMARANG",
+      "baseKey": "DISHUB KOTA SEMARANG",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "KECAMATAN PATEBON SATPAM",
+      "baseKey": "KECAMATAN PATEBON",
+      "tipeClient": null,
+      "metode": null,
+      "pic": "BRIAN",
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "FOTO TERLALU SEDIKIT"
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "DEMPUL"
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "KEJARI SEMARANG SATPAM",
+      "baseKey": "KEJARI SEMARANG",
+      "tipeClient": null,
+      "metode": null,
+      "pic": "MASUDI",
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-20",
+        "keterangan": "FOTO MASIH KURANG"
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "KESBANGPOL SATPAM",
+      "baseKey": "KESBANGPOL",
+      "tipeClient": null,
+      "metode": null,
+      "pic": "BRIAN",
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "KESBANGPOL CS",
+      "baseKey": "KESBANGPOL",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "KESBANGPOL DRIVER",
+      "baseKey": "KESBANGPOL DRIVER",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "MAN 2 CS",
+      "baseKey": "MAN 2",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "POLIPLAS SATPAM",
+      "baseKey": "POLIPLAS",
+      "tipeClient": null,
+      "metode": null,
+      "pic": "MASUDI",
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-14",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "POLIPLAS CS",
+      "baseKey": "POLIPLAS",
+      "tipeClient": null,
+      "metode": null,
+      "pic": "MASUDI",
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "PT HOMEWELL SATPAM",
+      "baseKey": "PT HOMEWELL",
+      "tipeClient": "LAMA",
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "ADA ABSEN BARU"
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "SMA N 8 SEMARANG",
+      "baseKey": "SMA N 8 SEMARANG",
+      "tipeClient": "LAMA",
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BAPENDA PROV JATENG",
+      "baseKey": "BAPENDA PROV JATENG",
+      "tipeClient": "BARU",
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-10",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "UNZA",
+      "baseKey": "UNZA",
+      "tipeClient": null,
+      "metode": null,
+      "pic": "MASUDI",
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "RSUD ADHYATMA",
+      "baseKey": "RSUD ADHYATMA",
+      "tipeClient": null,
+      "metode": null,
+      "pic": "BRIAN",
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "RSUD BREBES",
+      "baseKey": "RSUD BREBES",
+      "tipeClient": "LAMA",
+      "metode": "MANUAL",
+      "pic": "BRIAN",
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "RS ROMANI",
+      "baseKey": "RS ROMANI",
+      "tipeClient": null,
+      "metode": null,
+      "pic": "IKHSAN",
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "ADA ABSEN BARU"
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "RS EMANUEL",
+      "baseKey": "RS EMANUEL",
+      "tipeClient": null,
+      "metode": null,
+      "pic": "PRAYOGA",
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "RS BANYUMANIK",
+      "baseKey": "RS BANYUMANIK",
+      "tipeClient": "LAMA",
+      "metode": "MANUAL",
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "PT RAJAWALI DEASEL SATPAM",
+      "baseKey": "PT RAJAWALI DEASEL",
+      "tipeClient": null,
+      "metode": null,
+      "pic": "BRIAN",
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "FOTO YG ADA SAMA PERSIS BULAN LALU"
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "DPU KOTA SEMARANG",
+      "baseKey": "DPU KOTA SEMARANG",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPTIK PROV JATENG SATPAM",
+      "baseKey": "BPTIK PROV JATENG",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-18",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "ADA ABSEN BARU"
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "BPTIK PROV JATENG CS",
+      "baseKey": "BPTIK PROV JATENG",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-18",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "ADA ABSEN BARU"
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "PT CSC",
+      "baseKey": "PT CSC",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "PUPR PROV JATENG SATPAM",
+      "baseKey": "PUPR PROV JATENG",
+      "tipeClient": null,
+      "metode": null,
+      "pic": "MOEL",
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-07",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "DLH KOTA SEMARANG SATPAM",
+      "baseKey": "DLH KOTA SEMARANG",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "DLH KOTA SEMARANG DRIVER",
+      "baseKey": "DLH KOTA SEMARANG DRIVER",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "UPPD BLORA SATPAM",
+      "baseKey": "UPPD BLORA",
+      "tipeClient": "BARU",
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "UPPD DEMAK SATPAM",
+      "baseKey": "UPPD DEMAK",
+      "tipeClient": "BARU",
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "UPPD JEPARA SATPAM",
+      "baseKey": "UPPD JEPARA",
+      "tipeClient": "BARU",
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-20",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "UPPD KOTA SEMARANG 1",
+      "baseKey": "UPPD KOTA SEMARANG 1",
+      "tipeClient": "BARU",
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-20",
+        "keterangan": "KURANG 12 FOTO"
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "UPPD KUDUS SATPAM",
+      "baseKey": "UPPD KUDUS",
+      "tipeClient": "BARU",
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "UPPD PATI SATPAM",
+      "baseKey": "UPPD PATI",
+      "tipeClient": "BARU",
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "UPPD REMBANG SATPAM",
+      "baseKey": "UPPD REMBANG",
+      "tipeClient": "BARU",
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "CABDIN I UNGARAN SATPAM",
+      "baseKey": "CABDIN I UNGARAN",
+      "tipeClient": null,
+      "metode": null,
+      "pic": "IKHSAN",
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-10",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "CABDIN I UNGARAN CS",
+      "baseKey": "CABDIN I UNGARAN",
+      "tipeClient": null,
+      "metode": null,
+      "pic": "IKHSAN",
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-10",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "CABDIN 3 PATI",
+      "baseKey": "CABDIN 3 PATI",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "KEJARI BLORA",
+      "baseKey": "KEJARI BLORA",
+      "tipeClient": "LAMA",
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "KEMENHAJ BLORA SATPAM",
+      "baseKey": "KEMENHAJ BLORA",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-10",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "KEMENHAJ BLORA CS & PRAMUBAKTI",
+      "baseKey": "KEMENHAJ BLORA CS & PRAMUBAKTI",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-07",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "KEMENAG PROVINSI",
+      "baseKey": "KEMENAG PROVINSI",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "DISPERTAN KOTA SEMARANG",
+      "baseKey": "DISPERTAN KOTA SEMARANG",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "KEMENHAJ KOTA SEMARANG   CS",
+      "baseKey": "KEMENHAJ KOTA SEMARANG",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-10",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "KEMENHAJ KOTA SEMARANG   PRAMUBAKTI",
+      "baseKey": "KEMENHAJ KOTA SEMARANG PRAMUBAKTI",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-10",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "KEMENAG KAB BLORA CS",
+      "baseKey": "KEMENAG KAB BLORA",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": true,
+        "tanggalSelesai": "2026-08-06",
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "LABKESMAS",
+      "baseKey": "LABKESMAS",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "PT VICTORIA",
+      "baseKey": "PT VICTORIA",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "ADA DI EPICOLLECT"
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "SUKASARI",
+      "baseKey": "SUKASARI",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": "ADA DI EPICOLLECT"
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    },
+    {
+      "nama": "TANGGAL",
+      "baseKey": "TANGGAL",
+      "tipeClient": null,
+      "metode": null,
+      "pic": null,
+      "laporan": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "absensi": {
+        "selesai": false,
+        "tanggalSelesai": null,
+        "keterangan": null
+      },
+      "catatan": null,
+      "status": "proses",
+      "hariTelat": null
+    }
+  ],
+  "excludedLocations": [
+    {
+      "nama": "PT. SAT DC. REMBANG",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. SAT DC. SEMARANG",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. SAT DC. CILACAP",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. SAT DEPO BALIKPAPAN",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. SAT DEPO KUPANG",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. BPR BKK LASEM (PERSERODA)",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. KIDO MULIA INDONESIA",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. LIEBRA PERMANA SEMARANG",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. LIEBRA PERMANA WONOGIRI",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PADMA HOTEL SEMARANG",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. SUMBER MASANDA JAYA BREBES",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. PWKWI TEMANGGUNG",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "RSJS MAGELANG",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. MERAK JAYA BETON",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PUSDATARU CS",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PUSDATARU SATPAM",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "BBPMP",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "STL",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "DINAS ESDM PROVINSI (DRIVER)",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. CITRA MANDIRI KENCANA",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. QUEEN MUKTI/HOTEL QUIRIN",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "DRH. NUGROHO ANIMAL CENTER",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. EKA FARMA",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. SATORIA DISTRIBUSI LESTARI",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "RS. CEPOKO SEMARANG",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "SMA N 8 SEMARANG",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "BPBD PROVINSI JATENG",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. BPR ARTHA MRANGGEN JAYA",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. RAJAWALI DIESEL INDONESIA",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. KIMIA FARMA TRADING & DISTRIBUTION",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "POLRES JEPARA",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "BPSMB PROVINSI JATENG",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "KEJARI GROBOGAN",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "KEJARI REMBANG",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "KEJARI BLORA",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "KEJARI KUDUS",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "SEKRETARIAT DAERAH KOTA SEMARANG",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "DINAS ESDM SLAMET SELATAN",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "HOTEL GP KALIURANG",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. TRIASIH SURALOKA ARDHI",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "DINAS ESDM MERAPI MAGELANG",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "UPPD KAB. MAGELANG (SATPAM)",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "UPPD KOTA MAGELANG",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "HOTEL PURI ASRI MAGELANG",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. AIM DAIHATSU MAGELANG",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. AIM ISUZU MAGELANG",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. AIM ROXY MAGELANG",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. AIM DAIHATSU WONOSOBO",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. AIM DAIHATSU PURWOREJO",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "SMKN 1 MAGELANG",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "RS. PANTI WALUYO",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PSDA SERAYU PURWOKERTO",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "KEJARI PURWOREJO",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "UPPD PURWOREJO",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "DINAS PERTANIAN MAGELANG",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "SMK SEMINARI",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "UPPD KAB MAGELANG (CS)",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "ESDM MAGELANG (CS)",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "UPPD KAB CILACAP",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. VICTORY FOOTWEAR INDONESIA",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. TAICHANG WRAPPER INDONESIA",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "ATR BPN KENDAL",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "DINAS KEPENDUDUKAN DAN PENCATATAN SIPIL KAB. PEKALONGAN",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. YOUNG INDONESIA PRATAMA",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PSDA PEMALI COMAL",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "DINAS KELAUTAN",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "DINAS KESEHATAN",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "DINAS PENDIDIKAN",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "DLH BREBES",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "DP2KBP2PA KENDAL",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "KLINIK PARU BREBES",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "KECAMATAN WANASARI",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "KECAMATAN JATIBARANG",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. SUKA SARI MITRA MANDIRI",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. AMIDIS TIRTA MULIA",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "DINAS ESDM TELOMOYO SALATIGA",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "CIOMAS ADISATWA",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "BERILL JAYA SEJAHTERA",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "RS PALANG BIRU",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "RSIA GLADIOOL MAGELANG",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "RS AT TAURAT",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "HOTEL UNISI JOGJA",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "RSUD RAA SOEWONDO PATI",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "DLH KAB. TEGAL",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "RSUD BUMIAYU",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "DISNAKKESWAN",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "DINAS KEPEMUDAAN, OLAHRAGA DAN PARIWISATA KAB. PURWOREJO",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "KEMENTERIAN AGAMA PROVINSI JAWA TENGAH",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "LITBANGKES WAIKABUBAK",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. LESTARI ALAM & CV. KINDO",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "PT. S2DIO KEAMANAN",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "BKK PROBOLINGGO",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "KEMENAG KOTA",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "DLH PATI",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "MTS 02 SMG",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "VKTR",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "MAN 01 SMG",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "BPOM PANGKALAN BUUN",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "KEJARI BARITO TIMUR",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "S2DIO",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    },
+    {
+      "nama": "JANSEN",
+      "keterangan": "TIDAK ADA LAPORAN BULANAN DAN ABSENSI"
+    }
+  ],
+  "heatmap": [
+    {
+      "baseKey": "BAPENDA PROV JATENG",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "BKK BOYOLALI",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "BKK SEMARANG",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "BPKAD BREBES",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "DISHUB KOTA SEMARANG",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "DISPORA SALATIGA",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "KEJARI SEMARANG",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "MAN 2",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "PENGADILAN NEGERI JEPARA",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "PENGADILAN NEGERI KUDUS",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "POLIPLAS",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "PT RAJAWALI DEASEL",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "RS BANYUMANIK",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "RS EMANUEL",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "RSUD ADHYATMA",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "RSUD BREBES",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "SMA N 8 SEMARANG",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "TANGGAL",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "UNZA",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "UPPD KOTA SEMARANG 1",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "BPTIK PROV JATENG",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "DLH KOTA SEMARANG",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "PT CSC",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "UPPD BLORA",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "UPPD DEMAK",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "UPPD JEPARA",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "UPPD KUDUS",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "UPPD PATI",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "UPPD REMBANG",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "CABDIN I UNGARAN",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-03",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "DPU KOTA SEMARANG",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "PUPR PROV JATENG",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "CABDIN 3 PATI",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-03",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-04",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-05",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "DISPERINAKER KAB KENDAL",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-06",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "DISPERTAN KOTA SEMARANG",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-03",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-04",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-05",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "KEJARI BLORA",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-03",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-04",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-05",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "KEMENAG KAB BLORA",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-03",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-04",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-05",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "KEMENAG PROVINSI",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-03",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-04",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-05",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "KEMENHAJ BLORA",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-03",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-04",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-05",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "KEMENHAJ KOTA SEMARANG",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-03",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-04",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-05",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "KESBANGPOL",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-03",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-06",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "LABKESMAS",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-03",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-04",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-05",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-06",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "PT HOMEWELL",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-05",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-06",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "BPS BOYOLALI",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-04",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-05",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-06",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "KECAMATAN PATEBON",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-04",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-05",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-06",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "KEMENHAJ BLORA CS & PRAMUBAKTI",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-03",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-04",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-05",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-06",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "KEMENHAJ KOTA SEMARANG PRAMUBAKTI",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-03",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-04",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-05",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-06",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "PT VICTORIA",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-03",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-04",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-05",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-06",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "SUKASARI",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-03",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-04",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-05",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-06",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-07",
+          "status": "overdue"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "BPOM SURAKARTA",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-04",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-05",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-06",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "BPOM SURAKARTA DRIVER",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-03",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-04",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-05",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-06",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "BPS BLORA",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-04",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-05",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-06",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "BPS GROBOGAN",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-04",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-05",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-06",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "BPS JEPARA",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-04",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-05",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-06",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "BPS KAB BATANG",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-04",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-05",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-06",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "BPS KAB BREBES",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-04",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-05",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-06",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "BPS KAB DEMAK",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-04",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-05",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-06",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "BPS KAB PEMALANG",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-04",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-05",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-06",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "BPS KAB REMBANG",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-04",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-05",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-06",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "BPS KAB SRAGEN",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-04",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-05",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-06",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "BPS KAB TEGAL",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-04",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-05",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-06",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "BPS KAB WONOGIRI",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-04",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-05",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-06",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "BPS KAB WONOGIRI PRAMUBAKTI",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-03",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-04",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-05",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-06",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "BPS KENDAL",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-04",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-05",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-06",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "BPS KOTA PEKALONGAN",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-04",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-05",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-06",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "BPS KUDUS",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-04",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-05",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-06",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "BPS PATI",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-04",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-05",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-06",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "BPS SALATIGA",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-04",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-05",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-06",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "BPS SUKOHARJO KAB",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-04",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-05",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-06",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "DLH KOTA SEMARANG DRIVER",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-03",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-04",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-05",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-06",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "KESBANGPOL DRIVER",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-03",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-04",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-05",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-06",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "PENGADILAN NEGERI PATI",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-03",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-04",
+          "status": "no-data"
+        },
+        {
+          "month": "2026-05",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-06",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    },
+    {
+      "baseKey": "RS ROMANI",
+      "cells": [
+        {
+          "month": "2026-02",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-03",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-04",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-05",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-06",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-07",
+          "status": "selesai"
+        },
+        {
+          "month": "2026-08",
+          "status": "proses"
+        }
+      ]
+    }
+  ],
+  "leaderboard": [
+    {
+      "pic": "RENDY",
+      "lokasiDitangani": 1,
+      "selesai": 1,
+      "overdue": 0,
+      "pctTepatWaktu": 100,
+      "basisBulan": "2026-07",
+      "lokasiSaatIni": 1,
+      "selesaiSaatIni": 0,
+      "prosesSaatIni": 1,
+      "overdueSaatIni": 0
+    },
+    {
+      "pic": "IKHSAN",
+      "lokasiDitangani": 2,
+      "selesai": 1,
+      "overdue": 1,
+      "pctTepatWaktu": 50,
+      "basisBulan": "2026-07",
+      "lokasiSaatIni": 3,
+      "selesaiSaatIni": 0,
+      "prosesSaatIni": 3,
+      "overdueSaatIni": 0
+    },
+    {
+      "pic": "BRIAN",
+      "lokasiDitangani": 5,
+      "selesai": 2,
+      "overdue": 3,
+      "pctTepatWaktu": 40,
+      "basisBulan": "2026-07",
+      "lokasiSaatIni": 5,
+      "selesaiSaatIni": 0,
+      "prosesSaatIni": 5,
+      "overdueSaatIni": 0
+    },
+    {
+      "pic": "MASUDI",
+      "lokasiDitangani": 5,
+      "selesai": 1,
+      "overdue": 4,
+      "pctTepatWaktu": 20,
+      "basisBulan": "2026-07",
+      "lokasiSaatIni": 5,
+      "selesaiSaatIni": 0,
+      "prosesSaatIni": 5,
+      "overdueSaatIni": 0
+    },
+    {
+      "pic": "PRAYOGA",
+      "lokasiDitangani": 1,
+      "selesai": 0,
+      "overdue": 1,
+      "pctTepatWaktu": 0,
+      "basisBulan": "2026-07",
+      "lokasiSaatIni": 1,
+      "selesaiSaatIni": 0,
+      "prosesSaatIni": 1,
+      "overdueSaatIni": 0
+    },
+    {
+      "pic": "MOEL",
+      "lokasiDitangani": 1,
+      "selesai": 0,
+      "overdue": 1,
+      "pctTepatWaktu": 0,
+      "basisBulan": "2026-07",
+      "lokasiSaatIni": 1,
+      "selesaiSaatIni": 0,
+      "prosesSaatIni": 1,
+      "overdueSaatIni": 0
+    }
+  ]
+}
