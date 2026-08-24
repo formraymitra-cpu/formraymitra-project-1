@@ -60,7 +60,11 @@ const indexHtml = `<!doctype html>
 <body>
   <div id="root"></div>
   <script>
+    window.__APP_MODE__ = "absensi";
     window.__DASHBOARD_DATA__ = <?!= datasetJson ?>;
+    if (!location.hash || location.hash === "#/" || location.hash.indexOf("#/payroll") === 0) {
+      location.hash = "#/overview";
+    }
   </script>
   <?!= include('Bundle'); ?>
 </body>

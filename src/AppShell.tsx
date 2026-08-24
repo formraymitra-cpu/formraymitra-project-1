@@ -3,14 +3,26 @@ import { ChevronDown } from "./components/icons";
 import { useDataset } from "./useDataset";
 import { usePayrollDataset } from "./usePayrollDataset";
 
+declare global {
+  interface Window {
+    /**
+     * Diset oleh Index.html tiap deployment Apps Script: "payroll" (dari
+     * apps-script-payroll/) atau "absensi" (dari apps-script/). Kosong saat
+     * dev lokal (`npm run dev`) -> tampilkan semua menu supaya gampang
+     * ditest bareng.
+     */
+    __APP_MODE__?: "payroll" | "absensi";
+  }
+}
+
 const TABS = [
-  { to: "/overview", label: "Overview" },
-  { to: "/monitoring", label: "Monitoring Harian" },
-  { to: "/kinerja-pic", label: "Kinerja PIC" },
-  { to: "/payroll/ringkasan", label: "Ringkasan Payroll", divider: true },
-  { to: "/payroll/progres", label: "Progres Payroll" },
-  { to: "/payroll/detail", label: "Detail per Lokasi" },
-  { to: "/payroll/notice", label: "Notice Merah" },
+  { to: "/overview", label: "Overview", domain: "absensi" as const },
+  { to: "/monitoring", label: "Monitoring Harian", domain: "absensi" as const },
+  { to: "/kinerja-pic", label: "Kinerja PIC", domain: "absensi" as const },
+  { to: "/payroll/ringkasan", label: "Ringkasan Payroll", domain: "payroll" as const, divider: true },
+  { to: "/payroll/progres", label: "Progres Payroll", domain: "payroll" as const },
+  { to: "/payroll/detail", label: "Detail per Lokasi", domain: "payroll" as const },
+  { to: "/payroll/notice", label: "Notice Merah", domain: "payroll" as const },
 ];
 
 export default function AppShell() {
@@ -18,6 +30,9 @@ export default function AppShell() {
   const p = usePayrollDataset();
   const location = useLocation();
   const isPayroll = location.pathname.startsWith("/payroll");
+
+  const appMode = typeof window !== "undefined" ? window.__APP_MODE__ : undefined;
+  const tabs = appMode ? TABS.filter((t) => t.domain === appMode).map((t, i) => (i === 0 ? { ...t, divider: false } : t)) : TABS;
 
   const currentLabel = isPayroll
     ? p.periodeLabel || p.periode || "—"
@@ -35,7 +50,7 @@ export default function AppShell() {
           </span>
         </div>
         <nav className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto">
-          {TABS.map((t) => (
+          {tabs.map((t) => (
             <span key={t.to} className="flex flex-shrink-0 items-center gap-1">
               {t.divider && <span className="mx-2 h-5 w-px flex-shrink-0 bg-border" />}
               <NavLink

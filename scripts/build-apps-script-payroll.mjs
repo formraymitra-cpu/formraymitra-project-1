@@ -57,6 +57,7 @@ const indexHtml = `<!doctype html>
 <body>
   <div id="root"></div>
   <script>
+    window.__APP_MODE__ = "payroll";
     window.__PAYROLL_DATA__ = <?!= payrollDataJson ?>;
     window.__DASHBOARD_DATA__ = <?!= absensiDataJson ?> || undefined;
     if (!location.hash || location.hash === "#/" || location.hash === "#/overview") {
