@@ -7,6 +7,11 @@ DAN MUTASI" jadi satu dataset JSON untuk dashboard Rekonsiliasi Payroll
 Jalankan ulang setiap ada export baru dari kedua spreadsheet:
     python3 scripts/build-payroll-data.py <rekap-gaji.xlsx> <rekonsiliasi.xlsx> [as-of-date YYYY-MM-DD]
 
+Opsional --mapping=<file.csv> untuk menambah pemetaan nama lokasi manual
+(2 kolom: NAMA_DI_REKAP,NAMA_DI_REKONSILIASI) tanpa perlu bikin sheet
+MAPPING_LOKASI dulu di spreadsheet aslinya -- berguna buat preview cepat.
+Kalau sheet MAPPING_LOKASI juga ada, isi sheet itu yang menang kalau bentrok.
+
 Asumsi struktur (lihat README di apps-script-payroll/ untuk detail & cara
 sinkron live lewat Apps Script):
 
@@ -456,13 +461,33 @@ def build_kpi(locations, hasil_by_lokasi):
     }
 
 
+def parse_mapping_csv(path):
+    """CSV 2 kolom (tanpa header wajib): NAMA_DI_REKAP,NAMA_DI_REKONSILIASI.
+    Cara ad-hoc menambah pemetaan manual tanpa perlu bikin sheet MAPPING_LOKASI
+    dulu di spreadsheet aslinya -- berguna buat testing/preview lokal."""
+    import csv as csv_module
+
+    out = {}
+    with open(path, newline="", encoding="utf-8") as f:
+        for row in csv_module.reader(f):
+            if len(row) < 2 or not row[0].strip() or not row[1].strip():
+                continue
+            if row[0].strip().upper() in ("NAMA_DI_REKAP", "NAMA DI REKAP"):
+                continue
+            out[row[0].strip()] = row[1].strip()
+    return out
+
+
 def main():
-    if len(sys.argv) < 3:
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    mapping_arg = next((a for a in sys.argv[1:] if a.startswith("--mapping=")), None)
+
+    if len(args) < 2:
         print(__doc__)
         sys.exit(1)
-    rekap_path = sys.argv[1]
-    rekon_path = sys.argv[2]
-    as_of = sys.argv[3] if len(sys.argv) > 3 else date.today().isoformat()
+    rekap_path = args[0]
+    rekon_path = args[1]
+    as_of = args[2] if len(args) > 2 else date.today().isoformat()
 
     wb_rekap = load(rekap_path)
     wb_rekon = load(rekon_path)
@@ -476,6 +501,9 @@ def main():
     rekap_rows = parse_rekap_lokasi(wb_rekap, sheet_name)
     hasil_by_lokasi = parse_hasil_pengecekan(wb_rekon)
     manual_map = parse_manual_mapping(wb_rekap)
+    if mapping_arg:
+        csv_map = parse_mapping_csv(mapping_arg.split("=", 1)[1])
+        manual_map = {**csv_map, **manual_map}  # sheet MAPPING_LOKASI menang kalau bentrok
     pic_imports = parse_sumber_rekap_mutasi(wb_rekon)
 
     locations = build_locations(rekap_rows, hasil_by_lokasi, manual_map)
