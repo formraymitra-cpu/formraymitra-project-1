@@ -14,6 +14,10 @@ export interface PayrollMember {
   statusAkhir: string | null;
   transferGanda: boolean;
   jumlahRefGanda: number;
+  /** Kolom CEK MANUAL di HASIL_PENGECEKAN — admin sudah cek manual di luar pencocokan otomatis. */
+  konfirmasiManual: boolean;
+  /** Kolom HASIL MANUAL — hasil dari pengecekan manual itu (mis. "SESUAI"). */
+  hasilManual: string | null;
 }
 
 export interface PayrollLocation {
@@ -54,7 +58,8 @@ export type NoticeKategori =
   | "transfer-kurang"
   | "gaji-vs-rab"
   | "nama-lokasi-perlu-cek"
-  | "lokasi-tidak-ketemu";
+  | "lokasi-tidak-ketemu"
+  | "konfirmasi-tanpa-nominal";
 
 export interface PayrollNotice {
   id: string;

@@ -12,11 +12,12 @@ const KATEGORI_LABEL: Record<NoticeKategori, string> = {
   "gaji-vs-rab": "Gaji ≠ RAB",
   "nama-lokasi-perlu-cek": "Nama/Lokasi Perlu Dicek",
   "lokasi-tidak-ketemu": "Lokasi Belum Direkonsiliasi",
+  "konfirmasi-tanpa-nominal": "Dikonfirmasi Manual, Nominal Belum Dilengkapi",
 };
 
 const KATEGORI_ORDER: NoticeKategori[] = [
   "double-transfer", "transfer-kurang", "transfer-lebih", "belum-transfer",
-  "gaji-vs-rab", "nama-lokasi-perlu-cek", "lokasi-tidak-ketemu",
+  "gaji-vs-rab", "nama-lokasi-perlu-cek", "konfirmasi-tanpa-nominal", "lokasi-tidak-ketemu",
 ];
 
 export default function PayrollNotices() {

@@ -185,7 +185,17 @@ export default function PayrollDetail() {
                             <div key={i} className="grid grid-cols-[1.5fr_1fr_1fr_1fr_1.5fr] items-center gap-3 border-b border-border py-2 last:border-b-0">
                               <span className="text-[12.5px] font-medium">{a.namaRekap}</span>
                               <span className="text-[12px]">{formatRupiah(a.nominalRekap)}</span>
-                              <span className="text-[12px]">{a.nominalMutasi !== null ? formatRupiah(a.nominalMutasi) : "belum tertransfer"}</span>
+                              <span className="text-[12px]">
+                                {a.nominalMutasi !== null ? (
+                                  formatRupiah(a.nominalMutasi)
+                                ) : a.konfirmasiManual ? (
+                                  <span className="text-warn-text" title="Sudah dicek manual tapi nominal mutasi belum dilengkapi di HASIL_PENGECEKAN">
+                                    dikonfirmasi manual, nominal belum dilengkapi
+                                  </span>
+                                ) : (
+                                  "belum tertransfer"
+                                )}
+                              </span>
                               <span className={`text-[12px] font-semibold ${a.selisih && Math.abs(a.selisih) > 5 ? "text-bad-text" : "text-ink-tertiary"}`}>
                                 {a.selisih !== null ? formatRupiah(a.selisih) : "—"}
                               </span>

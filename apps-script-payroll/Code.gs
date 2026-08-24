@@ -163,6 +163,8 @@ function parseHasilPengecekan_(ss) {
       statusAkhir: cleanStr_(r[16]),
       transferGanda: jumlahRef >= 2,
       jumlahRefGanda: jumlahRef,
+      konfirmasiManual: r[18] === true,
+      hasilManual: cleanStr_(r[19]),
     };
     if (!byLokasi[lokasiRaw]) byLokasi[lokasiRaw] = [];
     byLokasi[lokasiRaw].push(member);
@@ -330,7 +332,7 @@ function buildLocations_(rekapRows, hasilByLokasi, manualMap) {
   });
 }
 
-function buildNotices_(locations) {
+function buildNotices_(locations, hasilByLokasi) {
   var notices = [];
   var nid = 0;
   function add(kategori, severity, lokasi, nama, nominal, ket) {
@@ -339,26 +341,56 @@ function buildNotices_(locations) {
   }
   var fmt = function (n) { return "Rp " + Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); };
 
-  locations.forEach(function (loc) {
-    loc.anggota.forEach(function (m) {
+  // Notice per-karyawan HARUS jalan dari hasilByLokasi (seluruh isi
+  // HASIL_PENGECEKAN), bukan dari loc.anggota -- karena tidak semua lokasi di
+  // HASIL_PENGECEKAN punya padanan di REKAP GAJI SEMUA LOKASI (mis. lokasi
+  // tipe SATPAM seperti "SAMSAT 2 PENGECEKAN" kadang tidak ada baris
+  // REKAP-nya sama sekali). Kalau cuma baca loc.anggota, karyawan di lokasi
+  // begini tidak akan pernah muncul sebagai notice.
+  var labelByRaw = {};
+  locations.forEach(function (l) {
+    if (l.lokasiRekonsiliasi && (l.matchConfidence === "auto" || l.matchConfidence === "manual")) {
+      labelByRaw[l.lokasiRekonsiliasi] = l.nama;
+    }
+  });
+
+  for (var rawLokasi in hasilByLokasi) {
+    var lokasiLabel = labelByRaw[rawLokasi] || rawLokasi;
+    hasilByLokasi[rawLokasi].forEach(function (m) {
       if (m.transferGanda) {
-        add("double-transfer", "tinggi", loc.nama, m.namaRekap, m.nominalMutasi,
+        add("double-transfer", "tinggi", lokasiLabel, m.namaRekap, m.nominalMutasi,
           m.jumlahRefGanda + " baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda.");
       }
       if (m.nominalMutasi !== null && m.selisih !== null && Math.abs(m.selisih) > TOLERANSI_RUPIAH) {
         if (m.selisih > 0) {
-          add("transfer-kurang", "tinggi", loc.nama, m.namaRekap, m.selisih,
+          add("transfer-kurang", "tinggi", lokasiLabel, m.namaRekap, m.selisih,
             "Nominal rekap " + fmt(m.nominalRekap) + " vs mutasi " + fmt(m.nominalMutasi) + " — transfer kurang " + fmt(m.selisih) + ".");
         } else {
-          add("transfer-lebih", "tinggi", loc.nama, m.namaRekap, Math.abs(m.selisih),
+          add("transfer-lebih", "tinggi", lokasiLabel, m.namaRekap, Math.abs(m.selisih),
             "Nominal rekap " + fmt(m.nominalRekap) + " vs mutasi " + fmt(m.nominalMutasi) + " — transfer lebih " + fmt(Math.abs(m.selisih)) + ".");
         }
       }
       if (m.statusAkhir && m.statusAkhir.indexOf("PERLU CEK") !== -1) {
-        add("nama-lokasi-perlu-cek", "sedang", loc.nama, m.namaRekap, m.nominalRekap, "Status pencocokan: " + m.statusAkhir + ".");
+        add("nama-lokasi-perlu-cek", "sedang", lokasiLabel, m.namaRekap, m.nominalRekap, "Status pencocokan: " + m.statusAkhir + ".");
+      }
+      if (m.konfirmasiManual && m.nominalMutasi === null) {
+        // Admin sudah cek manual & tandai "SESUAI", tapi kolom NOMINAL MUTASI di
+        // HASIL_PENGECEKAN tetap kosong -- bisa berarti memang belum tertransfer,
+        // atau sudah tertransfer tapi gagal ke-link otomatis. Tidak bisa dibedakan
+        // otomatis dari data yang ada, jadi diberi notice terpisah supaya admin cek
+        // ulang, bukan ditebak/dimasukkan begitu saja ke Total Gaji Tertransfer.
+        add("konfirmasi-tanpa-nominal", "sedang", lokasiLabel, m.namaRekap, m.nominalRekap,
+          "Sudah dicek manual dan ditandai \"" + (m.hasilManual || "SESUAI") + "\", tapi kolom NOMINAL MUTASI " +
+          "di HASIL_PENGECEKAN masih kosong sehingga tidak ikut terhitung di Total Gaji Tertransfer. Cek lagi: " +
+          "kalau memang sudah tertransfer, lengkapi nominal & tanggal mutasinya di HASIL_PENGECEKAN; kalau memang " +
+          "belum, tidak perlu tindakan lebih lanjut.");
       }
     });
+  }
 
+  // Notice per-lokasi (butuh konteks RAB/GAJI/komponen dari REKAP) tetap
+  // jalan dari `locations`, karena inherently REKAP-anchored.
+  locations.forEach(function (loc) {
     if (loc.jumlahAnggota > 0 && loc.jumlahSudahTertransfer < loc.jumlahAnggota) {
       var belum = loc.jumlahAnggota - loc.jumlahSudahTertransfer;
       add("belum-transfer", "sedang", loc.nama, null, null,
@@ -434,7 +466,7 @@ function buildPayrollDataset() {
   var manualMap = parseManualMapping_(wbRekap);
 
   var locations = buildLocations_(rekapRows, hasilByLokasi, manualMap);
-  var notices = buildNotices_(locations);
+  var notices = buildNotices_(locations, hasilByLokasi);
   var kpi = buildKpi_(locations, hasilByLokasi);
   var totals = monthlyTotals_(wbRekap);
 

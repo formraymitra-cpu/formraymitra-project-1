@@ -188,6 +188,8 @@ def parse_hasil_pengecekan(wb):
             "statusAkhir": clean(r[16]),
             "transferGanda": jumlah_ref >= 2,
             "jumlahRefGanda": jumlah_ref,
+            "konfirmasiManual": r[18] is True,
+            "hasilManual": clean(r[19]),
         }
         by_lokasi.setdefault(lokasi_raw, []).append(member)
     return by_lokasi
@@ -314,7 +316,7 @@ def build_locations(rekap_rows, hasil_by_lokasi, manual_map):
     return locations
 
 
-def build_notices(locations):
+def build_notices(locations, hasil_by_lokasi):
     notices = []
     nid = 0
 
@@ -331,31 +333,64 @@ def build_notices(locations):
             "keterangan": ket,
         })
 
-    for loc in locations:
-        for m in loc["anggota"]:
+    # Notice per-karyawan HARUS jalan dari hasil_by_lokasi (seluruh isi
+    # HASIL_PENGECEKAN), bukan dari locations[].anggota -- karena tidak semua
+    # lokasi di HASIL_PENGECEKAN punya padanan di REKAP GAJI SEMUA LOKASI
+    # (mis. lokasi tipe SATPAM seperti "SAMSAT 2 PENGECEKAN" kadang tidak ada
+    # baris REKAP-nya sama sekali). Kalau cuma baca locations[].anggota,
+    # karyawan di lokasi begini (dan double-transfer/selisihnya) tidak akan
+    # pernah muncul sebagai notice.
+    label_by_raw = {
+        l["lokasiRekonsiliasi"]: l["nama"]
+        for l in locations
+        if l["lokasiRekonsiliasi"] and l["matchConfidence"] in ("auto", "manual")
+    }
+
+    for raw_lokasi, anggota in hasil_by_lokasi.items():
+        lokasi_label = label_by_raw.get(raw_lokasi, raw_lokasi)
+        for m in anggota:
             if m["transferGanda"]:
                 add(
-                    "double-transfer", "tinggi", loc["nama"], m["namaRekap"],
+                    "double-transfer", "tinggi", lokasi_label, m["namaRekap"],
                     m["nominalMutasi"],
                     f"{m['jumlahRefGanda']} baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda.",
                 )
             if m["nominalMutasi"] is not None and m["selisih"] is not None and abs(m["selisih"]) > TOLERANSI_RUPIAH:
                 if m["selisih"] > 0:
                     add(
-                        "transfer-kurang", "tinggi", loc["nama"], m["namaRekap"], m["selisih"],
+                        "transfer-kurang", "tinggi", lokasi_label, m["namaRekap"], m["selisih"],
                         f"Nominal rekap Rp {m['nominalRekap']:,.0f} vs mutasi Rp {m['nominalMutasi']:,.0f} — transfer kurang Rp {m['selisih']:,.0f}.".replace(",", "."),
                     )
                 else:
                     add(
-                        "transfer-lebih", "tinggi", loc["nama"], m["namaRekap"], abs(m["selisih"]),
+                        "transfer-lebih", "tinggi", lokasi_label, m["namaRekap"], abs(m["selisih"]),
                         f"Nominal rekap Rp {m['nominalRekap']:,.0f} vs mutasi Rp {m['nominalMutasi']:,.0f} — transfer lebih Rp {abs(m['selisih']):,.0f}.".replace(",", "."),
                     )
             if m["statusAkhir"] and ("PERLU CEK" in m["statusAkhir"]):
                 add(
-                    "nama-lokasi-perlu-cek", "sedang", loc["nama"], m["namaRekap"], m["nominalRekap"],
+                    "nama-lokasi-perlu-cek", "sedang", lokasi_label, m["namaRekap"], m["nominalRekap"],
                     f"Status pencocokan: {m['statusAkhir']}.",
                 )
+            if m["konfirmasiManual"] and m["nominalMutasi"] is None:
+                # Admin sudah cek manual dan bilang "SESUAI", tapi kolom NOMINAL MUTASI di
+                # HASIL_PENGECEKAN tetap kosong. Ini bisa berarti dua hal yang beda: (a) memang
+                # belum tertransfer (dan admin sudah tahu itu), atau (b) sudah tertransfer tapi
+                # gagal ke-link otomatis ke baris mutasinya (butuh dilengkapi manual di sheet
+                # HASIL_PENGECEKAN supaya ikut kehitung sebagai "tertransfer"). Tidak bisa
+                # dibedakan otomatis dari kolom yang ada -- makanya diberi notice terpisah,
+                # bukan ditebak/digabung ke total tertransfer begitu saja.
+                add(
+                    "konfirmasi-tanpa-nominal", "sedang", lokasi_label, m["namaRekap"], m["nominalRekap"],
+                    "Sudah dicek manual dan ditandai \"" + (m["hasilManual"] or "SESUAI") +
+                    "\", tapi kolom NOMINAL MUTASI di HASIL_PENGECEKAN masih kosong sehingga tidak "
+                    "ikut terhitung di Total Gaji Tertransfer. Cek lagi: kalau memang sudah "
+                    "tertransfer, lengkapi nominal & tanggal mutasinya di HASIL_PENGECEKAN; kalau "
+                    "memang belum, tidak perlu tindakan lebih lanjut.",
+                )
 
+    # Notice per-lokasi (butuh konteks RAB/GAJI/komponen dari REKAP) tetap
+    # jalan dari `locations`, karena inherently REKAP-anchored.
+    for loc in locations:
         if loc["jumlahAnggota"] > 0 and loc["jumlahSudahTertransfer"] < loc["jumlahAnggota"]:
             belum = loc["jumlahAnggota"] - loc["jumlahSudahTertransfer"]
             add(
@@ -444,7 +479,7 @@ def main():
     pic_imports = parse_sumber_rekap_mutasi(wb_rekon)
 
     locations = build_locations(rekap_rows, hasil_by_lokasi, manual_map)
-    notices = build_notices(locations)
+    notices = build_notices(locations, hasil_by_lokasi)
     kpi = build_kpi(locations, hasil_by_lokasi)
     totals = monthly_totals(wb_rekap)
 
