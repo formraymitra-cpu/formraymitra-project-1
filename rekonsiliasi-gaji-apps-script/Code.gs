@@ -1030,7 +1030,7 @@ function importHTMLBCA() {
  ************************************************************/
 
 function prosesFileMutasi(namaFile, base64Data, bank) {
-  const laporan = {file:namaFile, bank:String(bank||'').toUpperCase(), jenis:'', kandidat:0, terbaca:0, valid:0, diLuarPeriode:0, ditulisMutasi:0, ditulisRaw:0, error:0, pesanError:''};
+  const laporan = {file:namaFile, bank:String(bank||'').toUpperCase(), jenis:'', kandidat:0, terbaca:0, valid:0, diLuarPeriode:0, ditulisMutasi:0, ditulisRaw:0, error:0, errorDetail:[], pesanError:''};
   try {
     const periode=getPeriodeAktif();
     if(!periode) throw new Error('Periode Gaji belum aktif.');
@@ -1048,6 +1048,7 @@ function prosesFileMutasi(namaFile, base64Data, bank) {
     } else throw new Error('Format file tidak didukung. Gunakan HTML/HTM untuk BCA atau PDF untuk BRI/BPD/MANDIRI.');
     laporan.jenis=hasil&&hasil.diagnostik&&hasil.diagnostik.jenis?String(hasil.diagnostik.jenis):''; laporan.kandidat=hasil&&hasil.diagnostik&&Number(hasil.diagnostik.kandidat)>=0?Number(hasil.diagnostik.kandidat):(hasil&&hasil.mutasi?hasil.mutasi.length:0);
     laporan.tanggalBulk=hasil&&hasil.diagnostik&&hasil.diagnostik.tanggalBulk?String(hasil.diagnostik.tanggalBulk):'';
+    laporan.errorDetail=hasil&&hasil.diagnostik&&Array.isArray(hasil.diagnostik.errors)?hasil.diagnostik.errors:[];
     laporan.terbaca=hasil&&Array.isArray(hasil.mutasi)?hasil.mutasi.length:0; laporan.valid=laporan.terbaca; if(laporan.jenis && laporan.jenis.indexOf('BULK')===0) laporan.error=Math.max(0,laporan.kandidat-laporan.terbaca);
     if(!laporan.terbaca){laporan.error=Math.max(1,laporan.kandidat); throw new Error('Parser tidak menghasilkan transaksi valid. Kandidat terdeteksi: '+laporan.kandidat+'.');}
     const hasilSaring=saringHasilMenurutPeriode(hasil,periode);
@@ -1059,13 +1060,24 @@ function prosesFileMutasi(namaFile, base64Data, bank) {
     catatSumberMutasi(laporan.bank,namaFile,periode.nama,laporan.ditulisMutasi);
     return {success:true,laporan:laporan,message:formatLaporanImport(laporan)};
   } catch(error) {
-    laporan.error=Math.max(laporan.error, laporan.kandidat-laporan.terbaca, 1); laporan.pesanError=error&&error.message?error.message:String(error);
+    const pesanErrorAsli=error&&error.message?error.message:String(error);
+    // "0 transaksi berada dalam periode aktif" BUKAN kegagalan parsing — semua
+    // kandidat berhasil dibaca (kandidat===terbaca), hanya saja tanggalnya di
+    // luar periode aktif. Jangan paksa Error/tidak valid jadi minimal 1 untuk
+    // kasus ini, supaya laporan tidak menyesatkan (seolah ada 1 baris rusak).
+    const diLuarPeriodeSaja=/berada dalam periode aktif/i.test(pesanErrorAsli) && laporan.kandidat===laporan.terbaca;
+    laporan.error=diLuarPeriodeSaja
+      ? Math.max(0,laporan.kandidat-laporan.terbaca)
+      : Math.max(laporan.error, laporan.kandidat-laporan.terbaca, 1);
+    laporan.pesanError=pesanErrorAsli;
     Logger.log('prosesFileMutasi ERROR: '+(error&&error.stack?error.stack:error));
     return {success:false,laporan:laporan,message:formatLaporanImport(laporan)+'\n❌ '+laporan.pesanError};
   }
 }
 
 function formatLaporanImport(laporan) {
+  const MAKS_DETAIL=8;
+  const detail=Array.isArray(laporan.errorDetail)?laporan.errorDetail:[];
   return laporan.file+' ['+laporan.bank+']'+
     (laporan.jenis ? '\n  Jenis mutasi        : '+laporan.jenis : '')+
     (laporan.tanggalBulk ? '\n  Tanggal bulk        : '+laporan.tanggalBulk : '')+
@@ -1075,7 +1087,12 @@ function formatLaporanImport(laporan) {
     '\n  Di luar periode     : '+laporan.diLuarPeriode+
     '\n  Masuk MUTASI        : '+laporan.ditulisMutasi+
     '\n  Masuk RAW            : '+laporan.ditulisRaw+
-    '\n  Error/tidak valid   : '+laporan.error;
+    '\n  Error/tidak valid   : '+laporan.error+
+    (detail.length
+      ? '\n  Rincian kandidat gagal dibaca:\n    - '+
+        detail.slice(0,MAKS_DETAIL).join('\n    - ')+
+        (detail.length>MAKS_DETAIL ? '\n    ... dan '+(detail.length-MAKS_DETAIL)+' lainnya.' : '')
+      : '');
 }
 /************************************************************
  * ==========================================================
@@ -1601,6 +1618,7 @@ function parsePDFBulkBRI(text, namaFile, periode) {
 
   const mutasi = [];
   const raw = [];
+  const errors = [];
   let nomor = 0;
 
   /*
@@ -1619,10 +1637,16 @@ function parsePDFBulkBRI(text, namaFile, periode) {
     // Nominal terkadang terpecah oleh spasi akibat ekstraksi PDF,
     // mis. "Rp3. 147 .680" seharusnya dibaca 3.147.680.
     const amountMatch = blok.match(/Rp\.?\s*(\d[\d.,\s]*\d|\d)/i);
-    if (!amountMatch) continue;
+    if (!amountMatch) {
+      errors.push('Rekening ' + rekening + ': nominal "Rp..." tidak ditemukan pada blok ini.');
+      continue;
+    }
 
     const nominal = parseNominalUmum(amountMatch[1].replace(/\s+/g, ''));
-    if (!nominal || nominal <= 0) continue;
+    if (!nominal || nominal <= 0) {
+      errors.push('Rekening ' + rekening + ': nominal terbaca tetapi tidak valid ("' + amountMatch[1] + '").');
+      continue;
+    }
 
     const sebelumNominal = blok.substring(0, amountMatch.index);
     const sesudahNominal = blok.substring(
@@ -1665,7 +1689,10 @@ function parsePDFBulkBRI(text, namaFile, periode) {
       .replace(/\s+/g, ' ')
       .trim();
 
-    if (!nama) continue;
+    if (!nama) {
+      errors.push('Rekening ' + rekening + ': nominal Rp' + nominal.toLocaleString('id-ID') + ' ditemukan tetapi nama penerima kosong.');
+      continue;
+    }
 
     /*
      * Jika sisa blok hanya noise, jangan dimasukkan.
@@ -1720,7 +1747,8 @@ function parsePDFBulkBRI(text, namaFile, periode) {
       kandidat: expected || mutasi.length,
       valid: mutasi.length,
       jenis: 'BULK BRI',
-      idBulk: idBulk
+      idBulk: idBulk,
+      errors: errors
     }
   };
 }
@@ -1746,6 +1774,7 @@ function parsePDFBulkBPD(text, namaFile, periode) {
 
   const mutasi = [];
   const raw = [];
+  const errors = [];
   let nomor = 0;
 
   /*
@@ -1765,10 +1794,16 @@ function parsePDFBulkBPD(text, namaFile, periode) {
     // Nominal terkadang terpecah oleh spasi akibat ekstraksi PDF,
     // mis. "27 .147 .680" seharusnya dibaca 27.147.680.
     const amountMatch = blok.match(/(\d[\d.,\s]*\d|\d)\s+Success/i);
-    if (!amountMatch) continue;
+    if (!amountMatch) {
+      errors.push('Rekening ' + rekening + ': nominal diikuti "Success" tidak ditemukan pada blok ini.');
+      continue;
+    }
 
     const nominal = parseNominalUmum(amountMatch[1].replace(/\s+/g, ''));
-    if (!nominal || nominal <= 0) continue;
+    if (!nominal || nominal <= 0) {
+      errors.push('Rekening ' + rekening + ': nominal terbaca tetapi tidak valid ("' + amountMatch[1] + '").');
+      continue;
+    }
 
     const posAmount = amountMatch.index;
 
@@ -1778,7 +1813,10 @@ function parsePDFBulkBPD(text, namaFile, periode) {
     );
 
     const bankPos = sebelumAmount.search(/\bBANK\b/i);
-    if (bankPos < 0 || !ref) continue;
+    if (bankPos < 0 || !ref) {
+      errors.push('Rekening ' + rekening + ': label "BANK" atau kode referensi "BLQ..." tidak ditemukan pada blok ini.');
+      continue;
+    }
 
     let nama = sebelumAmount
       .substring(0, bankPos)
@@ -1833,7 +1871,10 @@ function parsePDFBulkBPD(text, namaFile, periode) {
       .replace(/\s+/g, ' ')
       .trim();
 
-    if (!nama) continue;
+    if (!nama) {
+      errors.push('Rekening ' + rekening + ': nominal Rp' + nominal.toLocaleString('id-ID') + ' ditemukan tetapi nama penerima kosong.');
+      continue;
+    }
 
     const keterangan =
       '[BULK BPD] ' +
@@ -1885,7 +1926,8 @@ function parsePDFBulkBPD(text, namaFile, periode) {
       tanggalBulk: tanggal ? formatTanggal(tanggal) : '',
       tanggalBulkDate: tanggal || null,
       idBulk: idBulk,
-      refBulk: refBulk
+      refBulk: refBulk,
+      errors: errors
     }
   };
 }
