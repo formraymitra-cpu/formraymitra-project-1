@@ -198,6 +198,11 @@ function onOpen() {
       'cekDataBelumDikenali'
     )
 
+    .addItem(
+      '🧮 Audit Selisih Rekonsiliasi',
+      'auditSelisihRekonsiliasi'
+    )
+
     .addSeparator()
 
     .addItem(
@@ -3545,7 +3550,8 @@ function prosesPengecekanMode(hanyaBaru){
     return;
   }
 
-  const hasil=cocokkanSemua_V82(rekap,data);
+  const hasilCocok=cocokkanSemua_V82(rekap,data);
+  const hasil=hasilCocok.hasil;
   tulisHasilPengecekan(hasil,hanyaBaru);
   if(hanyaBaru)tandaiMutasiSudahDiproses(sh,data);
 
@@ -3969,6 +3975,172 @@ function updateNominalLokasi() {
 
 
 function jalankanPengecekanGaji(){prosesPengecekanMode(false);}
+
+/************************************************************
+ * ==========================================================
+ * AUDIT SELISIH REKONSILIASI
+ * ==========================================================
+ *
+ * Menjawab pertanyaan "kenapa total di NOMINAL LOKASI / REKAP_AKHIR
+ * masih beda dari total MUTASI?" dengan angka pasti, bukan tebakan:
+ *
+ *   Total MUTASI periode aktif
+ *     = sudah cocok ke REKAP (HASIL_PENGECEKAN)
+ *       + TIDAK PERNAH cocok ke REKAP mana pun  <- lihat sheet
+ *                                                   AUDIT_SELISIH_MUTASI
+ *
+ *   Yang sudah cocok ke REKAP
+ *     = sudah DONE + punya nominal riil (siap masuk REKAP AKHIR)
+ *       + belum DONE / belum lolos cek manual
+ *
+ *   REKAP_AKHIR (snapshot sheet) dibandingkan dengan total yang
+ *   sebenarnya sudah DONE saat ini, untuk mendeteksi kalau REKAP_AKHIR
+ *   belum di-"Update Rekap Akhir" ulang setelah ada cek manual baru.
+ *
+ * TIDAK menulis apa pun ke MUTASI / REKAP / HASIL_PENGECEKAN.
+ * Satu-satunya sheet yang ditulis adalah AUDIT_SELISIH_MUTASI (rincian
+ * transaksi MUTASI yang tidak pernah menjadi kandidat siapa pun).
+ ************************************************************/
+
+function auditSelisihRekonsiliasi() {
+  const ui = SpreadsheetApp.getUi();
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  const periode = getPeriodeAktif();
+  if (!periode) {
+    ui.alert('❌ Tidak ada Periode Gaji aktif.');
+    return;
+  }
+
+  const shMutasi = ss.getSheetByName(CONFIG.SHEET_MUTASI);
+  if (!shMutasi || shMutasi.getLastRow() < 2) {
+    ui.alert('❌ MUTASI belum memiliki data.');
+    return;
+  }
+
+  // === 1) Semua MUTASI periode aktif ===
+  const dataMutasi = bacaMutasi(shMutasi, periode);
+  const totalMutasi = dataMutasi.reduce(function(s, m) { return s + Number(m.nominal || 0); }, 0);
+
+  // === 2) Jalankan ulang pencocokan di memori (tidak menulis apa pun)
+  // untuk menemukan baris MUTASI yang tidak pernah jadi kandidat REKAP
+  // mana pun sama sekali. ===
+  const rekap = bacaSemuaRekapPIC_V82(periode, dataMutasi);
+  const mutasiTerpakai = rekap.length
+    ? cocokkanSemua_V82(rekap, dataMutasi).mutasiTerpakai
+    : {};
+
+  const mutasiYatim = dataMutasi.filter(function(m) { return !mutasiTerpakai[m.row]; });
+  const totalYatim = mutasiYatim.reduce(function(s, m) { return s + Number(m.nominal || 0); }, 0);
+  const totalTerpakai = totalMutasi - totalYatim;
+
+  // === 3) Baca HASIL_PENGECEKAN apa adanya (termasuk hasil cek manual) ===
+  const shHasil = ss.getSheetByName(CONFIG.SHEET_HASIL);
+  let totalDoneReal = 0;
+  let totalBelumDone = 0;
+  const lokasiGrup = {};
+
+  if (shHasil && shHasil.getLastRow() > 1) {
+    const rows = shHasil.getRange(2, 1, shHasil.getLastRow() - 1, 21).getValues();
+
+    rows.forEach(function(r) {
+      const loc = String(r[2] || '').trim();
+      if (!loc) return;
+
+      const statusFinal = String(r[20] || '').trim().toUpperCase();
+      const nominalMutasiVal = r[6];
+      const punyaReal = nominalMutasiVal !== '' && nominalMutasiVal !== null &&
+        !isNaN(Number(nominalMutasiVal)) && Number(nominalMutasiVal) > 0;
+
+      const key = loc.toUpperCase().replace(/\s+/g, ' ').trim();
+      if (!lokasiGrup[key]) {
+        lokasiGrup[key] = { loc: loc, totalRow: 0, doneCount: 0, siapCount: 0, nominalBelum: 0 };
+      }
+      const g = lokasiGrup[key];
+      g.totalRow++;
+
+      if (statusFinal === 'DONE') g.doneCount++;
+
+      if (statusFinal === 'DONE' && punyaReal) {
+        g.siapCount++;
+        totalDoneReal += Number(nominalMutasiVal);
+      } else if (punyaReal) {
+        g.nominalBelum += Number(nominalMutasiVal);
+        totalBelumDone += Number(nominalMutasiVal);
+      }
+    });
+  }
+
+  const lokasiTertahan = Object.keys(lokasiGrup)
+    .map(function(k) { return lokasiGrup[k]; })
+    .filter(function(g) { return !(g.doneCount === g.totalRow && g.siapCount === g.totalRow); });
+
+  // === 4) REKAP_AKHIR saat ini (snapshot) ===
+  const shRekapAkhir = ss.getSheetByName('REKAP_AKHIR');
+  let totalRekapAkhir = 0;
+  if (shRekapAkhir && shRekapAkhir.getLastRow() > 1) {
+    const nilai = shRekapAkhir.getRange(2, 5, shRekapAkhir.getLastRow() - 1, 1).getValues();
+    nilai.forEach(function(row) { totalRekapAkhir += Number(row[0] || 0); });
+  }
+
+  // === 5) Tulis rincian mutasi "yatim" (tidak pernah cocok) ===
+  let shAudit = ss.getSheetByName('AUDIT_SELISIH_MUTASI');
+  if (!shAudit) shAudit = ss.insertSheet('AUDIT_SELISIH_MUTASI');
+  shAudit.clear();
+
+  const headerAudit = ['BARIS DI MUTASI', 'ID MUTASI', 'TANGGAL', 'BANK', 'KETERANGAN', 'NOMINAL', 'CATATAN'];
+  shAudit.getRange(1, 1, 1, headerAudit.length).setValues([headerAudit]);
+
+  if (mutasiYatim.length) {
+    const outAudit = mutasiYatim.map(function(m) {
+      return [
+        'MUTASI!A' + m.row,
+        m.id,
+        m.tanggal || '',
+        m.bank,
+        m.keterangan,
+        m.nominal,
+        'Tidak pernah cocok ke REKAP mana pun — cek manual (transaksi asing/duplikat/karyawan belum ada di REKAP/nama meleset jauh)'
+      ];
+    });
+    shAudit.getRange(2, 1, outAudit.length, headerAudit.length).setValues(outAudit);
+    shAudit.getRange(2, 6, outAudit.length, 1).setNumberFormat('#,##0');
+  }
+
+  formatHeader(shAudit, headerAudit.length);
+  buatFilterJikaPerlu(shAudit, headerAudit.length);
+  shAudit.autoResizeColumns(1, headerAudit.length);
+
+  // === 6) Ringkasan ===
+  let pesan = '🧮 AUDIT SELISIH REKONSILIASI — ' + periode.nama + '\n\n' +
+    'Total MUTASI periode aktif        : Rp ' + totalMutasi.toLocaleString('id-ID') + ' (' + dataMutasi.length + ' transaksi)\n' +
+    '  ├─ sudah cocok ke REKAP          : Rp ' + totalTerpakai.toLocaleString('id-ID') + '\n' +
+    '  └─ TIDAK PERNAH cocok ke REKAP   : Rp ' + totalYatim.toLocaleString('id-ID') + ' (' + mutasiYatim.length + ' transaksi)\n' +
+    (mutasiYatim.length ? '       → rincian di sheet AUDIT_SELISIH_MUTASI\n' : '') +
+    '\nDari yang sudah cocok ke REKAP (HASIL_PENGECEKAN):\n' +
+    '  ├─ DONE + nominal riil (siap REKAP AKHIR) : Rp ' + totalDoneReal.toLocaleString('id-ID') + '\n' +
+    '  └─ belum DONE / belum lolos cek manual     : Rp ' + totalBelumDone.toLocaleString('id-ID') + '\n' +
+    '\nREKAP_AKHIR saat ini (snapshot)     : Rp ' + totalRekapAkhir.toLocaleString('id-ID');
+
+  if (totalRekapAkhir < totalDoneReal) {
+    pesan += '\n⚠️ REKAP_AKHIR ketinggalan Rp ' +
+      (totalDoneReal - totalRekapAkhir).toLocaleString('id-ID') +
+      ' dari HASIL_PENGECEKAN. Klik ulang 📊 Update Rekap Akhir.';
+  }
+
+  if (lokasiTertahan.length) {
+    pesan += '\n\nLokasi yang masih menahan nominal (belum 100% DONE):\n' +
+      lokasiTertahan.slice(0, 12).map(function(g) {
+        return '• ' + g.loc + ' (' + g.doneCount + '/' + g.totalRow + ' DONE' +
+          (g.nominalBelum > 0 ? ', Rp ' + g.nominalBelum.toLocaleString('id-ID') + ' menunggu' : '') + ')';
+      }).join('\n');
+    if (lokasiTertahan.length > 12) {
+      pesan += '\n... dan ' + (lokasiTertahan.length - 12) + ' lokasi lainnya.';
+    }
+  }
+
+  ui.alert(pesan);
+}
 
 /************************************************************
  * ==========================================================
@@ -8185,7 +8357,17 @@ function cocokkanSemua_V82(dataRekap, dataMutasi) {
   }
 
   tandaiDoubleTransfer(hasil,dataRekap,dataMutasi);
-  return hasil;
+
+  // Baris MUTASI (nomor baris sheet) yang berhasil dipasangkan ke REKAP
+  // mana pun, dipakai oleh auditSelisihRekonsiliasi() untuk menemukan
+  // mutasi yang TIDAK PERNAH cocok ke rekap siapa pun (kandidat anomali).
+  const mutasiTerpakai={};
+  Object.keys(pasanganTerpilih).forEach(function(key){
+    const row=pasanganTerpilih[key].mutasi.row;
+    if(row!=null)mutasiTerpakai[row]=true;
+  });
+
+  return {hasil:hasil,mutasiTerpakai:mutasiTerpakai};
 }
 
 function buatLokasiMutasiTeks_V82_(m){
