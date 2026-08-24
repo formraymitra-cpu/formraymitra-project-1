@@ -4731,6 +4731,13 @@ function normalisasiNamaMatch_(v) {
     .toUpperCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[\u2018\u2019\u00b4`]/g, "'")
+    // Tanda kutip DI TENGAH kata (mis. "MU'ALIM", "SYA'BAN") dilebur,
+    // bukan dijadikan pemisah token. Sisi mutasi/bank biasanya menyimpan
+    // nama seperti itu sebagai satu kata utuh tanpa tanda kutip, jadi kalau
+    // sisi REKAP dipecah jadi "MU" + "ALIM" keduanya tidak akan pernah
+    // ketemu dengan token "MUALIM" di sisi mutasi.
+    .replace(/([A-Z0-9])'+(?=[A-Z0-9])/g, '$1')
     .replace(/[^A-Z0-9]+/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
@@ -7939,17 +7946,51 @@ function cocokkanSemua_V82(dataRekap, dataMutasi) {
     });
   });
 
+  function urutkanKandidat_(list){
+    list.sort(function(a,b){
+      if(Math.abs(b.gabungan-a.gabungan)>0.0001)return b.gabungan-a.gabungan;
+      if(b.namaUtuh!==a.namaUtuh)return b.namaUtuh?1:-1;
+      if(b.scoreLokasi!==a.scoreLokasi)return b.scoreLokasi-a.scoreLokasi;
+      if(b.scoreNominal!==a.scoreNominal)return b.scoreNominal-a.scoreNominal;
+      if(b.scoreBank!==a.scoreBank)return b.scoreBank-a.scoreBank;
+      return a.selisih-b.selisih;
+    });
+    return list;
+  }
+
+  /*
+   * ==========================================================
+   * TAHAP 1 — KUMPULKAN SEMUA PASANGAN KANDIDAT (REKAP × MUTASI)
+   * ==========================================================
+   * Sebelumnya setiap REKAP dicocokkan satu per satu mengikuti
+   * urutan barisnya di sheet, lalu langsung "mengambil" mutasi
+   * dengan skor terbaik yang tersisa. Ini berbahaya: REKAP yang
+   * diproses lebih dulu bisa mencuri baris MUTASI milik REKAP
+   * lain hanya karena kebetulan sedikit mirip (skor rendah),
+   * padahal pemilik aslinya — yang diproses belakangan — punya
+   * skor jauh lebih kuat untuk baris MUTASI yang sama.
+   *
+   * Supaya urutan baris di sheet TIDAK PERNAH memengaruhi hasil,
+   * semua pasangan (rekap, mutasi) yang punya skor nama > 0
+   * dikumpulkan dulu ke satu daftar tunggal, lalu diurutkan dari
+   * yang paling meyakinkan ke seluruh dataset (bukan per REKAP).
+   * Pasangan ditetapkan mengikuti urutan itu (tahap 2), sehingga
+   * kecocokan terkuat SELALU dapat giliran pertama, siapa pun
+   * yang kebetulan berada lebih dulu di sheet.
+   */
+
+  const kandidatPerRekap=[];
+  const semuaKandidat=[];
+
   for(let i=0;i<dataRekap.length;i++){
     const r=dataRekap[i];
     const namaRekap=String(r.nama||'').trim();
     const nominalRekap=Number(r.diterima||0);
 
+    kandidatPerRekap[i]=[];
     if(!namaRekap||nominalRekap<=0)continue;
 
-    const kandidat=[];
-
     for(let j=0;j<mutasiPrepared.length;j++){
-      if(sudahDigunakan[j])continue;
       const m=mutasiPrepared[j];
 
       const scoreNama=skorNama_(namaRekap,m._namaTampilanV86,m.keterangan);
@@ -7974,14 +8015,61 @@ function cocokkanSemua_V82(dataRekap, dataMutasi) {
         m._namaNormV86===norm_(namaRekap) ||
         m._namaNormV86.indexOf(norm_(namaRekap))!==-1;
 
-      kandidat.push({
-        index:j,mutasi:m,scoreNama:scoreNama,scoreLokasi:scoreLokasi,
+      const entry={
+        rekapIndex:i,index:j,mutasi:m,scoreNama:scoreNama,scoreLokasi:scoreLokasi,
         scoreNominal:scoreNominal,scoreBank:scoreBank,
         gabungan:gabungan,selisih:selisih,namaUtuh:namaUtuh
-      });
-    }
+      };
 
-    if(!kandidat.length){
+      kandidatPerRekap[i].push(entry);
+      semuaKandidat.push(entry);
+    }
+  }
+
+  /*
+   * ==========================================================
+   * TAHAP 2 — TETAPKAN PASANGAN SECARA GLOBAL
+   * ==========================================================
+   * Iterasi dari pasangan paling meyakinkan (gabungan tertinggi)
+   * ke yang paling lemah. Sebuah pasangan hanya ditetapkan jika
+   * REKAP-nya belum dapat pasangan DAN MUTASI-nya belum dipakai.
+   * Kalau pilihan terbaik seorang REKAP sudah "diambil" pasangan
+   * lain yang skornya lebih tinggi, REKAP itu otomatis jatuh ke
+   * kandidat terbaik berikutnya yang masih tersedia — bukan
+   * langsung dianggap tidak ditemukan.
+   */
+
+  urutkanKandidat_(semuaKandidat);
+
+  const rekapSudahDapat={};
+  const pasanganTerpilih={};
+
+  semuaKandidat.forEach(function(entry){
+    if(rekapSudahDapat[entry.rekapIndex])return;
+    if(sudahDigunakan[entry.index])return;
+
+    rekapSudahDapat[entry.rekapIndex]=true;
+    sudahDigunakan[entry.index]=true;
+    pasanganTerpilih[entry.rekapIndex]=entry;
+  });
+
+  /*
+   * ==========================================================
+   * TAHAP 3 — SUSUN HASIL, TETAP MENGIKUTI URUTAN REKAP ASLI
+   * ==========================================================
+   */
+
+  for(let i=0;i<dataRekap.length;i++){
+    const r=dataRekap[i];
+    const namaRekap=String(r.nama||'').trim();
+    const nominalRekap=Number(r.diterima||0);
+
+    if(!namaRekap||nominalRekap<=0)continue;
+
+    const kandidat=urutkanKandidat_(kandidatPerRekap[i]);
+    const best=pasanganTerpilih[i];
+
+    if(!best){
       hasil.push({
         pic:r.pic,lokasi:r.lokasi,nama:r.nama,namaMutasi:'',
         diterima:r.diterima,nominalMutasi:'',selisih:-nominalRekap,
@@ -7993,18 +8081,7 @@ function cocokkanSemua_V82(dataRekap, dataMutasi) {
       continue;
     }
 
-    kandidat.sort(function(a,b){
-      if(Math.abs(b.gabungan-a.gabungan)>0.0001)return b.gabungan-a.gabungan;
-      if(b.namaUtuh!==a.namaUtuh)return b.namaUtuh?1:-1;
-      if(b.scoreLokasi!==a.scoreLokasi)return b.scoreLokasi-a.scoreLokasi;
-      if(b.scoreNominal!==a.scoreNominal)return b.scoreNominal-a.scoreNominal;
-      if(b.scoreBank!==a.scoreBank)return b.scoreBank-a.scoreBank;
-      return a.selisih-b.selisih;
-    });
-
-    const best=kandidat[0];
     const m=best.mutasi;
-    sudahDigunakan[best.index]=true;
 
     const scoreNama=best.scoreNama;
     const scoreLokasi=best.scoreLokasi;
@@ -8065,13 +8142,21 @@ function cocokkanSemua_V82(dataRekap, dataMutasi) {
     // Kandidat kedua yang sangat dekat hanya ditandai jika kandidat kedua
     // juga memiliki bukti nama/lokasi yang layak. Ini menghindari status
     // transfer ganda palsu hanya karena banyak mutasi dengan nominal mirip.
-    if(kandidat.length>1){
-      const second=kandidat[1];
-      if(Math.abs(best.gabungan-second.gabungan)<=0.08 &&
-         second.scoreNama>=CONFIG.MIN_SCORE_NAMA_PERLU_CEK &&
-         second.scoreLokasi>=CONFIG.MIN_SCORE_LOKASI_SESUAI){
-        statusAkhir='🟠 KANDIDAT MIRIP / POTENSI TRANSFER GANDA';
-      }
+    //
+    // `best` (hasil tahap 2, global) tidak selalu sama dengan kandidat[0]
+    // (urutan terbaik versi REKAP ini sendiri) — bisa saja pilihan utama
+    // REKAP ini sudah diambil pasangan lain yang skornya lebih tinggi.
+    // Karena itu "kandidat kedua" dicari sebagai kandidat lokal TERBAIK
+    // yang BUKAN `best`, bukan sekadar kandidat[1].
+    let second=null;
+    for(let z=0;z<kandidat.length;z++){
+      if(kandidat[z]!==best){second=kandidat[z];break;}
+    }
+    if(second &&
+       Math.abs(best.gabungan-second.gabungan)<=0.08 &&
+       second.scoreNama>=CONFIG.MIN_SCORE_NAMA_PERLU_CEK &&
+       second.scoreLokasi>=CONFIG.MIN_SCORE_LOKASI_SESUAI){
+      statusAkhir='🟠 KANDIDAT MIRIP / POTENSI TRANSFER GANDA';
     }
 
     const acuan=kandidat.length>1
