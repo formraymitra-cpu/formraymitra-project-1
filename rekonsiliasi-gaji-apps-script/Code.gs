@@ -1053,7 +1053,31 @@ function prosesFileMutasi(namaFile, base64Data, bank) {
     if(!laporan.terbaca){laporan.error=Math.max(1,laporan.kandidat); throw new Error('Parser tidak menghasilkan transaksi valid. Kandidat terdeteksi: '+laporan.kandidat+'.');}
     const hasilSaring=saringHasilMenurutPeriode(hasil,periode);
     laporan.diLuarPeriode=Math.max(0,laporan.terbaca-hasilSaring.mutasi.length);
-    if(!hasilSaring.mutasi.length) throw new Error('Transaksi berhasil dibaca, tetapi 0 transaksi berada dalam periode aktif '+periode.nama+' ('+formatTanggal(periode.mulai)+' - '+formatTanggal(periode.selesai)+').');
+    if(!hasilSaring.mutasi.length) {
+      // Bulk BPD memakai SATU tanggal header untuk semua penerima (lihat
+      // saringHasilMenurutPeriode). Kalau tanggal itu sama sekali tidak
+      // ditemukan di PDF (pola teksnya beda dari file yang biasa berhasil),
+      // SEMUA baris otomatis tertolak walau transaksinya sendiri valid.
+      // Bedakan pesan ini dari kasus "tanggal ketemu tapi memang di luar
+      // periode", supaya jelas ini soal ekstraksi tanggal, bukan tanggal
+      // yang salah.
+      const jenisSekarang=hasil&&hasil.diagnostik&&hasil.diagnostik.jenis?String(hasil.diagnostik.jenis).toUpperCase():'';
+      const tanggalBulkKetemu=hasil&&hasil.diagnostik?hasil.diagnostik.tanggalBulk:'';
+      // Ditandai eksplisit (bukan ditebak dari isi pesan) supaya blok catch
+      // di bawah tahu ini BUKAN kegagalan parsing sungguhan — parser
+      // membaca semua kandidat dengan benar, cuma tidak ada tanggal yang
+      // cocok untuk memutuskan masuk periode mana.
+      laporan._bukanKegagalanParsing=true;
+      if(jenisSekarang==='BULK BPD' && !tanggalBulkKetemu) {
+        throw new Error(
+          'Transaksi berhasil dibaca ('+laporan.terbaca+' baris), tetapi TANGGAL TRANSAKSI BULK BPD tidak ditemukan di PDF ini '+
+          '(pola teks tanggalnya berbeda dari file BPD lain yang sudah berhasil). '+
+          'Karena Bulk BPD memakai satu tanggal header untuk semua penerima, tanpa tanggal itu semua baris tidak bisa dicocokkan ke periode manapun. '+
+          'Kirim PDF ini untuk diperiksa polanya, atau cek apakah PDF ini memang PDF Bulk BPD yang lengkap (bukan hasil potongan/cetak ulang sebagian).'
+        );
+      }
+      throw new Error('Transaksi berhasil dibaca, tetapi 0 transaksi berada dalam periode aktif '+periode.nama+' ('+formatTanggal(periode.mulai)+' - '+formatTanggal(periode.selesai)+').');
+    }
     const hasilTulis=tulisImportMutasi(hasilSaring);
     laporan.ditulisMutasi=hasilTulis.jumlahMutasi||0; laporan.ditulisRaw=hasilTulis.jumlahRaw||0;
     if(laporan.ditulisMutasi!==hasilSaring.mutasi.length) throw new Error('Verifikasi gagal: parser menghasilkan '+hasilSaring.mutasi.length+', tetapi MUTASI hanya menyimpan '+laporan.ditulisMutasi+'.');
@@ -1061,11 +1085,12 @@ function prosesFileMutasi(namaFile, base64Data, bank) {
     return {success:true,laporan:laporan,message:formatLaporanImport(laporan)};
   } catch(error) {
     const pesanErrorAsli=error&&error.message?error.message:String(error);
-    // "0 transaksi berada dalam periode aktif" BUKAN kegagalan parsing — semua
-    // kandidat berhasil dibaca (kandidat===terbaca), hanya saja tanggalnya di
-    // luar periode aktif. Jangan paksa Error/tidak valid jadi minimal 1 untuk
-    // kasus ini, supaya laporan tidak menyesatkan (seolah ada 1 baris rusak).
-    const diLuarPeriodeSaja=/berada dalam periode aktif/i.test(pesanErrorAsli) && laporan.kandidat===laporan.terbaca;
+    // Kasus "0 di luar periode" / "tanggal bulk BPD tidak ditemukan" BUKAN
+    // kegagalan parsing — semua kandidat berhasil dibaca (kandidat===terbaca),
+    // hanya saja tidak bisa dicocokkan ke periode. Jangan paksa Error/tidak
+    // valid jadi minimal 1 untuk kasus ini, supaya laporan tidak menyesatkan
+    // (seolah ada baris rusak padahal sebenarnya 0).
+    const diLuarPeriodeSaja=laporan._bukanKegagalanParsing===true && laporan.kandidat===laporan.terbaca;
     laporan.error=diLuarPeriodeSaja
       ? Math.max(0,laporan.kandidat-laporan.terbaca)
       : Math.max(laporan.error, laporan.kandidat-laporan.terbaca, 1);
