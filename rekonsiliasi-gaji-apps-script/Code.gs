@@ -3622,9 +3622,34 @@ function prosesPengecekanMode(hanyaBaru){
   const data=hanyaBaru?semua.filter(function(x){return x.statusProses!=='SUDAH DIPROSES';}):semua;
   if(!data.length){ui.alert(hanyaBaru?'✅ Tidak ada mutasi baru yang belum diproses.':'❌ Tidak ditemukan mutasi untuk periode aktif.');return;}
 
-  const rekap=bacaSemuaRekapPIC_V82(periode,data);
+  let rekap=bacaSemuaRekapPIC_V82(periode,data);
+
+  if(hanyaBaru){
+    /*
+     * "Cek Mutasi Baru" cuma memproses mutasi yang BELUM diproses (data
+     * di atas). REKAP yang barisnya di HASIL_PENGECEKAN sudah punya
+     * pasangan mutasi nyata (NAMA MUTASI terisi) TIDAK BOLEH dicoba
+     * dicocokkan ulang di sini — mutasi asli mereka sudah ditandai
+     * "SUDAH DIPROSES" dari proses sebelumnya, jadi tidak akan pernah
+     * muncul lagi di `data` di atas, dan mereka pasti akan berakhir
+     * "🔴 MUTASI TIDAK DITEMUKAN". Sebelumnya ini menghasilkan BARIS
+     * DUPLIKAT untuk karyawan yang sama tiap kali menu ini dijalankan
+     * (baris lama yang sudah benar tetap ada, ditambah baris baru yang
+     * salah menyatakan "tidak ditemukan" walau sudah pernah cocok dan
+     * bahkan sudah dicek manual DONE).
+     */
+    const sudahPunyaMatch=ambilIdentitasSudahMatch_(ss);
+    rekap=rekap.filter(function(r){
+      return !sudahPunyaMatch[kunciRekap_(r.pic,r.lokasi,r.nama,r.diterima)];
+    });
+  }
+
   if(!rekap.length){
-    ui.alert('❌ Tidak ditemukan data karyawan dari Rekap PIC.\n\nSistem sudah membaca MUTASI, tetapi tidak menemukan sheet REKAP yang relevan dengan lokasi mutasi periode aktif.');
+    ui.alert(
+      hanyaBaru
+        ? '✅ Tidak ada REKAP baru yang perlu dicocokkan. Semua karyawan pada mutasi yang belum diproses sudah punya hasil pencocokan sebelumnya.'
+        : '❌ Tidak ditemukan data karyawan dari Rekap PIC.\n\nSistem sudah membaca MUTASI, tetapi tidak menemukan sheet REKAP yang relevan dengan lokasi mutasi periode aktif.'
+    );
     return;
   }
 
@@ -3652,6 +3677,43 @@ function tandaiMutasiSudahDiproses(sh,data){
     if(idx>=0 && idx<col.length) col[idx][0]='SUDAH DIPROSES';
   });
   sh.getRange(2,11,col.length,1).setValues(col);
+}
+
+/*
+ * Identitas satu REKAP (bukan satu pasangan REKAP+MUTASI): PIC + LOKASI +
+ * NAMA REKAP + NOMINAL REKAP. Ini SENGAJA sama persis dengan kunci yang
+ * dipakai FIX21_kunciManual_/manualKey di tulisHasilPengecekan, supaya
+ * "REKAP yang sama" selalu dikenali konsisten di seluruh sistem —
+ * terlepas dari mutasi apa (kalau ada) yang kebetulan cocok dengannya
+ * pada satu waktu proses tertentu.
+ */
+function kunciRekap_(pic,lokasi,nama,diterima){
+  return [pic,lokasi,nama,diterima].map(function(x){
+    return String(x==null?'':x).trim().toUpperCase();
+  }).join('¦');
+}
+
+/*
+ * Baca HASIL_PENGECEKAN apa adanya, kembalikan set identitas REKAP yang
+ * SUDAH punya pasangan mutasi nyata (kolom NAMA MUTASI terisi) —
+ * terlepas dari statusnya SESUAI/PERLU CEK/sudah DONE atau belum.
+ * Dipakai prosesPengecekanMode(true) supaya "Cek Mutasi Baru" tidak
+ * mencoba mencocokkan ulang REKAP yang mutasi aslinya sudah "SUDAH
+ * DIPROSES" (dan karena itu pasti tidak akan ketemu lagi) — mencegah
+ * baris duplikat "MUTASI TIDAK DITEMUKAN" menimpa hasil yang sudah benar.
+ */
+function ambilIdentitasSudahMatch_(ss){
+  const out={};
+  const sh=ss.getSheetByName(CONFIG.SHEET_HASIL);
+  if(!sh||sh.getLastRow()<2) return out;
+
+  const data=sh.getRange(2,1,sh.getLastRow()-1,21).getValues();
+  data.forEach(function(r){
+    const namaMutasi=String(r[4]||'').trim();
+    if(!namaMutasi) return;
+    out[kunciRekap_(r[1],r[2],r[3],r[5])]=true;
+  });
+  return out;
 }
 function updateRekapAkhir(){
   const ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -5617,8 +5679,20 @@ function tulisHasilPengecekan(hasil,hanyaBaru){
     }
   } else {
     const output=hasil.map(function(item,i){const r=makeRow(item);return [i+1].concat(r);});
-    if(sh.getLastRow()>1)sh.getRange(2,1,sh.getLastRow()-1,18).clearContent();
+    const oldLastRow=sh.getLastRow();
+    if(oldLastRow>1)sh.getRange(2,1,oldLastRow-1,21).clearContent();
     if(output.length){sh.getRange(2,1,output.length,21).setValues(output);sh.getRange(2,19,output.length,1).insertCheckboxes();}
+
+    /*
+     * Kalau data baru lebih pendek dari sebelumnya (mis. setelah baris
+     * duplikat karyawan dibersihkan), buang sisa baris di bawahnya.
+     * Tanpa ini, baris sisa hanya kehilangan isi kolom A-U tapi tetap
+     * ada sebagai baris kosong menggantung di sheet.
+     */
+    const lastRowBaru=Math.max(2,output.length+1);
+    if(sh.getLastRow()>lastRowBaru){
+      sh.deleteRows(lastRowBaru+1, sh.getLastRow()-lastRowBaru);
+    }
   }
   const rowsNow=sh.getLastRow()-1;if(rowsNow>0){sh.getRange(2,6,rowsNow,3).setNumberFormat('#,##0');sh.getRange(2,12,rowsNow,2).setNumberFormat('0.00');}
   formatHeader(sh,21);buatFilterJikaPerlu(sh,21);sh.autoResizeColumns(1,21);sh.setColumnWidth(18,320);sh.setColumnWidth(19,100);sh.setColumnWidth(20,140);sh.setColumnWidth(21,120);
