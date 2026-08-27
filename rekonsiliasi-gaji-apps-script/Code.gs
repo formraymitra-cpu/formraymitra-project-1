@@ -3072,6 +3072,12 @@ function parseTanggalFlexible(value) {
       juli: 6,
       aug: 7,
       august: 7,
+      // "Agu"/"Ags" adalah singkatan Agustus yang lazim dipakai bank
+      // (mis. PDF Bulk BPD: "26-Agu-2026"). Tanpa ini, tanggal Agustus
+      // gagal diparse dan SEMUA transaksi Bulk BPD bulan itu tertolak
+      // dari periode aktif walau datanya sendiri valid.
+      agu: 7,
+      ags: 7,
       agustus: 7,
       sep: 8,
       sept: 8,
@@ -3084,6 +3090,8 @@ function parseTanggalFlexible(value) {
       november: 10,
       dec: 11,
       december: 11,
+      // "Des" adalah singkatan Desember yang lazim, sebelumnya cuma "Dec".
+      des: 11,
       desember: 11
     };
 
@@ -3126,6 +3134,8 @@ function parseTanggalFlexible(value) {
       juli: 6,
       aug: 7,
       august: 7,
+      agu: 7,
+      ags: 7,
       agustus: 7,
       sep: 8,
       sept: 8,
@@ -3138,6 +3148,7 @@ function parseTanggalFlexible(value) {
       november: 10,
       dec: 11,
       december: 11,
+      des: 11,
       desember: 11
     };
 
