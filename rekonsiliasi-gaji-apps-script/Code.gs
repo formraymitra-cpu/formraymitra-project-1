@@ -8026,10 +8026,24 @@ function cocokkanSemua_V82(dataRekap, dataMutasi) {
   }
 
   function namaTampilanMutasi_(m){
+    /*
+     * KETERANGAN selalu diutamakan karena berisi detail per transaksi
+     * (nama karyawan, lokasi, periode). NAMA REKENING PT hanya nama
+     * pemilik rekening PERUSAHAAN pengirim (sama untuk semua baris di
+     * satu file, mis. "RAY MITRA PERKASA PT") — sama sekali tidak
+     * membedakan transaksi satu dari yang lain, jadi tidak berguna
+     * sebagai nama tampilan/pencocokan. Ini berlaku untuk semua bank
+     * (BCA, BRI, BPD, MANDIRI non-bulk); untuk mutasi Bulk, NAMA
+     * REKENING PT memang sengaja dikosongkan oleh parsernya sehingga
+     * baris ini tetap jatuh ke KETERANGAN juga.
+     * ambilNamaDariKeterangan('', ...) SELALU mengembalikan string
+     * kosong (indexOf string kosong selalu 0), jadi sengaja tidak
+     * dipakai lagi di sini — dulu hanya kebetulan membuat rantai ini
+     * jatuh ke KETERANGAN untuk mutasi Bulk saja.
+     */
     return String(
-      m.namaRekening ||
-      ambilNamaDariKeterangan('',m.keterangan) ||
       m.keterangan ||
+      m.namaRekening ||
       ''
     ).trim();
   }
