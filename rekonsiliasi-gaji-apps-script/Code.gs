@@ -3794,13 +3794,13 @@ function updateRekapAkhir(){
   const incomplete = [];
 
   /*
-   * NOMINAL di REKAP_AKHIR wajib berisi NOMINAL MUTASI (nilai riil
-   * yang benar-benar tertransfer di bank), TIDAK BOLEH diam-diam
-   * diganti NOMINAL REKAP (nilai gaji yang seharusnya ditransfer)
-   * hanya karena mutasi belum berhasil dipasangkan. Baris yang
-   * berstatus DONE tetapi belum punya NOMINAL MUTASI riil dianggap
-   * lokasi tersebut BELUM lengkap, supaya tidak masuk REKAP_AKHIR
-   * dengan angka yang salah.
+   * NOMINAL di REKAP_AKHIR mengutamakan NOMINAL MUTASI (nilai riil
+   * yang benar-benar tertransfer di bank, dari pencocokan otomatis).
+   * Kalau baris itu DONE lewat CEK MANUAL (HASIL MANUAL diisi
+   * "SESUAI" secara sadar oleh pemakai) tetapi mutasi otomatisnya
+   * tidak/belum ketemu, NOMINAL REKAP dipakai sebagai gantinya —
+   * DONE tetap DONE berarti pemakai sudah mengonfirmasi sendiri
+   * transaksinya benar, jadi lokasi itu tidak lagi ditahan.
    */
   function punyaNominalMutasiRiil_(r) {
     const v = r[6];
@@ -3818,14 +3818,11 @@ function updateRekapAkhir(){
       return String(r[20] || '').trim().toUpperCase() === 'DONE';
     }).length;
 
-    const siapCount = g.rows.filter(function(r){
-      return String(r[20] || '').trim().toUpperCase() === 'DONE' &&
-        punyaNominalMutasiRiil_(r);
-    }).length;
-
-    if (doneCount === g.rows.length && g.rows.length > 0 && siapCount === g.rows.length) {
+    if (doneCount === g.rows.length && g.rows.length > 0) {
       g.rows.forEach(function(r){
-        const nilaiNominal = Number(r[6]);
+        const nilaiNominal = punyaNominalMutasiRiil_(r)
+          ? Number(r[6])
+          : Number(r[5] || 0);
         const key = keyRekapAkhir_(r[3],r[2],nilaiNominal);
 
         if (!sudahAda[key]) {
@@ -3839,12 +3836,7 @@ function updateRekapAkhir(){
         }
       });
     } else {
-      let label = g.loc + ' (' + doneCount + '/' + g.rows.length + ' DONE)';
-      if (doneCount === g.rows.length && siapCount < g.rows.length) {
-        label += ' — ' + (g.rows.length - siapCount) +
-          ' baris DONE tapi NOMINAL MUTASI belum ada (bukan nominal riil transfer, belum dimasukkan)';
-      }
-      incomplete.push(label);
+      incomplete.push(g.loc + ' (' + doneCount + '/' + g.rows.length + ' DONE)');
     }
   });
 
@@ -4175,8 +4167,15 @@ function auditSelisihRekonsiliasi() {
   const totalTerpakai = totalMutasi - totalYatim;
 
   // === 3) Baca HASIL_PENGECEKAN apa adanya (termasuk hasil cek manual) ===
+  // Mengikuti aturan updateRekapAkhir: satu lokasi masuk REKAP_AKHIR kalau
+  // SEMUA barisnya sudah DONE (baik lewat pencocokan otomatis maupun cek
+  // manual). Nominalnya mengutamakan NOMINAL MUTASI riil, dan memakai
+  // NOMINAL REKAP sebagai pengganti untuk baris yang DONE lewat cek manual
+  // tanpa pasangan mutasi otomatis -- DONE berarti pemakai sudah
+  // mengonfirmasi sendiri, jadi tidak lagi dianggap "tertahan".
   const shHasil = ss.getSheetByName(CONFIG.SHEET_HASIL);
-  let totalDoneReal = 0;
+  let totalSiapMasukRekapAkhir = 0;
+  let totalFallbackRekap = 0;
   let totalBelumDone = 0;
   const lokasiGrup = {};
 
@@ -4189,31 +4188,41 @@ function auditSelisihRekonsiliasi() {
 
       const statusFinal = String(r[20] || '').trim().toUpperCase();
       const nominalMutasiVal = r[6];
+      const nominalRekapVal = r[5];
       const punyaReal = nominalMutasiVal !== '' && nominalMutasiVal !== null &&
         !isNaN(Number(nominalMutasiVal)) && Number(nominalMutasiVal) > 0;
 
       const key = loc.toUpperCase().replace(/\s+/g, ' ').trim();
       if (!lokasiGrup[key]) {
-        lokasiGrup[key] = { loc: loc, totalRow: 0, doneCount: 0, siapCount: 0, nominalBelum: 0 };
+        lokasiGrup[key] = { loc: loc, totalRow: 0, doneCount: 0, nominalSiap: 0, doneFallback: 0 };
       }
       const g = lokasiGrup[key];
       g.totalRow++;
 
-      if (statusFinal === 'DONE') g.doneCount++;
-
-      if (statusFinal === 'DONE' && punyaReal) {
-        g.siapCount++;
-        totalDoneReal += Number(nominalMutasiVal);
+      if (statusFinal === 'DONE') {
+        g.doneCount++;
+        if (punyaReal) {
+          g.nominalSiap += Number(nominalMutasiVal);
+        } else {
+          g.nominalSiap += Number(nominalRekapVal || 0);
+          g.doneFallback++;
+        }
       } else if (punyaReal) {
-        g.nominalBelum += Number(nominalMutasiVal);
         totalBelumDone += Number(nominalMutasiVal);
       }
     });
   }
 
-  const lokasiTertahan = Object.keys(lokasiGrup)
-    .map(function(k) { return lokasiGrup[k]; })
-    .filter(function(g) { return !(g.doneCount === g.totalRow && g.siapCount === g.totalRow); });
+  const lokasiTertahan = [];
+  Object.keys(lokasiGrup).forEach(function(k) {
+    const g = lokasiGrup[k];
+    if (g.doneCount === g.totalRow) {
+      totalSiapMasukRekapAkhir += g.nominalSiap;
+      totalFallbackRekap += g.doneFallback;
+    } else {
+      lokasiTertahan.push(g);
+    }
+  });
 
   // === 4) REKAP_AKHIR saat ini (snapshot) ===
   const shRekapAkhir = ss.getSheetByName('REKAP_AKHIR');
@@ -4258,21 +4267,21 @@ function auditSelisihRekonsiliasi() {
     '  └─ TIDAK PERNAH cocok ke REKAP   : Rp ' + totalYatim.toLocaleString('id-ID') + ' (' + mutasiYatim.length + ' transaksi)\n' +
     (mutasiYatim.length ? '       → rincian di sheet AUDIT_SELISIH_MUTASI\n' : '') +
     '\nDari yang sudah cocok ke REKAP (HASIL_PENGECEKAN):\n' +
-    '  ├─ DONE + nominal riil (siap REKAP AKHIR) : Rp ' + totalDoneReal.toLocaleString('id-ID') + '\n' +
-    '  └─ belum DONE / belum lolos cek manual     : Rp ' + totalBelumDone.toLocaleString('id-ID') + '\n' +
+    '  ├─ siap masuk REKAP AKHIR (lokasi 100% DONE) : Rp ' + totalSiapMasukRekapAkhir.toLocaleString('id-ID') +
+    (totalFallbackRekap > 0 ? ' (' + totalFallbackRekap + ' baris di antaranya pakai NOMINAL REKAP, DONE lewat cek manual tanpa mutasi otomatis)' : '') + '\n' +
+    '  └─ sudah cocok tapi belum DONE                 : Rp ' + totalBelumDone.toLocaleString('id-ID') + '\n' +
     '\nREKAP_AKHIR saat ini (snapshot)     : Rp ' + totalRekapAkhir.toLocaleString('id-ID');
 
-  if (totalRekapAkhir < totalDoneReal) {
+  if (totalRekapAkhir < totalSiapMasukRekapAkhir) {
     pesan += '\n⚠️ REKAP_AKHIR ketinggalan Rp ' +
-      (totalDoneReal - totalRekapAkhir).toLocaleString('id-ID') +
+      (totalSiapMasukRekapAkhir - totalRekapAkhir).toLocaleString('id-ID') +
       ' dari HASIL_PENGECEKAN. Klik ulang 📊 Update Rekap Akhir.';
   }
 
   if (lokasiTertahan.length) {
-    pesan += '\n\nLokasi yang masih menahan nominal (belum 100% DONE):\n' +
+    pesan += '\n\nLokasi yang masih tertahan (belum 100% DONE):\n' +
       lokasiTertahan.slice(0, 12).map(function(g) {
-        return '• ' + g.loc + ' (' + g.doneCount + '/' + g.totalRow + ' DONE' +
-          (g.nominalBelum > 0 ? ', Rp ' + g.nominalBelum.toLocaleString('id-ID') + ' menunggu' : '') + ')';
+        return '• ' + g.loc + ' (' + g.doneCount + '/' + g.totalRow + ' DONE)';
       }).join('\n');
     if (lokasiTertahan.length > 12) {
       pesan += '\n... dan ' + (lokasiTertahan.length - 12) + ' lokasi lainnya.';
