@@ -8516,7 +8516,24 @@ function cocokkanSemua_V82(dataRekap, dataMutasi) {
     for(let z=0;z<kandidat.length;z++){
       if(kandidat[z]!==best){second=kandidat[z];break;}
     }
-    if(second &&
+
+    /*
+     * Kalau pemenang sudah punya bukti nama UTUH (nama lengkap REKAP
+     * benar-benar ditemukan apa adanya di teks mutasi), kandidat kedua
+     * yang cuma kebetulan berbagi SATU token nama umum (mis. nama depan
+     * yang sama-sama dipakai banyak pegawai, "MUHAMMAD"/"MUHAMAD", di
+     * lokasi+nominal bulk yang sama) BUKAN alasan yang cukup untuk
+     * meragukan pemenang yang sudah jelas benar. Ini sering terjadi di
+     * transfer massal satu lokasi dengan banyak nominal seragam — tanpa
+     * penjagaan ini, hampir semua baris di lokasi itu salah ditandai
+     * "POTENSI TRANSFER GANDA" walau nama/lokasi/nominalnya sendiri
+     * sudah SESUAI semua. Peringatan ini tetap muncul kalau kandidat
+     * kedua SAMA-SAMA punya nama utuh (ambiguitas nyata, mis. transfer
+     * yang benar-benar terkirim dua kali untuk nama yang identik).
+     */
+    const keduanyaSamaKuat = !second || !best.namaUtuh || second.namaUtuh;
+
+    if(second && keduanyaSamaKuat &&
        Math.abs(best.gabungan-second.gabungan)<=0.08 &&
        second.scoreNama>=CONFIG.MIN_SCORE_NAMA_PERLU_CEK &&
        second.scoreLokasi>=CONFIG.MIN_SCORE_LOKASI_SESUAI){
