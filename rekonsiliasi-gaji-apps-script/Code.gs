@@ -8518,20 +8518,27 @@ function cocokkanSemua_V82(dataRekap, dataMutasi) {
     }
 
     /*
-     * Kalau pemenang sudah punya bukti nama UTUH (nama lengkap REKAP
-     * benar-benar ditemukan apa adanya di teks mutasi), kandidat kedua
-     * yang cuma kebetulan berbagi SATU token nama umum (mis. nama depan
-     * yang sama-sama dipakai banyak pegawai, "MUHAMMAD"/"MUHAMAD", di
-     * lokasi+nominal bulk yang sama) BUKAN alasan yang cukup untuk
-     * meragukan pemenang yang sudah jelas benar. Ini sering terjadi di
-     * transfer massal satu lokasi dengan banyak nominal seragam — tanpa
-     * penjagaan ini, hampir semua baris di lokasi itu salah ditandai
-     * "POTENSI TRANSFER GANDA" walau nama/lokasi/nominalnya sendiri
-     * sudah SESUAI semua. Peringatan ini tetap muncul kalau kandidat
-     * kedua SAMA-SAMA punya nama utuh (ambiguitas nyata, mis. transfer
-     * yang benar-benar terkirim dua kali untuk nama yang identik).
+     * Kalau pemenang sudah punya nama SANGAT KUAT (nama utuh ditemukan
+     * apa adanya DI TEKS MUTASI, ATAU skor token nyaris sempurna — ini
+     * sengaja tidak cuma mengandalkan namaUtuh, karena namaUtuh gagal
+     * mengenali nama REKAP yang disingkat, mis. REKAP "M. Abdul Rachman"
+     * vs teks mutasi "MUHAMAD ABDUL RACHMAN": token "ABDUL"+"RACHMAN"
+     * cocok sempurna [scoreNama~1] walau "M " bukan substring harfiah
+     * dari "MUHAMAD "), kandidat kedua yang cuma kebetulan berbagi SATU
+     * token nama umum (mis. nama depan yang sama-sama dipakai banyak
+     * pegawai, "MUHAMMAD"/"MUHAMAD", di lokasi+nominal bulk yang sama)
+     * BUKAN alasan yang cukup untuk meragukan pemenang yang sudah jelas
+     * benar. Ini sering terjadi di transfer massal satu lokasi dengan
+     * banyak nominal seragam — tanpa penjagaan ini, hampir semua baris
+     * di lokasi itu salah ditandai "POTENSI TRANSFER GANDA" walau
+     * nama/lokasi/nominalnya sendiri sudah SESUAI semua. Peringatan ini
+     * tetap muncul kalau kandidat kedua SAMA-SAMA punya bukti nama
+     * sekuat itu (ambiguitas nyata, mis. transfer yang benar-benar
+     * terkirim dua kali untuk nama yang identik).
      */
-    const keduanyaSamaKuat = !second || !best.namaUtuh || second.namaUtuh;
+    const NAMA_SANGAT_KUAT=0.98;
+    const namaSangatKuat_=function(k){return k.namaUtuh || k.scoreNama>=NAMA_SANGAT_KUAT;};
+    const keduanyaSamaKuat = !second || !namaSangatKuat_(best) || namaSangatKuat_(second);
 
     if(second && keduanyaSamaKuat &&
        Math.abs(best.gabungan-second.gabungan)<=0.08 &&
