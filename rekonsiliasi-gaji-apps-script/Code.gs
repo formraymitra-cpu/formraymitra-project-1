@@ -3695,12 +3695,23 @@ function kunciRekap_(pic,lokasi,nama,diterima){
 
 /*
  * Baca HASIL_PENGECEKAN apa adanya, kembalikan set identitas REKAP yang
- * SUDAH punya pasangan mutasi nyata (kolom NAMA MUTASI terisi) —
- * terlepas dari statusnya SESUAI/PERLU CEK/sudah DONE atau belum.
+ * STATUS FINAL-nya sudah DONE (benar-benar dikonfirmasi — otomatis
+ * karena 🟢 SESUAI, atau manual lewat HASIL MANUAL = "SESUAI").
+ *
+ * SENGAJA bukan "punya NAMA MUTASI apa pun" — baris berstatus
+ * 🟡 PERLU CEK atau yang sudah ditulis "BELUM SESUAI" lewat cek manual
+ * BUKAN kandidat yang sudah selesai; itu masih menunggu keputusan
+ * (baik keputusan pemakai, maupun kesempatan dicocokkan ulang kalau
+ * transaksi yang benar baru belakangan masuk MUTASI). Kalau baris
+ * begini disaring keluar juga, REKAP itu terkunci selamanya ke
+ * pasangan yang salah walau transaksi aslinya sudah ada di MUTASI —
+ * karena mutasi yang salah itu sudah kadung "SUDAH DIPROSES" dan
+ * REKAP-nya tidak pernah dicoba dicocokkan ulang lagi.
+ *
  * Dipakai prosesPengecekanMode(true) supaya "Cek Mutasi Baru" tidak
- * mencoba mencocokkan ulang REKAP yang mutasi aslinya sudah "SUDAH
- * DIPROSES" (dan karena itu pasti tidak akan ketemu lagi) — mencegah
- * baris duplikat "MUTASI TIDAK DITEMUKAN" menimpa hasil yang sudah benar.
+ * mencoba mencocokkan ulang REKAP yang SUDAH DONE (mutasi aslinya
+ * sudah "SUDAH DIPROSES" dan pasti tidak ketemu lagi) — mencegah baris
+ * duplikat/menimpa hasil yang sudah benar-benar final.
  */
 function ambilIdentitasSudahMatch_(ss){
   const out={};
@@ -3709,8 +3720,8 @@ function ambilIdentitasSudahMatch_(ss){
 
   const data=sh.getRange(2,1,sh.getLastRow()-1,21).getValues();
   data.forEach(function(r){
-    const namaMutasi=String(r[4]||'').trim();
-    if(!namaMutasi) return;
+    const statusFinal=String(r[20]||'').trim().toUpperCase();
+    if(statusFinal!=='DONE') return;
     out[kunciRekap_(r[1],r[2],r[3],r[5])]=true;
   });
   return out;
@@ -5662,17 +5673,23 @@ function tulisHasilPengecekan(hasil,hanyaBaru){
   const oldManual=FIX21_bacaManualLama_(sh);
   const makeRow=function(item){const manualKey=[item.pic,item.lokasi,item.nama,item.diterima].map(function(x){return String(x==null?'':x).trim().toUpperCase();}).join('¦'); const old=oldManual[manualKey]||{s:false,t:'',u:''};let u=old.u||'';const t=String(old.t||'').trim().toUpperCase();if(t==='SESUAI')u='DONE';else if(t==='BELUM SESUAI')u='BELUM CLEAR';else if(String(item.statusAkhir||'').toUpperCase().indexOf('🟢 SESUAI')===0)u='DONE';return [item.pic,item.lokasi,item.nama,item.namaMutasi,item.diterima,item.nominalMutasi,item.selisih,item.bank,item.tanggal,item.sumber,item.scoreNama,item.scoreLokasi,item.statusNama,item.statusNominal,item.statusLokasi,item.statusAkhir,item.acuanDuplikat||'',old.s,old.t,u];};
   if(hanyaBaru){
-    const newKeys={}; hasil.forEach(function(item){newKeys[identitasHasil(item)]=true;});
+    /*
+     * Kunci "baris lama vs baris baru sama" HARUS identitas REKAP yang
+     * stabil (PIC+LOKASI+NAMA REKAP+NOMINAL REKAP), BUKAN identitasHasil
+     * yang ikut memuat detail mutasi (nama/nominal/bank/tanggal mutasi).
+     * Detail mutasi itu justru yang WAJAR berubah antar proses (mis.
+     * pasangan yang tadinya salah/lemah dikoreksi begitu transaksi yang
+     * benar baru masuk MUTASI belakangan). Kalau identitasHasil dipakai,
+     * baris lama yang salah tidak pernah dianggap tergantikan oleh baris
+     * baru yang benar — keduanya cuma menumpuk jadi duplikat.
+     */
+    const newKeys={}; hasil.forEach(function(item){newKeys[kunciRekap_(item.pic,item.lokasi,item.nama,item.diterima)]=true;});
 
     // oldRows memiliki 21 kolom termasuk NO, sedangkan makeRow() memiliki 20 kolom tanpa NO.
     // Untuk menghindari error 20 kolom vs 21 kolom, lepaskan kolom NO dari data lama terlebih dahulu.
     const merged=oldRows
       .filter(function(r){
-        return !newKeys[identitasHasil({
-          pic:r[1],lokasi:r[2],nama:r[3],namaMutasi:r[4],
-          diterima:r[5],nominalMutasi:r[6],bank:r[8],
-          tanggal:r[9],sumber:r[10]
-        })];
+        return !newKeys[kunciRekap_(r[1],r[2],r[3],r[5])];
       })
       .map(function(r){ return r.slice(1,21); });
 
