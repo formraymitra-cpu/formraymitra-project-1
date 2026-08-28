@@ -8379,10 +8379,38 @@ function cocokkanSemua_V82(dataRekap, dataMutasi) {
         m._namaNormV86===norm_(namaRekap) ||
         m._namaNormV86.indexOf(norm_(namaRekap))!==-1;
 
+      /*
+       * LAYAK DIPASANGKAN — penjagaan supaya REKAP tidak dipaksa
+       * dipasangkan ke kandidat yang lemah di DUA sisi sekaligus.
+       *
+       * Tanpa ini: kalau lokasi REKAP sama sekali tidak nyambung
+       * dengan lokasi di teks mutasi (mis. REKAP "PT KIDO MULIA"
+       * vs mutasi "BKK KLS I" / "RSJS MGL" / "HOTEL ATRIA" — bukan
+       * cuma singkatan, tapi lokasi/perusahaan yang BENAR-BENAR
+       * berbeda, scoreLokasi=0) DAN nama cuma nyambung lewat satu
+       * suku kata umum (mis. cuma "HASAN"/"EKO"/"AHMAD" yang sama,
+       * scoreNama rendah), kandidat lemah begini tetap jadi "yang
+       * terbaik yang tersedia" kalau tidak ada kandidat lain sama
+       * sekali — lalu terpaksa dipasangkan, MENCURI baris mutasi itu
+       * dari REKAP lain yang mungkin benar-benar pemiliknya.
+       *
+       * Kandidat baru dianggap layak kalau salah satu sisi punya
+       * bukti kuat: lokasi nyambung wajar (>= ambang SESUAI), ATAU
+       * nama sudah sangat meyakinkan (>= ambang SESUAI) walau lokasi
+       * di data REKAP-nya kebetulan tidak tertulis lengkap/konsisten.
+       * Kandidat yang GAGAL dua-duanya tidak pernah ditetapkan
+       * sebagai pasangan (tahap 2) — REKAP-nya jatuh ke "MUTASI
+       * TIDAK DITEMUKAN" alih-alih dipaksakan ke pasangan yang salah.
+       */
+      const layakDipasangkan=
+        scoreLokasi>=CONFIG.MIN_SCORE_LOKASI_SESUAI ||
+        scoreNama>=CONFIG.MIN_SCORE_NAMA_SESUAI;
+
       const entry={
         rekapIndex:i,index:j,mutasi:m,scoreNama:scoreNama,scoreLokasi:scoreLokasi,
         scoreNominal:scoreNominal,scoreBank:scoreBank,
-        gabungan:gabungan,selisih:selisih,namaUtuh:namaUtuh
+        gabungan:gabungan,selisih:selisih,namaUtuh:namaUtuh,
+        layakDipasangkan:layakDipasangkan
       };
 
       kandidatPerRekap[i].push(entry);
@@ -8409,6 +8437,7 @@ function cocokkanSemua_V82(dataRekap, dataMutasi) {
   const pasanganTerpilih={};
 
   semuaKandidat.forEach(function(entry){
+    if(!entry.layakDipasangkan)return;
     if(rekapSudahDapat[entry.rekapIndex])return;
     if(sudahDigunakan[entry.index])return;
 
