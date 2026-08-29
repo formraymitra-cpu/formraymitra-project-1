@@ -1813,7 +1813,14 @@ function parsePDFBulkBPD(text, namaFile, periode) {
     const rekening = String(m[1] || '').trim();
     const blok = String(m[2] || '');
 
-    const refMatchDetail = blok.match(/\b(BLQ\d+)\b/i);
+    /*
+     * Kode referensi per baris TIDAK selalu berprefix "BLQ" — beberapa
+     * bulk BPD (mis. hasil transfer dari user/cabang lain) memakai
+     * prefix lain seperti "BLWZ" (contoh: BLWZ743550). Prefixnya boleh
+     * apa saja asal berupa huruf diikuti langsung angka tanpa spasi,
+     * supaya tidak terikat ke satu prefix tertentu.
+     */
+    const refMatchDetail = blok.match(/\b([A-Z]{2,8}\d{4,})\b/i);
     const ref = refMatchDetail ? refMatchDetail[1] : '';
 
     // Nominal terkadang terpecah oleh spasi akibat ekstraksi PDF,
@@ -1839,7 +1846,7 @@ function parsePDFBulkBPD(text, namaFile, periode) {
 
     const bankPos = sebelumAmount.search(/\bBANK\b/i);
     if (bankPos < 0 || !ref) {
-      errors.push('Rekening ' + rekening + ': label "BANK" atau kode referensi "BLQ..." tidak ditemukan pada blok ini.');
+      errors.push('Rekening ' + rekening + ': label "BANK" atau kode referensi transaksi tidak ditemukan pada blok ini.');
       continue;
     }
 
@@ -1849,13 +1856,17 @@ function parsePDFBulkBPD(text, namaFile, periode) {
       .trim();
 
     /*
-     * Bagian setelah BANK berisi referensi dan keterangan.
-     * Contoh layout:
+     * Bagian setelah BANK berisi referensi dan keterangan. Contoh layout:
      * DANY IRFAN BANK BLQ6038580 GAJI JULI 26 2.324.902 Success JATENG KEC PWJ
+     * Variasi lain menaruh nama cabang bank (mis. "JATENG") tepat
+     * setelah label BANK, SEBELUM kode referensinya:
+     * WAHYU AWAN BANK JATENG BLWZ743550 GAJI AGS 26 SEKDA PROV DRIVER
+     * Kode referensi dicari dengan pola umum (huruf+angka), bukan
+     * prefix "BLQ" saja, supaya kedua variasi ini tetap terbaca.
      */
     const setelahBank = sebelumAmount.substring(bankPos);
 
-    const refPos = setelahBank.search(/\bBLQ\d+\b/i);
+    const refPos = setelahBank.search(/\b[A-Z]{2,8}\d{4,}\b/i);
     let keteranganBulk = '';
 
     if (refPos >= 0) {
@@ -1885,6 +1896,14 @@ function parsePDFBulkBPD(text, namaFile, periode) {
     // Nomor urut baris berikutnya kadang ikut terbawa ke blok sebelumnya.
     keteranganBulk = keteranganBulk
       .replace(/\s+\d{1,2}\s*$/g, '')
+      .trim();
+
+    // Baris TERAKHIR pada tabel tidak punya nomor baris berikutnya sebagai
+    // batas, jadi footer tabel HTML ("Showing 1 to 24 of 24 entries...")
+    // kadang ikut terbawa ke keterangan baris itu. Buang footer ini secara
+    // eksplisit supaya keterangan baris terakhir tetap bersih.
+    keteranganBulk = keteranganBulk
+      .replace(/\s*Showing\s+\d+\s+to\s+\d+\s+of\s+\d+\s+entries[\s\S]*$/i, '')
       .trim();
 
     /*
