@@ -218,6 +218,11 @@ function onOpen() {
     )
 
     .addItem(
+      '🗑️ Hapus Baris Mutasi (Pilih Nomor)',
+      'hapusBarisMutasiPilihan'
+    )
+
+    .addItem(
       '🧹 Bersihkan Hasil Pengecekan',
       'bersihkanHasilPengecekan'
     )
@@ -6729,6 +6734,141 @@ function rapikanNomorKolom(sh) {
   }
 
   sh.getRange(2, 1, jumlah, 1).setValues(nomor);
+}
+
+
+/************************************************************
+ * ==========================================================
+ * HAPUS BARIS MUTASI (PILIH NOMOR)
+ * ==========================================================
+ *
+ * Menghapus baris tertentu di sheet MUTASI berdasarkan NOMOR BARIS
+ * SHEET (bukan urutan data), bisa berupa rentang ("50-57"), nomor
+ * tunggal dipisah koma ("50,52,55"), atau gabungan keduanya
+ * ("50-53,60,65-67"). Dibuat karena menu hapus baris yang ada
+ * (hapusBarisTerpilih) hanya bisa satu baris per kali jalan — untuk
+ * MUTASI yang bisa berisi ratusan baris hasil import Bulk, ini
+ * terlalu lambat kalau baris yang mau dibuang banyak & berurutan.
+ *
+ * Sheet RAW SENGAJA TIDAK ikut dihapus di sini: RAW adalah daftar
+ * terpisah (ID sendiri, tidak sejajar baris dengan MUTASI), jadi
+ * "baris 50 di MUTASI" tidak berarti apa-apa untuk RAW.
+ ************************************************************/
+
+function hapusBarisMutasiPilihan() {
+  const ui = SpreadsheetApp.getUi();
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sh = ss.getSheetByName(CONFIG.SHEET_MUTASI);
+
+  if (!sh || sh.getLastRow() < 2) {
+    ui.alert('❌ Sheet MUTASI belum memiliki data.');
+    return;
+  }
+
+  const lastRow = sh.getLastRow();
+
+  const prompt = ui.prompt(
+    '🗑️ HAPUS BARIS MUTASI (PILIH NOMOR)',
+    'Masukkan NOMOR BARIS SHEET (sesuai nomor baris di sisi kiri Google Sheets, bukan urutan data) yang ingin dihapus.\n\n' +
+    'Boleh gabungan rentang dan nomor tunggal, dipisah koma. Contoh:\n' +
+    '50-57          -> baris 50 sampai 57\n' +
+    '50,52,55       -> hanya baris 50, 52, dan 55\n' +
+    '50-53,60,65-67 -> gabungan rentang dan tunggal\n\n' +
+    'Data MUTASI saat ini ada di baris 2 sampai ' + lastRow + '.',
+    ui.ButtonSet.OK_CANCEL
+  );
+
+  if (prompt.getSelectedButton() !== ui.Button.OK) return;
+
+  const inputText = String(prompt.getResponseText() || '').trim();
+  if (!inputText) {
+    ui.alert('❌ Input kosong.');
+    return;
+  }
+
+  const rows = {};
+  const formatSalahList = [];
+
+  inputText.split(',').forEach(function(bagian) {
+    const b = bagian.trim();
+    if (!b) return;
+
+    const rangeMatch = b.match(/^(\d+)\s*-\s*(\d+)$/);
+    const tunggalMatch = b.match(/^(\d+)$/);
+
+    if (rangeMatch) {
+      let a = Number(rangeMatch[1]);
+      let z = Number(rangeMatch[2]);
+      if (a > z) { const tmp = a; a = z; z = tmp; }
+      for (let n = a; n <= z; n++) rows[n] = true;
+    } else if (tunggalMatch) {
+      rows[Number(tunggalMatch[1])] = true;
+    } else {
+      formatSalahList.push(b);
+    }
+  });
+
+  if (formatSalahList.length) {
+    ui.alert(
+      '❌ Format tidak dikenali: ' + formatSalahList.join(', ') +
+      '\n\nGunakan contoh seperti "50-57" atau "50,52,55".'
+    );
+    return;
+  }
+
+  const nomorValid = [];
+  const nomorDiabaikan = [];
+
+  Object.keys(rows).map(Number).sort(function(a, b) { return a - b; }).forEach(function(n) {
+    // Baris 1 (header) tidak boleh terhapus lewat menu ini.
+    if (n >= 2 && n <= lastRow) {
+      nomorValid.push(n);
+    } else {
+      nomorDiabaikan.push(n);
+    }
+  });
+
+  if (!nomorValid.length) {
+    ui.alert('❌ Tidak ada nomor baris valid (harus di antara 2 dan ' + lastRow + ').');
+    return;
+  }
+
+  const PREVIEW_MAKS = 10;
+  let preview = '';
+  nomorValid.slice(0, PREVIEW_MAKS).forEach(function(n) {
+    const nilai = sh.getRange(n, 1, 1, 6).getValues()[0];
+    const ringkas = String(nilai[5] || nilai[0] || '(kosong)').substring(0, 70);
+    preview += '\nBaris ' + n + ': ' + ringkas;
+  });
+  if (nomorValid.length > PREVIEW_MAKS) {
+    preview += '\n... dan ' + (nomorValid.length - PREVIEW_MAKS) + ' baris lainnya.';
+  }
+
+  let pesan =
+    'Akan menghapus ' + nomorValid.length + ' baris dari sheet MUTASI:\n' +
+    preview;
+
+  if (nomorDiabaikan.length) {
+    pesan += '\n\n⚠️ Diabaikan (di luar rentang data 2-' + lastRow + '): ' +
+      nomorDiabaikan.join(', ');
+  }
+
+  pesan +=
+    '\n\n⚠️ Sheet RAW TIDAK ikut dihapus di sini (baris RAW tidak sejajar dengan MUTASI).' +
+    '\n⚠️ Setelah menghapus, jalankan 🔄 Cek Ulang Periode agar HASIL_PENGECEKAN ikut diperbarui.' +
+    '\n⚠️ TINDAKAN INI TIDAK BISA DI-UNDO.';
+
+  const konfirmasi = ui.alert('🗑️ HAPUS BARIS MUTASI', pesan, ui.ButtonSet.YES_NO);
+  if (konfirmasi !== ui.Button.YES) return;
+
+  // Hapus dari nomor baris TERBESAR ke TERKECIL, supaya nomor baris yang
+  // belum diproses tidak ikut bergeser saat baris di atasnya sudah dihapus.
+  nomorValid.sort(function(a, b) { return b - a; });
+  nomorValid.forEach(function(n) {
+    sh.deleteRow(n);
+  });
+
+  ui.alert('✅ ' + nomorValid.length + ' baris berhasil dihapus dari sheet MUTASI.');
 }
 
 
