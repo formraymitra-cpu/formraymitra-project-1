@@ -2018,6 +2018,8 @@ function parsePDFBulkMandiri(text, namaFile, periode) {
   const mutasi = [];
   const raw = [];
   const errors = [];
+  const remarksAsli = [];
+  const lokasiDariNamaFile = ekstrakLokasiDariNamaFileBulkMandiri_(namaFile);
 
   function cleanName(value) {
     let s = String(value || '')
@@ -2246,10 +2248,28 @@ function parsePDFBulkMandiri(text, namaFile, periode) {
        */
       remark = remark.replace(/^\s*00\s*/, '').trim();
 
+      // Remark ASLI (dari isi PDF) tetap disimpan untuk pencocokan periode
+      // di bawah — supaya perubahan tampilan KETERANGAN (lihat lokasiTampilan)
+      // tidak ikut mengubah cara sistem menentukan transaksi ini termasuk
+      // periode aktif atau tidak.
+      remarksAsli.push(remark);
+
+      /*
+       * KETERANGAN yang DITAMPILKAN di sheet MUTASI memakai LOKASI dari
+       * NAMA FILE (bukan remark mentah hasil ekstraksi PDF). Nama file
+       * selalu satu teks utuh per file ("GAJI 08 UNZA VITALIS", "HOTEL
+       * ARTOS MAGELANG", dst) sehingga jauh lebih stabil dibanding remark
+       * yang bisa berulang/rusak kalau satu blok PDF kebetulan menggabung
+       * beberapa transaksi (lihat catatan di ekstrakLokasiDariNamaFileBulkMandiri_).
+       * Kalau nama file tidak menghasilkan apa pun (kasus sangat jarang),
+       * baru jatuh ke remark asli supaya keterangan tidak pernah kosong.
+       */
+      const lokasiTampilan = lokasiDariNamaFile || remark;
+
       const keterangan =
         '[BULK MANDIRI] ' +
         nama +
-        (remark ? ' | ' + remark : '');
+        (lokasiTampilan ? ' | ' + lokasiTampilan : '');
 
       const id = buatID('MANDIRI-BULK', namaFile, i);
 
@@ -2295,11 +2315,11 @@ function parsePDFBulkMandiri(text, namaFile, periode) {
   }
 
   /* FIX18: untuk Bulk Mandiri tanpa tanggal individual, validasi periode
-   * dilakukan dari remark. Jika remark hasil ekstraksi rusak/terpotong,
-   * fallback ke nama file, mis. "BPN PROV KALTENG JULI.pdf". */
-  const semuaKeterangan = mutasi
-    .map(function(row) { return String(row[5] || ''); })
-    .join(' ');
+   * dilakukan dari remark ASLI (bukan KETERANGAN yang ditampilkan di
+   * sheet, yang sejak perbaikan lokasi-dari-nama-file bisa berbeda isi).
+   * Jika remark hasil ekstraksi rusak/terpotong, fallback ke nama file,
+   * mis. "BPN PROV KALTENG JULI.pdf". */
+  const semuaKeterangan = remarksAsli.join(' ');
 
   const bulkPeriodeCocok =
     periodeCocokDenganKeterangan(semuaKeterangan, {nama: periode}) ||
@@ -2320,6 +2340,29 @@ function parsePDFBulkMandiri(text, namaFile, periode) {
       errors: errors
     }
   };
+}
+
+/*
+ * Nama file Bulk Mandiri biasanya diawali judul laporan bank yang selalu
+ * sama ("Transaction Status Multiple Transfer by File Upload - ..." atau
+ * variasi "Transaction Record ..."), diikuti nama lokasi/perusahaan yang
+ * sebenarnya ingin ditampilkan di KETERANGAN mutasi, mis.:
+ *   "Transaction Status Multiple Transfer by File Upload - HOTEL ARTOS MAGELANG.pdf"
+ *   -> "HOTEL ARTOS MAGELANG"
+ *   "Transaction Status Multiple Transfer by File Upload - GAJI_08_UNZA_VITALIS.pdf"
+ *   -> "GAJI 08 UNZA VITALIS"
+ * Judul laporan itu sendiri tidak informatif untuk KETERANGAN (sama di
+ * semua file), jadi dibuang; sisanya dirapikan (underscore -> spasi).
+ */
+function ekstrakLokasiDariNamaFileBulkMandiri_(namaFile) {
+  let s = String(namaFile || '').trim();
+  s = s.replace(/\.pdf$/i, '');
+  s = s.replace(
+    /^Transaction\s+(?:Status|Record)(?:\s+Multiple\s+Transfer)?(?:\s+by\s+File\s+Upload)?\s*-\s*/i,
+    ''
+  );
+  s = s.replace(/_+/g, ' ').replace(/\s+/g, ' ').trim();
+  return s;
 }
 
 function periodeCocokDenganNamaFileBulkMandiri(namaFile, periode) {
