@@ -149,6 +149,11 @@ function onOpen() {
       'tesBacaPDFDrive'
     )
 
+    .addItem(
+      '🧪 Debug: Ekspor Teks Mentah PDF',
+      'debugTeksMentahPDFDrive'
+    )
+
     .addSeparator()
 
     .addItem(
@@ -1534,6 +1539,85 @@ function tesBacaPDFDrive() {
   } catch(e) {
     ui.alert('❌ PDF GAGAL DIBACA\n\n' + (e && e.message ? e.message : String(e)));
   }
+}
+
+/************************************************************
+ * ==========================================================
+ * DEBUG: EKSPOR TEKS MENTAH PDF (DARI DRIVE)
+ * ==========================================================
+ *
+ * Dibuat untuk mendiagnosis kasus di mana hasil ekstraksi teks PDF
+ * lewat Google Drive (ambilTeksDariPDF, dipakai SEMUA parser bank)
+ * ternyata berbeda dari hasil ekstraksi PDF dengan alat lain — mis.
+ * beberapa baris tabel Bulk Mandiri/BRI/BPD kadang tergabung jadi
+ * satu baris di MUTASI padahal PDF aslinya berisi baris terpisah.
+ * Tanpa melihat teks MENTAH persis yang dibaca Google Drive (bukan
+ * hasil parsing/pembersihan), akar masalah begini tidak bisa
+ * dipastikan — cuma bisa ditebak.
+ *
+ * TIDAK menyentuh alur import/parsing/pencocokan sama sekali. Murni
+ * alat bantu lihat data, hasilnya ditulis ke sheet DEBUG_TEKS_PDF
+ * supaya bisa disalin dan dikirim untuk didiagnosis.
+ ************************************************************/
+
+function debugTeksMentahPDFDrive() {
+  const ui = SpreadsheetApp.getUi();
+  const r = ui.prompt(
+    '🧪 DEBUG: EKSPOR TEKS MENTAH PDF',
+    'Upload dulu file PDF-nya ke Google Drive kamu (folder mana saja), lalu masukkan ID file itu di sini.\n\n' +
+    'Cara dapat ID: buka file itu di Drive, lihat alamat URL-nya —\n' +
+    'https://drive.google.com/file/d/INI-ID-NYA/view\n\n' +
+    'Teks mentah hasil bacaan Google Drive akan ditulis ke sheet DEBUG_TEKS_PDF supaya bisa kamu salin.',
+    ui.ButtonSet.OK_CANCEL
+  );
+
+  if (r.getSelectedButton() !== ui.Button.OK) return;
+
+  const id = String(r.getResponseText() || '').trim();
+  if (!id) { ui.alert('❌ ID file kosong.'); return; }
+
+  let file, hasilTeks;
+  try {
+    file = DriveApp.getFileById(id);
+    hasilTeks = ambilTeksDariPDF(file.getBlob().getBytes(), file.getName());
+  } catch (e) {
+    ui.alert('❌ PDF GAGAL DIBACA\n\n' + (e && e.message ? e.message : String(e)));
+    return;
+  }
+
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sh = ss.getSheetByName('DEBUG_TEKS_PDF');
+  if (!sh) sh = ss.insertSheet('DEBUG_TEKS_PDF');
+  sh.clear();
+
+  sh.getRange(1, 1).setValue('File: ' + file.getName());
+  sh.getRange(2, 1).setValue('Metode baca: ' + hasilTeks.metode);
+  sh.getRange(3, 1).setValue('Panjang teks: ' + hasilTeks.text.length + ' karakter');
+
+  /*
+   * Sel Google Sheets punya batas panjang teks (sekitar 50.000 karakter).
+   * Teks dipecah per potongan aman ke beberapa baris berurutan supaya
+   * TIDAK ADA yang terpotong diam-diam untuk file dengan banyak halaman.
+   */
+  const POTONGAN = 45000;
+  const teks = hasilTeks.text;
+  let baris = 5;
+  for (let i = 0; i < teks.length; i += POTONGAN) {
+    sh.getRange(baris, 1).setValue(teks.substring(i, i + POTONGAN));
+    baris++;
+  }
+
+  sh.setColumnWidth(1, 800);
+  sh.getRange(1, 1, 3, 1).setFontWeight('bold');
+  SpreadsheetApp.setActiveSheet(sh);
+
+  ui.alert(
+    '✅ TEKS MENTAH BERHASIL DIEKSPOR\n\n' +
+    'File: ' + file.getName() + '\n' +
+    'Metode: ' + hasilTeks.metode + '\n' +
+    'Panjang: ' + hasilTeks.text.length + ' karakter\n\n' +
+    'Buka sheet DEBUG_TEKS_PDF, salin isinya (bisa beberapa baris kalau teksnya panjang), lalu kirim ke saya untuk didiagnosis.'
+  );
 }
 
 
