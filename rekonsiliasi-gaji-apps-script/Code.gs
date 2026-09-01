@@ -218,6 +218,11 @@ function onOpen() {
     )
 
     .addItem(
+      '🗑️ Hapus Sumber Mutasi + Data Terkait (Pilih Nomor)',
+      'hapusSumberMutasiPilihan'
+    )
+
+    .addItem(
       '🗑️ Hapus Baris Mutasi (Pilih Nomor)',
       'hapusBarisMutasiPilihan'
     )
@@ -6739,6 +6744,182 @@ function rapikanNomorKolom(sh) {
 
 /************************************************************
  * ==========================================================
+ * HAPUS SUMBER MUTASI + DATA TERKAIT (PILIH NOMOR)
+ * ==========================================================
+ *
+ * Menghapus baris terpilih di sheet SUMBER_MUTASI (nomor baris sheet,
+ * boleh rentang/daftar seperti "85-90" atau "85,90,95" — format input
+ * sama dengan hapusBarisMutasiPilihan di bawah), lalu OTOMATIS ikut
+ * menghapus semua baris di sheet MUTASI dan RAW yang berasal dari
+ * file itu (dicocokkan lewat BANK + NAMA FILE + PERIODE yang sama
+ * persis dengan baris SUMBER_MUTASI yang dipilih).
+ *
+ * Ini jauh lebih praktis dibanding hapusBarisMutasiPilihan untuk
+ * kasus "saya mau buang SEMUA hasil import satu file tertentu" —
+ * user tidak perlu cari sendiri baris berapa saja di MUTASI yang
+ * berasal dari file itu, cukup pilih baris di SUMBER_MUTASI (yang
+ * satu baris = satu file, jauh lebih sedikit dan gampang dikenali).
+ ************************************************************/
+
+function hapusSumberMutasiPilihan() {
+  const ui = SpreadsheetApp.getUi();
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const shSumber = ss.getSheetByName(CONFIG.SHEET_SUMBER_MUTASI);
+  const shMutasi = ss.getSheetByName(CONFIG.SHEET_MUTASI);
+  const shRaw = ss.getSheetByName(CONFIG.SHEET_RAW);
+
+  if (!shSumber || shSumber.getLastRow() < 2) {
+    ui.alert('❌ Sheet SUMBER_MUTASI belum memiliki data.');
+    return;
+  }
+
+  const lastRow = shSumber.getLastRow();
+
+  const prompt = ui.prompt(
+    '🗑️ HAPUS SUMBER MUTASI + DATA TERKAIT',
+    'Masukkan NOMOR BARIS SHEET SUMBER_MUTASI (sesuai nomor baris di sisi kiri Google Sheets) yang ingin dihapus.\n\n' +
+    'Semua baris di sheet MUTASI dan RAW yang berasal dari file itu (BANK + NAMA FILE + PERIODE sama persis) akan ikut terhapus otomatis.\n\n' +
+    'Boleh gabungan rentang dan nomor tunggal, dipisah koma. Contoh:\n' +
+    '85-90       -> baris 85 sampai 90\n' +
+    '85,90,95    -> hanya baris 85, 90, dan 95\n\n' +
+    'Data SUMBER_MUTASI saat ini ada di baris 2 sampai ' + lastRow + '.',
+    ui.ButtonSet.OK_CANCEL
+  );
+
+  if (prompt.getSelectedButton() !== ui.Button.OK) return;
+
+  const inputText = String(prompt.getResponseText() || '').trim();
+  if (!inputText) {
+    ui.alert('❌ Input kosong.');
+    return;
+  }
+
+  const rows = {};
+  const formatSalahList = [];
+
+  inputText.split(',').forEach(function(bagian) {
+    const b = bagian.trim();
+    if (!b) return;
+
+    const rangeMatch = b.match(/^(\d+)\s*-\s*(\d+)$/);
+    const tunggalMatch = b.match(/^(\d+)$/);
+
+    if (rangeMatch) {
+      let a = Number(rangeMatch[1]);
+      let z = Number(rangeMatch[2]);
+      if (a > z) { const tmp = a; a = z; z = tmp; }
+      for (let n = a; n <= z; n++) rows[n] = true;
+    } else if (tunggalMatch) {
+      rows[Number(tunggalMatch[1])] = true;
+    } else {
+      formatSalahList.push(b);
+    }
+  });
+
+  if (formatSalahList.length) {
+    ui.alert(
+      '❌ Format tidak dikenali: ' + formatSalahList.join(', ') +
+      '\n\nGunakan contoh seperti "85-90" atau "85,90,95".'
+    );
+    return;
+  }
+
+  const nomorValid = [];
+  const nomorDiabaikan = [];
+
+  Object.keys(rows).map(Number).sort(function(a, b) { return a - b; }).forEach(function(n) {
+    if (n >= 2 && n <= lastRow) {
+      nomorValid.push(n);
+    } else {
+      nomorDiabaikan.push(n);
+    }
+  });
+
+  if (!nomorValid.length) {
+    ui.alert('❌ Tidak ada nomor baris valid (harus di antara 2 dan ' + lastRow + ').');
+    return;
+  }
+
+  // Kunci pencocokan: BANK + NAMA FILE + PERIODE, sama persis dengan yang
+  // dicatat catatSumberMutasi() saat file itu diimpor pertama kali, dan
+  // sama persis dengan kolom SUMBER FILE/PERIODE (MUTASI) & NAMA FILE/
+  // PERIODE (RAW) yang ditulis tulisImportMutasi().
+  const kunciTerpilih = [];
+  const previewSumber = [];
+
+  nomorValid.forEach(function(n) {
+    const r = shSumber.getRange(n, 1, 1, 7).getValues()[0];
+    const bank = String(r[1] || '').trim().toUpperCase();
+    const namaFile = String(r[2] || '').trim();
+    const periodeNama = String(r[3] || '').trim();
+    kunciTerpilih.push({ bank: bank, namaFile: namaFile, periode: periodeNama });
+    previewSumber.push('Baris ' + n + ': [' + bank + '] ' + namaFile + ' (' + periodeNama + ')');
+  });
+
+  function cocokKunci(bank, namaFile, periode) {
+    const b = String(bank || '').trim().toUpperCase();
+    const f = String(namaFile || '').trim();
+    const p = String(periode || '').trim();
+    return kunciTerpilih.some(function(k) {
+      return k.bank === b && k.namaFile === f && k.periode === p;
+    });
+  }
+
+  // MUTASI: kolom C=BANK, H=SUMBER FILE, I=PERIODE (indeks 0-based: 2,7,8).
+  const barisMutasiHapus = [];
+  if (shMutasi && shMutasi.getLastRow() > 1) {
+    const dataMutasi = shMutasi.getRange(2, 1, shMutasi.getLastRow() - 1, 11).getValues();
+    dataMutasi.forEach(function(r, idx) {
+      if (cocokKunci(r[2], r[7], r[8])) barisMutasiHapus.push(idx + 2);
+    });
+  }
+
+  // RAW: kolom B=BANK, C=NAMA FILE, J=PERIODE (indeks 0-based: 1,2,9).
+  const barisRawHapus = [];
+  if (shRaw && shRaw.getLastRow() > 1) {
+    const dataRaw = shRaw.getRange(2, 1, shRaw.getLastRow() - 1, 11).getValues();
+    dataRaw.forEach(function(r, idx) {
+      if (cocokKunci(r[1], r[2], r[9])) barisRawHapus.push(idx + 2);
+    });
+  }
+
+  let pesan =
+    'Akan menghapus ' + nomorValid.length + ' baris SUMBER_MUTASI:\n' +
+    previewSumber.slice(0, 10).join('\n') +
+    (previewSumber.length > 10 ? '\n... dan ' + (previewSumber.length - 10) + ' lainnya.' : '') +
+    '\n\nBeserta data terkait:\n' +
+    '- ' + barisMutasiHapus.length + ' baris di sheet MUTASI\n' +
+    '- ' + barisRawHapus.length + ' baris di sheet RAW';
+
+  if (nomorDiabaikan.length) {
+    pesan += '\n\n⚠️ Diabaikan (di luar rentang data 2-' + lastRow + '): ' + nomorDiabaikan.join(', ');
+  }
+
+  pesan +=
+    '\n\n⚠️ Setelah menghapus, jalankan 🔄 Cek Ulang Periode agar HASIL_PENGECEKAN ikut diperbarui.' +
+    '\n⚠️ TINDAKAN INI TIDAK BISA DI-UNDO.';
+
+  const konfirmasi = ui.alert('🗑️ HAPUS SUMBER MUTASI + DATA TERKAIT', pesan, ui.ButtonSet.YES_NO);
+  if (konfirmasi !== ui.Button.YES) return;
+
+  // Hapus dari nomor baris TERBESAR ke TERKECIL di MASING-MASING sheet
+  // (baris yang dihapus sudah dihitung dari data sebelum ada penghapusan
+  // apa pun, jadi ketiga daftar ini tidak saling memengaruhi urutannya).
+  barisMutasiHapus.sort(function(a, b) { return b - a; }).forEach(function(n) { shMutasi.deleteRow(n); });
+  barisRawHapus.sort(function(a, b) { return b - a; }).forEach(function(n) { shRaw.deleteRow(n); });
+  nomorValid.sort(function(a, b) { return b - a; }).forEach(function(n) { shSumber.deleteRow(n); });
+
+  ui.alert(
+    '✅ Berhasil menghapus:\n' +
+    '- ' + nomorValid.length + ' baris SUMBER_MUTASI\n' +
+    '- ' + barisMutasiHapus.length + ' baris MUTASI\n' +
+    '- ' + barisRawHapus.length + ' baris RAW'
+  );
+}
+
+
+/************************************************************
+ * ==========================================================
  * HAPUS BARIS MUTASI (PILIH NOMOR)
  * ==========================================================
  *
@@ -6752,7 +6933,9 @@ function rapikanNomorKolom(sh) {
  *
  * Sheet RAW SENGAJA TIDAK ikut dihapus di sini: RAW adalah daftar
  * terpisah (ID sendiri, tidak sejajar baris dengan MUTASI), jadi
- * "baris 50 di MUTASI" tidak berarti apa-apa untuk RAW.
+ * "baris 50 di MUTASI" tidak berarti apa-apa untuk RAW. Kalau ingin
+ * sekaligus membuang data terkait di RAW dan catatan importnya di
+ * SUMBER_MUTASI, pakai menu 🗑️ Hapus Sumber Mutasi + Data Terkait.
  ************************************************************/
 
 function hapusBarisMutasiPilihan() {
