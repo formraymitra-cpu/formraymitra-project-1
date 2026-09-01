@@ -2090,10 +2090,24 @@ function parsePDFBulkMandiri(text, namaFile, periode) {
         continue;
       }
 
-      if (!/\bSuccess\b/i.test(block)) {
-        errors.push('Blok ' + (i + 1) + ': Success tidak ditemukan');
-        continue;
-      }
+      /*
+       * "Success" TIDAK LAGI menjadi syarat wajib blok dianggap valid.
+       * Kata ini sebelumnya harus ditemukan atau seluruh blok ditolak,
+       * padahal "Success" sama sekali tidak dipakai untuk mengambil
+       * nominal (jangkarnya "IDR ...") maupun nama (diambil dari teks
+       * sebelum IDR). Beberapa hasil ekstraksi PDF (terutama lewat
+       * konversi Google Drive, yang bisa berbeda dari hasil ekstraksi
+       * teks biasa) memisahkan/menghilangkan kata "Success" pada
+       * sebagian baris — terutama baris yang kebetulan terpotong di
+       * batas halaman seperti contoh nyata:
+       *   ... GAJI AGS 26 ARTOS [Page 1 of 2] [header tabel terulang] MA
+       *       - OUR Immediate - Success
+       * Padahal blok itu sendiri tetap lengkap dan valid untuk dibaca.
+       * Batas akhir blok (variabel z di atas) sudah punya fallback ke
+       * awal transaksi berikutnya kalau "Success" tidak ketemu, jadi
+       * tidak perlu menolak blok ini sama sekali — cukup lanjutkan,
+       * validasi IDR + nama di bawah tetap jadi penjaga blok sampah.
+       */
 
       /*
        * Variasi header Mandiri:
@@ -2314,7 +2328,7 @@ function periodeCocokDenganNamaFileBulkMandiri(namaFile, periode) {
   const bulan = {
     JANUARI: 0, JAN: 0, FEBRUARI: 1, FEB: 1, MARET: 2, MAR: 2,
     APRIL: 3, APR: 3, MEI: 4, MAY: 4, JUNI: 5, JUN: 5,
-    JULI: 6, JUL: 6, AGUSTUS: 7, AGU: 7, AUG: 7,
+    JULI: 6, JUL: 6, AGUSTUS: 7, AGU: 7, AGS: 7, AUG: 7,
     SEPTEMBER: 8, SEP: 8, OKTOBER: 9, OKT: 9, OCT: 9,
     NOVEMBER: 10, NOV: 10, DESEMBER: 11, DES: 11, DEC: 11
   };
@@ -6085,7 +6099,11 @@ function periodeCocokDenganKeterangan(keterangan, periode) {
     MEI: 4, MAY: 4,
     JUNI: 5, JUN: 5,
     JULI: 6, JUL: 6,
-    AGUSTUS: 7, AGU: 7, AUG: 7,
+    // "AGS" adalah singkatan Agustus yang lazim dipakai laporan bank
+    // (mis. remark Bulk Mandiri: "GAJI AGS 26 ARTOS MA"). Tanpa ini,
+    // transaksi Agustus yang keterangannya memakai singkatan ini
+    // selalu dianggap di luar periode walau bulannya benar.
+    AGUSTUS: 7, AGU: 7, AGS: 7, AUG: 7,
     SEPTEMBER: 8, SEP: 8,
     OKTOBER: 9, OKT: 9, OCT: 9,
     NOVEMBER: 10, NOV: 10,
@@ -6108,24 +6126,53 @@ function periodeCocokDenganKeterangan(keterangan, periode) {
 
   if (bulanPeriode === null) return false;
 
+  /*
+   * "teks" pada Bulk Mandiri adalah KETERANGAN gabungan banyak baris,
+   * yang juga memuat NAMA KARYAWAN (bukan cuma remark gaji). Mencari
+   * token bulan di SELURUH teks berisiko salah tangkap kalau kebetulan
+   * ada nama karyawan yang sama dengan singkatan bulan — nyata terjadi
+   * untuk karyawan bernama depan "JAN" (cocok dengan singkatan Januari)
+   * pada remark yang sebenarnya berbunyi "GAJI AGS 26 ...": tanpa
+   * penjagaan ini, "JAN" pada NAMA ditemukan lebih dulu dan periode
+   * salah dianggap Januari padahal keterangannya jelas Agustus.
+   *
+   * Karena format remark selalu "GAJI <BULAN> <TAHUN> <LOKASI>", cari
+   * token bulan & tahun TEPAT SETELAH kata "GAJI" dulu — nama karyawan
+   * tidak pernah muncul di posisi itu. Baru kalau kata "GAJI" sama
+   * sekali tidak ada, jatuh ke pencarian lama di seluruh teks.
+   */
   let bulanKeterangan = null;
-  Object.keys(bulan).some(function(k) {
-    if (new RegExp('\\b' + k + '\\b').test(teks)) {
-      bulanKeterangan = bulan[k];
-      return true;
+  let tahunKeterangan = null;
+
+  const gajiRe = /\bGAJI\s+([A-Z]+)\s+(\d{2,4})\b/g;
+  let gm;
+  while ((gm = gajiRe.exec(teks)) !== null) {
+    const token = gm[1];
+    if (Object.prototype.hasOwnProperty.call(bulan, token)) {
+      bulanKeterangan = bulan[token];
+      tahunKeterangan = Number(gm[2]);
+      break;
     }
-    return false;
-  });
+  }
+
+  if (bulanKeterangan === null && !/\bGAJI\b/.test(teks)) {
+    Object.keys(bulan).some(function(k) {
+      if (new RegExp('\\b' + k + '\\b').test(teks)) {
+        bulanKeterangan = bulan[k];
+        return true;
+      }
+      return false;
+    });
+
+    const tahunMatch = teks.match(/\b(20\d{2}|\d{2})\b/);
+    if (tahunMatch) tahunKeterangan = Number(tahunMatch[1]);
+  }
 
   if (bulanKeterangan !== bulanPeriode) return false;
 
-  if (tahunPeriode !== null) {
-    const tahunMatch = teks.match(/\b(20\d{2}|\d{2})\b/);
-    if (tahunMatch) {
-      let tahunKeterangan = Number(tahunMatch[1]);
-      if (tahunKeterangan < 100) tahunKeterangan += 2000;
-      if (tahunKeterangan !== tahunPeriode) return false;
-    }
+  if (tahunPeriode !== null && tahunKeterangan !== null) {
+    if (tahunKeterangan < 100) tahunKeterangan += 2000;
+    if (tahunKeterangan !== tahunPeriode) return false;
   }
 
   return true;
