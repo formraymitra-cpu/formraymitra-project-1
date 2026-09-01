@@ -8616,28 +8616,38 @@ function cocokkanSemua_V82(dataRekap, dataMutasi) {
     ).trim();
   }
 
-  function skorNama_(namaRekap,namaMutasi,ket){
-    const a=norm_(namaRekap);
-    const b=norm_(namaMutasi);
-    const k=norm_(ket);
-    if(!a)return 0;
+  /*
+   * aNorm/aTokens (sisi REKAP) diterima SUDAH dinormalisasi/ditokenisasi
+   * oleh pemanggil, bukan dihitung ulang di sini — REKAP yang sama
+   * dibandingkan ke ribuan baris MUTASI dalam satu proses, jadi
+   * menghitung ulang norm_/tokens_ untuk nama REKAP yang SAMA di setiap
+   * pasangan (i,j) hanya membuang waktu berkali-kali lipat tanpa
+   * mengubah hasilnya sama sekali (lihat precompute per-REKAP di Tahap 1
+   * di bawah). Sisi MUTASI (m._namaNormV86, m._tbTokensV86) sudah
+   * dipracompute sekali per baris MUTASI saat mutasiPrepared dibangun,
+   * dengan alasan yang sama.
+   */
+  function skorNama_(aNorm,aTokens,m){
+    if(!aNorm)return 0;
+    const b=m._namaNormV86;
+    const tb=m._tbTokensV86;
+    const tbSet=m._tbSetV86;
 
-    if(b && (a===b || b.indexOf(a)!==-1))return 1;
-
-    const ta=tokens_(a);
-    const tb=tokens_([b,k].join(' '));
-    if(!ta.length||!tb.length)return 0;
+    if(b && (aNorm===b || b.indexOf(aNorm)!==-1))return 1;
+    if(!aTokens.length||!tb.length)return 0;
 
     let hit=0;
-    ta.forEach(function(t){
-      if(tb.indexOf(t)!==-1){hit++;return;}
+    aTokens.forEach(function(t){
+      // Cocok persis: lookup O(1) lewat Set, bukan menelusuri array tb
+      // satu per satu (indexOf) — hasilnya identik, cuma lebih cepat.
+      if(tbSet.has(t)){hit++;return;}
       for(let i=0;i<tb.length;i++){
         if(tokenMiripV86_(t,tb[i])){hit++;return;}
       }
     });
 
-    let score=hit/ta.length;
-    if(b && (b.indexOf(a)!==-1))score=Math.min(1,score+0.20);
+    let score=hit/aTokens.length;
+    if(b && (b.indexOf(aNorm)!==-1))score=Math.min(1,score+0.20);
     return Math.min(1,score);
   }
 
@@ -8698,23 +8708,27 @@ function cocokkanSemua_V82(dataRekap, dataMutasi) {
     return false;
   }
 
-  function skorLokasi_(lokasiRekap,teksMutasi){
-    const a=tokenLokasi_(lokasiRekap);
-    const b=tokenLokasi_(teksMutasi);
-    if(!a.length||!b.length)return 0;
+  /*
+   * aTokens/naLokasi (sisi REKAP) dan bTokens/nbTeks (sisi MUTASI, dari
+   * m._lokasiTokensV86/m._lokasiNormV86) sama-sama diterima sudah
+   * dipracompute oleh pemanggil, dengan alasan performa yang sama
+   * seperti skorNama_ di atas.
+   */
+  function skorLokasi_(aTokens,bTokens,bTokensSet,naLokasi,nbTeks){
+    if(!aTokens.length||!bTokens.length)return 0;
 
     let hit=0;
-    a.forEach(function(t){
-      if(b.indexOf(t)!==-1){hit++;return;}
-      for(let i=0;i<b.length;i++){
-        if(tokenLokasiCocok_(t,b[i])){hit++;return;}
+    aTokens.forEach(function(t){
+      // Cocok persis: lookup O(1) lewat Set — hasilnya identik dengan
+      // bTokens.indexOf(t)!==-1, cuma lebih cepat untuk dataset besar.
+      if(bTokensSet.has(t)){hit++;return;}
+      for(let i=0;i<bTokens.length;i++){
+        if(tokenLokasiCocok_(t,bTokens[i])){hit++;return;}
       }
     });
 
-    let score=hit/a.length;
-    const na=normLokasi_(lokasiRekap);
-    const nb=normLokasi_(teksMutasi);
-    if(na && nb && (na===nb || nb.indexOf(na)!==-1 || na.indexOf(nb)!==-1))score=1;
+    let score=hit/aTokens.length;
+    if(naLokasi && nbTeks && (naLokasi===nbTeks || nbTeks.indexOf(naLokasi)!==-1 || naLokasi.indexOf(nbTeks)!==-1))score=1;
     return Math.min(1,score);
   }
 
@@ -8734,11 +8748,25 @@ function cocokkanSemua_V82(dataRekap, dataMutasi) {
   const mutasiPrepared=dataMutasi.map(function(m,index){
     const namaTampilan=namaTampilanMutasi_(m);
     const teks=[m.sumber||'',m.keterangan||'',m.namaRekening||'',namaTampilan||''].join(' ');
+    const namaNorm=norm_(namaTampilan);
+    const ketNorm=norm_(m.keterangan||'');
+    const tbTokens=tokens_([namaNorm,ketNorm].join(' '));
+    const lokasiTokens=tokenLokasi_(teks);
     return Object.assign({},m,{
       _indexV86:index,
       _namaTampilanV86:namaTampilan,
       _teksV86:teks,
-      _namaNormV86:norm_(namaTampilan)
+      _namaNormV86:namaNorm,
+      // Dipracompute sekali per baris MUTASI (bukan per pasangan REKAP x
+      // MUTASI) — lihat catatan performa di skorNama_/skorLokasi_ di atas.
+      // Versi Set (selain array aslinya) dipakai untuk lookup cocok-persis
+      // O(1), array aslinya tetap dipertahankan untuk fallback pencarian
+      // mirip/typo (tokenMiripV86_/tokenLokasiCocok_) yang butuh iterasi.
+      _tbTokensV86:tbTokens,
+      _tbSetV86:new Set(tbTokens),
+      _lokasiTokensV86:lokasiTokens,
+      _lokasiTokensSetV86:new Set(lokasiTokens),
+      _lokasiNormV86:normLokasi_(teks)
     });
   });
 
@@ -8786,13 +8814,28 @@ function cocokkanSemua_V82(dataRekap, dataMutasi) {
     kandidatPerRekap[i]=[];
     if(!namaRekap||nominalRekap<=0)continue;
 
+    /*
+     * Dipracompute SEKALI per REKAP, dipakai ulang untuk semua baris
+     * MUTASI di bawah — bukan dihitung ulang di dalam loop j (dulu
+     * skorNama_/skorLokasi_ menormalisasi & mentokenisasi ulang nama
+     * dan lokasi REKAP yang SAMA untuk SETIAP baris MUTASI). Untuk
+     * dataset besar (REKAP x MUTASI ribuan pasangan) ini adalah sumber
+     * utama lambatnya proses sampai kena "Melebihi jumlah eksekusi
+     * maksimum" dari Google Apps Script — hasil skornya identik,
+     * hanya dihitung jauh lebih sedikit kali.
+     */
+    const namaRekapNorm=norm_(namaRekap);
+    const namaRekapTokens=tokens_(namaRekapNorm);
+    const lokasiRekapTokens=tokenLokasi_(r.lokasi||'');
+    const lokasiRekapNorm=normLokasi_(r.lokasi||'');
+
     for(let j=0;j<mutasiPrepared.length;j++){
       const m=mutasiPrepared[j];
 
-      const scoreNama=skorNama_(namaRekap,m._namaTampilanV86,m.keterangan);
+      const scoreNama=skorNama_(namaRekapNorm,namaRekapTokens,m);
       if(scoreNama<=0)continue;
 
-      const scoreLokasi=skorLokasi_(r.lokasi||'',m._teksV86);
+      const scoreLokasi=skorLokasi_(lokasiRekapTokens,m._lokasiTokensV86,m._lokasiTokensSetV86,lokasiRekapNorm,m._lokasiNormV86);
       const scoreNominal=skorNominal_(nominalRekap,Number(m.nominal||0));
       const scoreBank=skorBankMatchV81_(r.bank||'',m.bank||'');
       const selisih=Math.abs(nominalRekap-Number(m.nominal||0));
@@ -8808,8 +8851,8 @@ function cocokkanSemua_V82(dataRekap, dataMutasi) {
         (bankFactor*0.05);
 
       const namaUtuh=
-        m._namaNormV86===norm_(namaRekap) ||
-        m._namaNormV86.indexOf(norm_(namaRekap))!==-1;
+        m._namaNormV86===namaRekapNorm ||
+        m._namaNormV86.indexOf(namaRekapNorm)!==-1;
 
       /*
        * LAYAK DIPASANGKAN — penjagaan supaya REKAP tidak dipaksa
