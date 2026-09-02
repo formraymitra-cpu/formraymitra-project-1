@@ -190,20 +190,27 @@ function buatBillPerMVA() {
   //--------------------------------
   text = text.replace(/[^\S\n]+/g, " ");
 
+  //--------------------------------
+  // Label penanda awal record. Beberapa dokumen sumber pakai "MVA Number",
+  // yang lain pakai "Virtual Account" — terima keduanya supaya format
+  // sumber yang berbeda-beda tetap ke-split dengan benar.
+  //--------------------------------
+  const LABEL_PATTERN = "(?:MVA\\s+Number|Virtual\\s+Account)";
+
   let blocks =
-    text.split(/(?=MVA\s+Number)/gi);
+    text.split(new RegExp("(?=" + LABEL_PATTERN + ")", "gi"));
 
   blocks =
     blocks.filter(x => x.trim() != "");
 
-  Logger.log("Total blok MVA Number terdeteksi: " + blocks.length);
+  Logger.log("Total blok data terdeteksi: " + blocks.length);
 
   if (startIndex === 0 && blocks.length <= 1) {
 
     DocumentApp.getUi().alert(
-      "Hanya ditemukan " + blocks.length + " data 'MVA Number' di dokumen sumber.\n\n" +
+      "Hanya ditemukan " + blocks.length + " data 'MVA Number' / 'Virtual Account' di dokumen sumber.\n\n" +
       "Kemungkinan penyebab:\n" +
-      "- Label 'MVA Number' di sebagian record tidak persis sama (karakter tersembunyi/format beda)\n" +
+      "- Label di sebagian record beda dari 'MVA Number' / 'Virtual Account' (mis. typo/karakter tersembunyi)\n" +
       "- Data sebenarnya diletakkan di dalam tabel, bukan paragraf biasa\n\n" +
       "Buka Extensions > Apps Script > Executions untuk lihat log, lalu cek ulang format dokumen sumber."
     );
@@ -235,7 +242,7 @@ function buatBillPerMVA() {
     // Ambil Data
     //--------------------------------
     let mva =
-      (block.match(/MVA Number\s*:?\s*(\d+)/i) || [, ""])[1];
+      (block.match(new RegExp(LABEL_PATTERN + "\\s*:?\\s*(\\d+)", "i")) || [, ""])[1];
 
     let namaMatch = block.match(/Name\s*:\s*(.*?)(?:\r?\n|Branch\s*:)/i);
 let nama = namaMatch ? namaMatch[1].trim() : "";
