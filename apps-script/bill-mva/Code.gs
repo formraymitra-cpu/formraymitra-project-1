@@ -254,7 +254,7 @@ let branch = branchMatch ? branchMatch[1].trim() : "";
       (block.match(/Ref No\s*:\s*(.+)/i) || [, ""])[1];
 
     let total =
-      (block.match(/TOTAL\s*:\s*([\d,.,]+)/i) || [, ""])[1];
+      (block.match(/TOTAL\s*:\s*(?:[A-Za-z]{2,5}\s*)?([\d.,]+)/i) || [, ""])[1];
 
     //--------------------------------
     // Billing Information
