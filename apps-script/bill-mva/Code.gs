@@ -51,8 +51,9 @@ function cekPosisiTerakhir() {
   const props = PropertiesService.getScriptProperties();
 
   const SOURCE_DOC_ID = props.getProperty("SOURCE_DOC_ID");
+  const OUTPUT_FOLDER_ID = props.getProperty("OUTPUT_FOLDER_ID");
 
-  if (!SOURCE_DOC_ID) {
+  if (!SOURCE_DOC_ID || !OUTPUT_FOLDER_ID) {
 
     ui.alert(
       "Silakan isi link proyek terlebih dahulu melalui menu\n\n📄 BILL MVA → ⚙️ Input Link Proyek"
@@ -63,17 +64,26 @@ function cekPosisiTerakhir() {
   }
 
   const blocks = getMvaBlocks(SOURCE_DOC_ID);
+  const outputFolder = DriveApp.getFolderById(OUTPUT_FOLDER_ID);
+  const sync = syncLastIndexWithDrive(props, outputFolder);
 
-  const lastIndexProp = props.getProperty("LAST_INDEX");
-  const lastIndex = Number(lastIndexProp || 0);
-  const lastMva = props.getProperty("LAST_MVA") || "-";
-  const lastNama = props.getProperty("LAST_NAMA") || "-";
-
-  if (!lastIndexProp) {
+  if (sync.index === 0) {
 
     ui.alert(
       "Total data terdeteksi di dokumen sumber : " + blocks.length + "\n\n" +
-      "Belum ada proses yang tersimpan (posisi masih di awal, atau semua file sudah pernah selesai dibuat sebelumnya)."
+      "Belum ada file yang dibuat sama sekali (posisi masih di awal)."
+    );
+
+    return;
+
+  }
+
+  if (sync.index >= blocks.length) {
+
+    ui.alert(
+      "Total data terdeteksi : " + blocks.length + "\n" +
+      "Sudah selesai sampai file ke- : " + sync.index + "\n\n" +
+      "Semua file tampaknya sudah selesai dibuat."
     );
 
     return;
@@ -82,10 +92,11 @@ function cekPosisiTerakhir() {
 
   ui.alert(
     "Total data terdeteksi : " + blocks.length + "\n" +
-    "Sudah selesai sampai file ke- : " + lastIndex + "\n" +
-    "Sisa belum diproses : " + (blocks.length - lastIndex) + "\n\n" +
-    "Terakhir dibuat : file ke-" + lastIndex + " (MVA " + lastMva + " - " + lastNama + ")\n\n" +
-    "Klik menu\n📄 BILL MVA → ▶ Lanjutkan Proses\nuntuk melanjutkan dari file ke-" + (lastIndex + 1) + "."
+    "Sudah selesai sampai file ke- : " + sync.index +
+    (sync.corrected ? "  (dikoreksi otomatis dari isi folder tujuan)" : "") + "\n" +
+    "Sisa belum diproses : " + (blocks.length - sync.index) + "\n\n" +
+    "Terakhir dibuat : file ke-" + sync.index + " (MVA " + sync.mva + ")\n\n" +
+    "Klik menu\n📄 BILL MVA → ▶ Lanjutkan Proses\nuntuk melanjutkan dari file ke-" + (sync.index + 1) + "."
   );
 
 }
@@ -231,6 +242,78 @@ function getMvaBlocks(sourceDocId) {
 
 
 //====================================================
+// SCAN FOLDER TUJUAN UNTUK CARI NOMOR FILE TERTINGGI
+// YANG SUDAH BENAR-BENAR ADA (bukan cuma percaya properti LAST_INDEX,
+// yang bisa "ketinggalan" kalau run sebelumnya berhenti paksa sebelum
+// sempat menyimpan posisi).
+//====================================================
+function scanOutputFolder(outputFolder) {
+
+  let maxNum = 0;
+  let maxMva = "";
+
+  const files = outputFolder.getFiles();
+
+  while (files.hasNext()) {
+
+    const f = files.next();
+    const m = f.getName().match(/^(\d+)\s*-.*-\s*MVA\s+(\S+)/i);
+
+    if (m) {
+
+      const n = parseInt(m[1], 10);
+
+      if (n > maxNum) {
+        maxNum = n;
+        maxMva = m[2];
+      }
+
+    }
+
+  }
+
+  return { maxNum: maxNum, maxMva: maxMva };
+
+}
+
+
+//--------------------------------
+// Samakan posisi tersimpan (LAST_INDEX) dengan file yang benar-benar
+// sudah ada di folder tujuan. Kalau folder ternyata sudah lebih maju
+// (mis. properti sempat gagal tersimpan karena timeout), posisi
+// otomatis dikoreksi supaya tidak membuat file dobel.
+//--------------------------------
+function syncLastIndexWithDrive(props, outputFolder) {
+
+  const storedIndex = Number(props.getProperty("LAST_INDEX") || 0);
+  const scan = scanOutputFolder(outputFolder);
+
+  if (scan.maxNum > storedIndex) {
+
+    props.setProperty("LAST_INDEX", String(scan.maxNum));
+
+    if (scan.maxMva) {
+      props.setProperty("LAST_MVA", scan.maxMva);
+    }
+
+    return {
+      index: scan.maxNum,
+      mva: scan.maxMva || (props.getProperty("LAST_MVA") || "-"),
+      corrected: true
+    };
+
+  }
+
+  return {
+    index: storedIndex,
+    mva: props.getProperty("LAST_MVA") || "-",
+    corrected: false
+  };
+
+}
+
+
+//====================================================
 // PROSES PEMBUATAN FILE
 //====================================================
 function buatBillPerMVA() {
@@ -269,9 +352,19 @@ function buatBillPerMVA() {
 
   const BATCH_SIZE = 50;
 
-  let startIndex = Number(
-    props.getProperty("LAST_INDEX") || 0
-  );
+  const outputFolder =
+    DriveApp.getFolderById(
+      OUTPUT_FOLDER_ID
+    );
+
+  const sync = syncLastIndexWithDrive(props, outputFolder);
+  let startIndex = sync.index;
+
+  if (sync.corrected) {
+    Logger.log(
+      "Posisi dikoreksi dari isi folder tujuan: LAST_INDEX -> " + startIndex
+    );
+  }
 
   const blocks = getMvaBlocks(SOURCE_DOC_ID);
 
@@ -295,11 +388,6 @@ function buatBillPerMVA() {
     Math.min(
       startIndex + BATCH_SIZE,
       blocks.length
-    );
-
-  const outputFolder =
-    DriveApp.getFolderById(
-      OUTPUT_FOLDER_ID
     );
 
   // Index terakhir yang benar-benar sudah selesai dibuat di run ini.
