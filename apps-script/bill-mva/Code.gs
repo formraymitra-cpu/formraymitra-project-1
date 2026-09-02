@@ -1,9 +1,23 @@
+//====================================================
+// Label penanda awal record. Beberapa dokumen sumber pakai "MVA Number",
+// yang lain pakai "Virtual Account" — terima keduanya supaya format
+// sumber yang berbeda-beda tetap ke-split dengan benar.
+//====================================================
+var LABEL_PATTERN = "(?:MVA\\s+Number|Virtual\\s+Account)";
+
+// Batas aman durasi 1x klik "Lanjutkan Proses" (limit Apps Script ~6 menit).
+// Berhenti otomatis sebelum kena "Exceeded maximum execution time", supaya
+// posisi terakhir selalu sempat tersimpan dengan benar.
+var MAX_RUNTIME_MS = 4.5 * 60 * 1000;
+
+
 function onOpen() {
 
   DocumentApp.getUi()
     .createMenu("📄 BILL MVA")
     .addItem("⚙️ Input Link Proyek", "inputLinkProject")
     .addSeparator()
+    .addItem("🔎 Cek Posisi Terakhir", "cekPosisiTerakhir")
     .addItem("▶ Lanjutkan Proses", "buatBillPerMVA")
     .addItem("🔄 Mulai Dari Awal", "resetBillPerMVA")
     .addToUi();
@@ -16,12 +30,63 @@ function onOpen() {
 //====================================================
 function resetBillPerMVA() {
 
-  PropertiesService
-    .getScriptProperties()
-    .deleteProperty("LAST_INDEX");
+  const props = PropertiesService.getScriptProperties();
+
+  props.deleteProperty("LAST_INDEX");
+  props.deleteProperty("LAST_MVA");
+  props.deleteProperty("LAST_NAMA");
 
   DocumentApp.getUi()
     .alert("Posisi proses berhasil direset ke file pertama.");
+
+}
+
+
+//====================================================
+// CEK POSISI TERAKHIR
+//====================================================
+function cekPosisiTerakhir() {
+
+  const ui = DocumentApp.getUi();
+  const props = PropertiesService.getScriptProperties();
+
+  const SOURCE_DOC_ID = props.getProperty("SOURCE_DOC_ID");
+
+  if (!SOURCE_DOC_ID) {
+
+    ui.alert(
+      "Silakan isi link proyek terlebih dahulu melalui menu\n\n📄 BILL MVA → ⚙️ Input Link Proyek"
+    );
+
+    return;
+
+  }
+
+  const blocks = getMvaBlocks(SOURCE_DOC_ID);
+
+  const lastIndexProp = props.getProperty("LAST_INDEX");
+  const lastIndex = Number(lastIndexProp || 0);
+  const lastMva = props.getProperty("LAST_MVA") || "-";
+  const lastNama = props.getProperty("LAST_NAMA") || "-";
+
+  if (!lastIndexProp) {
+
+    ui.alert(
+      "Total data terdeteksi di dokumen sumber : " + blocks.length + "\n\n" +
+      "Belum ada proses yang tersimpan (posisi masih di awal, atau semua file sudah pernah selesai dibuat sebelumnya)."
+    );
+
+    return;
+
+  }
+
+  ui.alert(
+    "Total data terdeteksi : " + blocks.length + "\n" +
+    "Sudah selesai sampai file ke- : " + lastIndex + "\n" +
+    "Sisa belum diproses : " + (blocks.length - lastIndex) + "\n\n" +
+    "Terakhir dibuat : file ke-" + lastIndex + " (MVA " + lastMva + " - " + lastNama + ")\n\n" +
+    "Klik menu\n📄 BILL MVA → ▶ Lanjutkan Proses\nuntuk melanjutkan dari file ke-" + (lastIndex + 1) + "."
+  );
 
 }
 
@@ -132,9 +197,45 @@ function getIdFromUrl(url) {
 
 
 //====================================================
+// BACA & PECAH DOKUMEN SUMBER JADI BLOK PER MVA
+//====================================================
+function getMvaBlocks(sourceDocId) {
+
+  const sourceDoc =
+    DocumentApp.openById(sourceDocId);
+
+  let text =
+    sourceDoc
+      .getBody()
+      .getText()
+      .replace(/\r/g, "");
+
+  //--------------------------------
+  // Normalisasi spasi/tab/non-breaking space.
+  // Dokumen hasil copy-paste (dari Excel/PDF/email) sering menyisipkan
+  // non-breaking space di antara kata (mis. "MVA Number"), sehingga
+  // hanya kemunculan pertama yang persis cocok dengan "MVA Number" biasa
+  // dan sisanya gagal ke-split -> semua record numpuk jadi 1 blok saja.
+  //--------------------------------
+  text = text.replace(/[^\S\n]+/g, " ");
+
+  let blocks =
+    text.split(new RegExp("(?=" + LABEL_PATTERN + ")", "gi"));
+
+  blocks =
+    blocks.filter(x => x.trim() != "");
+
+  return blocks;
+
+}
+
+
+//====================================================
 // PROSES PEMBUATAN FILE
 //====================================================
 function buatBillPerMVA() {
+
+  const scriptStart = Date.now();
 
   const props =
     PropertiesService.getScriptProperties();
@@ -172,36 +273,7 @@ function buatBillPerMVA() {
     props.getProperty("LAST_INDEX") || 0
   );
 
-  const sourceDoc =
-    DocumentApp.openById(SOURCE_DOC_ID);
-
-  let text =
-    sourceDoc
-      .getBody()
-      .getText()
-      .replace(/\r/g, "");
-
-  //--------------------------------
-  // Normalisasi spasi/tab/non-breaking space.
-  // Dokumen hasil copy-paste (dari Excel/PDF/email) sering menyisipkan
-  // non-breaking space di antara kata (mis. "MVA Number"), sehingga
-  // hanya kemunculan pertama yang persis cocok dengan "MVA Number" biasa
-  // dan sisanya gagal ke-split -> semua record numpuk jadi 1 blok saja.
-  //--------------------------------
-  text = text.replace(/[^\S\n]+/g, " ");
-
-  //--------------------------------
-  // Label penanda awal record. Beberapa dokumen sumber pakai "MVA Number",
-  // yang lain pakai "Virtual Account" — terima keduanya supaya format
-  // sumber yang berbeda-beda tetap ke-split dengan benar.
-  //--------------------------------
-  const LABEL_PATTERN = "(?:MVA\\s+Number|Virtual\\s+Account)";
-
-  let blocks =
-    text.split(new RegExp("(?=" + LABEL_PATTERN + ")", "gi"));
-
-  blocks =
-    blocks.filter(x => x.trim() != "");
+  const blocks = getMvaBlocks(SOURCE_DOC_ID);
 
   Logger.log("Total blok data terdeteksi: " + blocks.length);
 
@@ -219,7 +291,7 @@ function buatBillPerMVA() {
 
   }
 
-  let endIndex =
+  const batchEnd =
     Math.min(
       startIndex + BATCH_SIZE,
       blocks.length
@@ -230,11 +302,26 @@ function buatBillPerMVA() {
       OUTPUT_FOLDER_ID
     );
 
+  // Index terakhir yang benar-benar sudah selesai dibuat di run ini.
+  let lastCompletedIndex = startIndex - 1;
+
+  // Kalau berhenti duluan karena mendekati batas waktu eksekusi.
+  let stoppedByTimeLimit = false;
+
   for (
     let index = startIndex;
-    index < endIndex;
+    index < batchEnd;
     index++
   ) {
+
+    //--------------------------------
+    // Berhenti dengan aman sebelum kena batas waktu Apps Script,
+    // supaya posisi terakhir selalu tersimpan (tidak dobel saat lanjut).
+    //--------------------------------
+    if (Date.now() - scriptStart > MAX_RUNTIME_MS) {
+      stoppedByTimeLimit = true;
+      break;
+    }
 
     let block = blocks[index];
 
@@ -333,6 +420,9 @@ Total Amount: IDR ${total}`;
         namaFile
       );
 
+      lastCompletedIndex = index;
+      props.setProperty("LAST_INDEX", String(lastCompletedIndex + 1));
+
       continue;
 
     }
@@ -386,26 +476,29 @@ Total Amount: IDR ${total}`;
       namaFile
     );
 
+    //--------------------------------
+    // Simpan posisi SETIAP file (bukan cuma di akhir batch), supaya
+    // kalau tiba-tiba "Exceeded maximum execution time", file yang
+    // sudah jadi tidak dibuat ulang lagi saat klik Lanjutkan Proses.
+    //--------------------------------
+    lastCompletedIndex = index;
+
+    props.setProperty("LAST_INDEX", String(lastCompletedIndex + 1));
+    props.setProperty("LAST_MVA", mva);
+    props.setProperty("LAST_NAMA", nama);
+
   }
 
-  //--------------------------------
-  // Simpan Posisi Terakhir
-  //--------------------------------
-  props.setProperty(
-    "LAST_INDEX",
-    endIndex
-  );
+  const doneCount = lastCompletedIndex + 1;
 
   //--------------------------------
   // Semua File Selesai
   //--------------------------------
-  if (
-    endIndex >= blocks.length
-  ) {
+  if (doneCount >= blocks.length) {
 
-    props.deleteProperty(
-      "LAST_INDEX"
-    );
+    props.deleteProperty("LAST_INDEX");
+    props.deleteProperty("LAST_MVA");
+    props.deleteProperty("LAST_NAMA");
 
     DocumentApp.getUi()
       .alert(
@@ -417,9 +510,11 @@ Total Amount: IDR ${total}`;
 
     DocumentApp.getUi()
       .alert(
-        "Selesai sampai file ke-" +
-        endIndex +
-        ".\n\nKlik menu\n📄 BILL MVA → ▶ Lanjutkan Proses\nuntuk melanjutkan."
+        (stoppedByTimeLimit
+          ? "Berhenti otomatis karena mendekati batas waktu eksekusi.\n\n"
+          : "") +
+        "Selesai sampai file ke-" + doneCount + " dari " + blocks.length +
+        ".\n\nKlik menu\n📄 BILL MVA → ▶ Lanjutkan Proses\nuntuk melanjutkan dari file ke-" + (doneCount + 1) + "."
       );
 
   }
