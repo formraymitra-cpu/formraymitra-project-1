@@ -18,7 +18,7 @@ var CONFIG = {
   // titik awal untuk menemukan folder Drive tempat file-file bulanan itu
   // disimpan — dicari sekali lalu di-cache. Tiap bulan file barunya dicari
   // otomatis di folder yang sama, tidak perlu update ID ini lagi.
-  REKONSILIASI_SEED_ID: "1OzwuAfKeBC9zzReebiGnBpZFPg03wdyvWkr3haNiPrc",
+  REKONSILIASI_SEED_ID: "1_hhYXplrh5Qxzm1TnoW1MfJ3uJKm1Yi1a9267eqyqUU",
 
   // (Opsional) ID spreadsheet sumber dashboard "Monitoring Laporan &
   // Absensi" (CEKLIS LAPORAN BULANAN). Isi supaya web app ini SEKALIGUS
