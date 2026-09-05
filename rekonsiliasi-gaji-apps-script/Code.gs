@@ -2101,13 +2101,62 @@ function parsePDFBulkMandiri(text, namaFile, periode) {
     .replace(/\s+/g, ' ')
     .trim();
 
-  const starts = [];
+  const startsInfo = [];
   const reStart = /\bInhouse\s+Transfer\b/ig;
   let sm;
 
   while ((sm = reStart.exec(source)) !== null) {
-    starts.push(sm.index);
+    startsInfo.push({ index: sm.index, end: sm.index + sm[0].length });
   }
+
+  /*
+   * ROOT CAUSE BARIS "TERGABUNG" (mis. beberapa nama karyawan tercampur
+   * jadi satu KETERANGAN, ditemukan via menu Debug: Ekspor Teks Mentah
+   * PDF pada file GAJI 08 UNZA VITALIS): untuk sebagian file, hasil
+   * ekstraksi teks PDF lewat Google Drive membaca tabelnya PER KOLOM
+   * (bukan per baris) untuk kelompok baris yang beberapa nilai kolomnya
+   * kebetulan sama persis berturut-turut (Source of Fund, "Inhouse
+   * Transfer", nama bank — semuanya konstan untuk satu file). Contoh
+   * nyata (2 karyawan tergabung dalam satu grup):
+   *   1360056 191999      1360056 191999
+   *   Inhouse Transfer    Inhouse Transfer   <- 2x BERURUTAN, nyaris
+   *   PT. Bank Mandiri Tbk. (x2)                tanpa jarak sama sekali
+   *   13600185 42388      13600185 42354     <- rekening TETAP terpisah
+   *   MUHAMAD WIDIATMOKO SYAIFUL ANHAR           (nama Uploaded, 1 blok)
+   *   MUHAMAD WIDIATMOKO SYAIFUL ANHAR           (nama Host, blok sama)
+   *   IDR 3,605,169.00    IDR 3,345,566.00   <- nominal TETAP terpisah!
+   * Dulu setiap "Inhouse Transfer" dianggap 1 kandidat transaksi sendiri.
+   * Untuk grup begini, kandidat PERTAMA cuma kebagian teks dari "Inhouse
+   * Transfer" sampai "Inhouse Transfer" berikutnya (nyaris kosong -> selalu
+   * gagal "nominal IDR tidak ditemukan" -> dibuang), dan HANYA kandidat
+   * TERAKHIR dalam grup itu yang kebetulan meluas sampai "Success"
+   * sungguhan di ujung grup -> menampung SEMUA data gabungan sekaligus.
+   * Inilah sebabnya banyak baris hilang dan sisanya berisi banyak nama
+   * tercampur dalam satu baris MUTASI.
+   *
+   * Fix: kelompokkan dulu "Inhouse Transfer" yang BERURUTAN NYARIS TANPA
+   * JARAK (indikasi kuat itu bagian dari satu grup kolom-per-kolom yang
+   * sama) menjadi SATU grup. Nominal (IDR) tetap diekstrak SATU PER SATU
+   * di dalam grup itu (nominal selalu tetap terpisah per orang — lihat
+   * contoh di atas), sehingga JUMLAH transaksi dan TOTAL nominal tetap
+   * benar walau grup itu tergabung. Untuk grup berisi >1 transaksi, NAMA
+   * TIDAK bisa dipisah otomatis dengan aman (blok nama tidak punya
+   * pemisah antar orang) — semua baris hasil grup itu memakai teks nama
+   * gabungan yang sama, dan ditandai eksplisit di laporan import supaya
+   * dicek manual. Ini jauh lebih aman daripada menebak pembagian nama
+   * dan berisiko salah memasangkan nama ke nominal orang lain.
+   */
+  const JARAK_KLASTER_MAKS = 15;
+  const groups = [];
+  startsInfo.forEach(function(info) {
+    const g = groups.length ? groups[groups.length - 1] : null;
+    if (g && (info.index - g.lastEnd) <= JARAK_KLASTER_MAKS) {
+      g.starts.push(info.index);
+      g.lastEnd = info.end;
+    } else {
+      groups.push({ starts: [info.index], lastEnd: info.end });
+    }
+  });
 
   const mutasi = [];
   const raw = [];
@@ -2129,6 +2178,22 @@ function parsePDFBulkMandiri(text, namaFile, periode) {
       ' '
     );
 
+    /*
+     * Pembersihan di atas sengaja diapit \b di kedua ujungnya supaya kata
+     * seperti "Name"/"Bank" tidak ikut terpotong dari tengah kata lain.
+     * Konsekuensinya, untuk "...Tbk." (titik di akhir "PT. Bank Mandiri
+     * Tbk." YANG BERULANG — muncul di blok gabungan berisi >1 transaksi,
+     * lihat catatan akar masalah "baris tergabung" di atas), \b setelah
+     * "Tbk\.?" gagal cocok kalau titik itu ikut dikonsumsi (titik lalu
+     * spasi sama-sama bukan word-char, bukan batas kata), jadi regex
+     * mundur (backtrack) dan SENGAJA tidak memakan titik itu — titik
+     * itu tertinggal sendirian di antara spasi. Buang titik nyasar itu
+     * di sini (bukan bagian nama sungguhan mana pun, mis. "M." atau
+     * "L." tidak kena karena titiknya menempel ke huruf, bukan berdiri
+     * sendiri).
+     */
+    s = s.replace(/(?:^|\s)\.(?=\s|$)/g, ' ');
+
     // Nama sering terpotong PDF di tengah kata karena word-wrap,
     // mis. "MUHAM- MAD IRWAN" seharusnya "MUHAMMAD IRWAN". Gabungkan
     // dulu SEBELUM tanda hubung lain dibuang, supaya tidak ikut
@@ -2149,21 +2214,19 @@ function parsePDFBulkMandiri(text, namaFile, periode) {
       .trim();
   }
 
-  for (let i = 0; i < starts.length; i++) {
-    const a = starts[i];
+  let nomorOutput = 0;
+
+  groups.forEach(function(group, gi) {
+    const a = group.starts[0];
 
     /*
-     * Jangan langsung memotong ke Inhouse berikutnya.
+     * Jangan langsung memotong ke grup berikutnya.
      * Ambil sampai "Success" pertama setelah kandidat.
      * Ini lebih tahan terhadap variasi ekstraksi PDF.
      */
-    const nextStart = (i + 1 < starts.length)
-      ? starts[i + 1]
+    const nextStart = (gi + 1 < groups.length)
+      ? groups[gi + 1].starts[0]
       : source.length;
-
-    const successPos = source.search(
-      new RegExp('\\bSuccess\\b', 'i')
-    );
 
     // search() dari awal tidak bisa dipakai; cari Success relatif ke a.
     const afterStart = source.slice(a);
@@ -2172,7 +2235,7 @@ function parsePDFBulkMandiri(text, namaFile, periode) {
     let z;
     if (successMatch) {
       z = a + successMatch.index + successMatch[0].length;
-      // Jangan melewati awal transaksi berikutnya.
+      // Jangan melewati awal grup berikutnya.
       if (z > nextStart) z = nextStart;
     } else {
       z = nextStart;
@@ -2182,8 +2245,8 @@ function parsePDFBulkMandiri(text, namaFile, periode) {
 
     try {
       if (!/\bInhouse\s+Transfer\b/i.test(block)) {
-        errors.push('Blok ' + (i + 1) + ': Inhouse Transfer tidak ditemukan');
-        continue;
+        errors.push('Blok ' + (gi + 1) + ': Inhouse Transfer tidak ditemukan');
+        return;
       }
 
       /*
@@ -2200,7 +2263,7 @@ function parsePDFBulkMandiri(text, namaFile, periode) {
        *       - OUR Immediate - Success
        * Padahal blok itu sendiri tetap lengkap dan valid untuk dibaca.
        * Batas akhir blok (variabel z di atas) sudah punya fallback ke
-       * awal transaksi berikutnya kalau "Success" tidak ketemu, jadi
+       * awal grup berikutnya kalau "Success" tidak ketemu, jadi
        * tidak perlu menolak blok ini sama sekali — cukup lanjutkan,
        * validasi IDR + nama di bawah tetap jadi penjaga blok sampah.
        */
@@ -2223,33 +2286,44 @@ function parsePDFBulkMandiri(text, namaFile, periode) {
         : a;
 
       /*
-       * Nominal menjadi jangkar utama.
+       * Nominal menjadi jangkar utama. Dicari SEMUA kemunculannya (bukan
+       * cuma yang pertama) karena satu grup bisa berisi >1 transaksi
+       * tergabung (lihat catatan akar masalah "baris tergabung" di atas)
+       * — nominal per orang tetap terpisah dengan benar walau nama tidak.
        * Mendukung:
        * IDR 3,733,960.00
        * IDR 3,733,960. 00
        * IDR 3,733,960
        */
-      const nominalMatch = block.match(
-        /\bIDR\s*([0-9][0-9.,]*)(?:\s*\.\s*00|\s*00)?/i
-      );
-
-      if (!nominalMatch) {
-        errors.push('Blok ' + (i + 1) + ': nominal IDR tidak ditemukan');
-        continue;
+      const nominalRe = /\bIDR\s*([0-9][0-9.,]*)(?:\s*\.\s*00|\s*00)?/gi;
+      const nominalMatches = [];
+      let nmm;
+      while ((nmm = nominalRe.exec(block)) !== null) {
+        nominalMatches.push(nmm);
       }
 
-      const nominal = parseNominalUmum(
-        String(nominalMatch[1] || '').replace(/[.,]+$/, '')
-      );
-
-      if (!nominal || nominal <= 0) {
-        errors.push('Blok ' + (i + 1) + ': nominal tidak valid');
-        continue;
+      if (!nominalMatches.length) {
+        errors.push('Blok ' + (gi + 1) + ': nominal IDR tidak ditemukan');
+        return;
       }
+
+      const nominalList = nominalMatches
+        .map(function(mm) {
+          return parseNominalUmum(String(mm[1] || '').replace(/[.,]+$/, ''));
+        })
+        .filter(function(n) { return n && n > 0; });
+
+      if (!nominalList.length) {
+        errors.push('Blok ' + (gi + 1) + ': nominal tidak valid');
+        return;
+      }
+
+      const firstNominalMatch = nominalMatches[0];
+      const lastNominalMatch = nominalMatches[nominalMatches.length - 1];
 
       const beforeIdr = block.slice(
         bankEnd,
-        nominalMatch.index
+        firstNominalMatch.index
       ).trim();
 
       /*
@@ -2277,7 +2351,10 @@ function parsePDFBulkMandiri(text, namaFile, periode) {
       /*
        * Rekening tujuan paling aman diambil dari dua token angka
        * terakhir sebelum nama/nominal. Jika formatnya hanya satu token,
-       * tetap gunakan token tersebut.
+       * tetap gunakan token tersebut. HANYA valid untuk grup berisi SATU
+       * transaksi — untuk grup tergabung (>1 nominal), beforeIdr memuat
+       * rekening BANYAK orang sekaligus, jadi "dua token terakhir" tidak
+       * berarti apa-apa dan sengaja tidak dipakai (lihat di bawah).
        */
       let rekening = '';
       if (numberTokens.length >= 2) {
@@ -2317,16 +2394,16 @@ function parsePDFBulkMandiri(text, namaFile, periode) {
       }
 
       if (!nama) {
-        errors.push('Blok ' + (i + 1) + ': nama penerima tidak ditemukan');
-        continue;
+        errors.push('Blok ' + (gi + 1) + ': nama penerima tidak ditemukan');
+        return;
       }
 
       /*
-       * Remark berada setelah nominal sampai status Success.
-       * Hilangkan bagian routing OUR Immediate jika ada.
+       * Remark berada setelah nominal TERAKHIR dalam grup sampai status
+       * Success. Hilangkan bagian routing OUR Immediate jika ada.
        */
       const afterIdr = block.slice(
-        nominalMatch.index + nominalMatch[0].length
+        lastNominalMatch.index + lastNominalMatch[0].length
       );
 
       let remark = afterIdr
@@ -2342,12 +2419,6 @@ function parsePDFBulkMandiri(text, namaFile, periode) {
        */
       remark = remark.replace(/^\s*00\s*/, '').trim();
 
-      // Remark ASLI (dari isi PDF) tetap disimpan untuk pencocokan periode
-      // di bawah — supaya perubahan tampilan KETERANGAN (lihat lokasiTampilan)
-      // tidak ikut mengubah cara sistem menentukan transaksi ini termasuk
-      // periode aktif atau tidak.
-      remarksAsli.push(remark);
-
       /*
        * KETERANGAN yang DITAMPILKAN di sheet MUTASI memakai LOKASI dari
        * NAMA FILE (bukan remark mentah hasil ekstraksi PDF). Nama file
@@ -2360,53 +2431,81 @@ function parsePDFBulkMandiri(text, namaFile, periode) {
        */
       const lokasiTampilan = lokasiDariNamaFile || remark;
 
-      const keterangan =
-        '[BULK MANDIRI] ' +
-        nama +
-        (lokasiTampilan ? ' | ' + lokasiTampilan : '');
+      if (nominalList.length === 1) {
+        /*
+         * JALUR NORMAL — TIDAK BERUBAH: satu transaksi per grup, seperti
+         * sebelum perbaikan "baris tergabung" ditambahkan.
+         */
+        remarksAsli.push(remark);
 
-      const id = buatID('MANDIRI-BULK', namaFile, i);
+        const nominal = nominalList[0];
+        const keterangan =
+          '[BULK MANDIRI] ' +
+          nama +
+          (lokasiTampilan ? ' | ' + lokasiTampilan : '');
 
-      /*
-       * Tanggal individual tidak dipaksakan dari timestamp laporan.
-       * saringHasilMenurutPeriode() akan memakai remark
-       * "Gaji Juli 26 ..." untuk menentukan apakah transaksi masuk
-       * periode aktif.
-       */
-      mutasi.push([
-        id,
-        '',
-        'MANDIRI',
-        '',
-        '',
-        keterangan,
-        nominal,
-        namaFile,
-        periode,
-        ''
-      ]);
+        const id = buatID('MANDIRI-BULK', namaFile, nomorOutput++);
 
-      raw.push([
-        id,
-        'MANDIRI',
-        namaFile,
-        '',
-        rekening,
-        '',
-        keterangan,
-        '',
-        nominal,
-        periode,
-        'GAJI BULK'
-      ]);
+        mutasi.push([
+          id, '', 'MANDIRI', '', '', keterangan, nominal, namaFile, periode, ''
+        ]);
+
+        raw.push([
+          id, 'MANDIRI', namaFile, '', rekening, '', keterangan, '',
+          nominal, periode, 'GAJI BULK'
+        ]);
+      } else {
+        /*
+         * GRUP TERGABUNG: >1 nominal ditemukan dalam satu grup "Inhouse
+         * Transfer" yang berurutan nyaris tanpa jarak (lihat catatan akar
+         * masalah "baris tergabung" di atas file ini). Nominal per orang
+         * TETAP benar dan terpisah (nominalList di atas), tetapi nama
+         * tidak bisa dipisah otomatis dengan aman — blok nama gabungan
+         * tidak punya pemisah antar orang, dan pembagian kata secara
+         * merata TERBUKTI bisa salah (mis. gabungan 3 nama 9 kata belum
+         * tentu terbagi rata 3-3-3). Semua baris di grup ini memakai teks
+         * nama gabungan yang SAMA, ditandai jelas di KETERANGAN dan di
+         * laporan import supaya user tahu perlu cek manual ke PDF asli —
+         * jumlah transaksi & total nominal tetap benar walau atribusi
+         * nama per baris belum pasti.
+         */
+        errors.push(
+          'Blok ' + (gi + 1) + ': PERINGATAN — ' + nominalList.length +
+          ' transaksi tergabung jadi satu (kemungkinan besar akibat cara ' +
+          'Google Drive mengekstrak PDF ini). Nominal berhasil dipisah dengan ' +
+          'benar per transaksi, TETAPI nama karyawan tidak bisa dipisah otomatis ' +
+          'dengan aman (semua baris memakai nama gabungan yang sama) — cocokkan ' +
+          'manual dengan PDF asli: "' + nama + '".'
+        );
+
+        nominalList.forEach(function(nominal) {
+          remarksAsli.push(remark);
+
+          const keterangan =
+            '[BULK MANDIRI] ⚠️PERLU CEK MANUAL (nama tergabung)⚠️ ' +
+            nama +
+            (lokasiTampilan ? ' | ' + lokasiTampilan : '');
+
+          const id = buatID('MANDIRI-BULK', namaFile, nomorOutput++);
+
+          mutasi.push([
+            id, '', 'MANDIRI', '', '', keterangan, nominal, namaFile, periode, ''
+          ]);
+
+          raw.push([
+            id, 'MANDIRI', namaFile, '', '', '', keterangan, '',
+            nominal, periode, 'GAJI BULK'
+          ]);
+        });
+      }
 
     } catch (err) {
       errors.push(
-        'Blok ' + (i + 1) + ': ' +
+        'Blok ' + (gi + 1) + ': ' +
         (err && err.message ? err.message : String(err))
       );
     }
-  }
+  });
 
   /* FIX18: untuk Bulk Mandiri tanpa tanggal individual, validasi periode
    * dilakukan dari remark ASLI (bukan KETERANGAN yang ditampilkan di
@@ -2423,7 +2522,11 @@ function parsePDFBulkMandiri(text, namaFile, periode) {
     mutasi: mutasi,
     raw: raw,
     diagnostik: {
-      kandidat: starts.length,
+      // Total kemunculan "Inhouse Transfer" di seluruh teks = total
+      // transaksi sebenarnya, terlepas dari apakah tergabung dalam satu
+      // grup kolom-per-kolom atau tidak (lihat catatan akar masalah di
+      // atas) — setiap transaksi asli tetap menyumbang satu kemunculan.
+      kandidat: startsInfo.length,
       valid: mutasi.length,
       jenis: 'BULK MANDIRI',
       tanggalBulk: '',
