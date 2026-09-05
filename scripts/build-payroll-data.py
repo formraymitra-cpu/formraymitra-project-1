@@ -169,6 +169,51 @@ def monthly_totals(wb):
     return out
 
 
+NAMA_DARI_KETERANGAN = re.compile(r"\[.*?\]\s*(.+?)\s*\|")
+
+
+def parse_nama_mutasi(keterangan):
+    """Format umum: '[BULK BPD] NAMA KARYAWAN | GAJI AGSTS 26 ...'."""
+    if not keterangan:
+        return None
+    m = NAMA_DARI_KETERANGAN.match(str(keterangan))
+    return (m.group(1).strip().upper() if m else str(keterangan).strip().upper())
+
+
+def parse_mutasi(wb):
+    if "MUTASI" not in wb.sheetnames:
+        return []
+    ws = wb["MUTASI"]
+    out = []
+    for r in ws.iter_rows(min_row=2, values_only=True):
+        if not r[0]:
+            continue
+        nama = parse_nama_mutasi(r[5])
+        if not nama:
+            continue
+        out.append({
+            "nama": nama,
+            "tanggal": iso(r[1]),
+            "bank": clean(r[2]),
+            "nominal": num(r[6]),
+            "sumberFile": clean(r[7]),
+        })
+    return out
+
+
+def find_transfer_ganda(mutasi_rows):
+    """Deteksi transfer ganda SUNGGUHAN: nama yang sama benar-benar muncul >1x
+    sebagai baris mutasi terpisah di sheet MUTASI (bank asli) -- BUKAN dari
+    kolom ACUAN TRANSFER GANDA di HASIL_PENGECEKAN, yang cuma menandai baris
+    lain dengan NOMINAL SAMA sebagai kandidat pencocokan (lumrah kalau banyak
+    karyawan segolongan gajinya sama persis, jadi selalu memicu false
+    positive kalau dipakai sebagai indikasi double transfer)."""
+    by_name = {}
+    for m in mutasi_rows:
+        by_name.setdefault(m["nama"], []).append(m)
+    return {nama: rows for nama, rows in by_name.items() if len(rows) > 1}
+
+
 def parse_hasil_pengecekan(wb):
     if "HASIL_PENGECEKAN" not in wb.sheetnames:
         return {}
@@ -321,7 +366,7 @@ def build_locations(rekap_rows, hasil_by_lokasi, manual_map):
     return locations
 
 
-def build_notices(locations, hasil_by_lokasi):
+def build_notices(locations, hasil_by_lokasi, mutasi_rows):
     notices = []
     nid = 0
 
@@ -354,12 +399,6 @@ def build_notices(locations, hasil_by_lokasi):
     for raw_lokasi, anggota in hasil_by_lokasi.items():
         lokasi_label = label_by_raw.get(raw_lokasi, raw_lokasi)
         for m in anggota:
-            if m["transferGanda"]:
-                add(
-                    "double-transfer", "tinggi", lokasi_label, m["namaRekap"],
-                    m["nominalMutasi"],
-                    f"{m['jumlahRefGanda']} baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda.",
-                )
             if m["nominalMutasi"] is not None and m["selisih"] is not None and abs(m["selisih"]) > TOLERANSI_RUPIAH:
                 if m["selisih"] > 0:
                     add(
@@ -414,6 +453,20 @@ def build_notices(locations, hasil_by_lokasi):
                 "gaji-vs-rab", "sedang", loc["nama"], None, abs(loc["selisihRole2"]),
                 f"GAJI (Rp {loc['gaji']:,.0f}) tidak sama dengan RAB (Rp {loc['rab']:,.0f}) — cek apakah karena perubahan jumlah anggota (resign/belum ada pengganti) atau kesalahan input.".replace(",", "."),
             )
+
+    # Transfer ganda SUNGGUHAN: nama yang literally muncul >1x sebagai baris
+    # terpisah di sheet MUTASI (bank asli) -- lihat catatan di find_transfer_ganda().
+    for nama, rows in find_transfer_ganda(mutasi_rows).items():
+        total = sum(r["nominal"] or 0 for r in rows)
+        rincian = "; ".join(
+            f"{r['sumberFile'] or 'sumber tidak diketahui'} (Rp {r['nominal']:,.0f}, {r['tanggal'] or '-'})".replace(",", ".")
+            for r in rows
+        )
+        add(
+            "double-transfer", "tinggi", rows[0]["sumberFile"] or "?", nama, total,
+            f"Nama ini muncul {len(rows)}x sebagai baris mutasi terpisah di sheet MUTASI: {rincian}. "
+            "Cek apakah ini benar 1 orang yang ditransfer 2x, atau 2 orang berbeda dengan nama sama.",
+        )
 
     severity_order = {"tinggi": 0, "sedang": 1}
     notices.sort(key=lambda n: (severity_order[n["severity"]], n["kategori"]))
@@ -500,6 +553,7 @@ def main():
 
     rekap_rows = parse_rekap_lokasi(wb_rekap, sheet_name)
     hasil_by_lokasi = parse_hasil_pengecekan(wb_rekon)
+    mutasi_rows = parse_mutasi(wb_rekon)
     manual_map = parse_manual_mapping(wb_rekap)
     if mapping_arg:
         csv_map = parse_mapping_csv(mapping_arg.split("=", 1)[1])
@@ -507,7 +561,7 @@ def main():
     pic_imports = parse_sumber_rekap_mutasi(wb_rekon)
 
     locations = build_locations(rekap_rows, hasil_by_lokasi, manual_map)
-    notices = build_notices(locations, hasil_by_lokasi)
+    notices = build_notices(locations, hasil_by_lokasi, mutasi_rows)
     kpi = build_kpi(locations, hasil_by_lokasi)
     totals = monthly_totals(wb_rekap)
 

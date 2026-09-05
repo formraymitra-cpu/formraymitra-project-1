@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-24T03:47:20.691902",
+  "generatedAt": "2026-09-05T07:17:36.650743",
   "periode": "GAJI AGUSTUS 2026",
   "periodeLabel": "Gaji Agustus 2026",
   "periodeMulai": "2026-08-20",
@@ -19768,457 +19768,16 @@
   ],
   "notices": [
     {
-      "id": "N0002",
+      "id": "N0216",
       "kategori": "double-transfer",
       "severity": "tinggi",
-      "lokasi": "UPPD KAB BLORA",
-      "namaKaryawan": "ADIB NURDIANSYAH EL HAFIZ",
-      "nominalDampak": 2491000.0,
-      "keterangan": "3 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0003",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB BLORA",
-      "namaKaryawan": "ARDIAN WAHYU SAPUTRA",
-      "nominalDampak": 2491000.0,
-      "keterangan": "5 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0004",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB BLORA",
-      "namaKaryawan": "BAGAS MALIK FAJAR",
-      "nominalDampak": 2491000.0,
-      "keterangan": "2 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0005",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB BLORA",
-      "namaKaryawan": "BAMBANG SUSILO",
-      "nominalDampak": 2491000.0,
-      "keterangan": "4 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0006",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB BLORA",
-      "namaKaryawan": "HERI EKO CAHYONO",
-      "nominalDampak": 2491000.0,
-      "keterangan": "4 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0007",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB BATANG",
-      "namaKaryawan": "EKA HERY DEVIANTO",
-      "nominalDampak": 1889500.0,
-      "keterangan": "3 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0008",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB BATANG",
-      "namaKaryawan": "ERWIN ARDIANSYAH",
-      "nominalDampak": 2899000.0,
-      "keterangan": "2 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0009",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB BATANG",
-      "namaKaryawan": "MOH AMSORI",
-      "nominalDampak": 2899000.0,
-      "keterangan": "3 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0010",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB BATANG",
-      "namaKaryawan": "MOH HAMZAH",
-      "nominalDampak": 1889500.0,
-      "keterangan": "2 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0011",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB PEMALANG",
+      "lokasi": "GAJI 08 2026 - UPPD KOTA SEMARANG 1.pdf",
       "namaKaryawan": "WARSITO",
-      "nominalDampak": 2847670.0,
-      "keterangan": "2 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0012",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB PEMALANG",
-      "namaKaryawan": "UNTUNG SANTOSO",
-      "nominalDampak": 2847670.0,
-      "keterangan": "2 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0013",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB PEMALANG",
-      "namaKaryawan": "BAGUS SATRIO PRAKOSO",
-      "nominalDampak": 2847670.0,
-      "keterangan": "2 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0014",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB PEMALANG",
-      "namaKaryawan": "GUNAWAN ADINUGROHO",
-      "nominalDampak": 2847670.0,
-      "keterangan": "4 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0015",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB PEMALANG",
-      "namaKaryawan": "HERU SETIAWAN",
-      "nominalDampak": 2847670.0,
-      "keterangan": "5 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0016",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB PEMALANG",
-      "namaKaryawan": "IMAM YENDRI KURNIAWAN",
-      "nominalDampak": 2847670.0,
-      "keterangan": "5 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0018",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB REMBANG",
-      "namaKaryawan": "EKO DANANG PURNOMO",
-      "nominalDampak": 2779000.0,
-      "keterangan": "3 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0019",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB REMBANG",
-      "namaKaryawan": "YULINAR PUPUT FRASTIKA",
-      "nominalDampak": 2779000.0,
-      "keterangan": "2 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0020",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB REMBANG",
-      "namaKaryawan": "MUCHAMAD KARYADI",
-      "nominalDampak": 2779000.0,
-      "keterangan": "2 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0021",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB REMBANG",
-      "namaKaryawan": "RENALDY DWI AFANDI",
-      "nominalDampak": 2779000.0,
-      "keterangan": "2 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0023",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB PATI",
-      "namaKaryawan": "DIDIK KURNIAWAN",
-      "nominalDampak": 2827000.0,
-      "keterangan": "5 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0024",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB PATI",
-      "namaKaryawan": "IWAN PRASETYO HUSODO",
-      "nominalDampak": 2827000.0,
-      "keterangan": "3 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0025",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB PATI",
-      "namaKaryawan": "AGUNG ATMAJA",
-      "nominalDampak": 2827000.0,
-      "keterangan": "3 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0026",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB PATI",
-      "namaKaryawan": "ANDRA SETIAWAN",
-      "nominalDampak": 2827000.0,
-      "keterangan": "3 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0027",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB PATI",
-      "namaKaryawan": "AJI MUHAMMAD",
-      "nominalDampak": 2827000.0,
-      "keterangan": "5 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0029",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB KUDUS",
-      "namaKaryawan": "MOHAMMAD TAUFIQ RIANTO",
-      "nominalDampak": 2913536.0,
-      "keterangan": "3 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0030",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB KUDUS",
-      "namaKaryawan": "CAHYO ADI SAPUTRO",
-      "nominalDampak": 2883448.0,
-      "keterangan": "2 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0031",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB KUDUS",
-      "namaKaryawan": "FURQON ABDUL AZIZ",
-      "nominalDampak": 2883448.0,
-      "keterangan": "3 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0032",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB KUDUS",
-      "namaKaryawan": "SRI AGUNG",
-      "nominalDampak": 2883448.0,
-      "keterangan": "2 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
+      "nominalDampak": 5846590.0,
+      "keterangan": "Nama ini muncul 2x sebagai baris mutasi terpisah di sheet MUTASI: GAJI 08 2026 - UPPD KOTA SEMARANG 1.pdf (Rp 2.998.920. 2026-08-20); GAJI 08 2026 - UPPD KAB PEMALANG.pdf (Rp 2.847.670. 2026-08-20). Cek apakah ini benar 1 orang yang ditransfer 2x, atau 2 orang berbeda dengan nama sama."
     },
     {
       "id": "N0033",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB KUDUS",
-      "namaKaryawan": "NOOR SETIAWAN",
-      "nominalDampak": 2883448.0,
-      "keterangan": "2 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0035",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB JEPARA",
-      "namaKaryawan": "MOHAMMAD KHABIB",
-      "nominalDampak": 2855800.0,
-      "keterangan": "2 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0036",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB DEMAK",
-      "namaKaryawan": "ARIYANTO",
-      "nominalDampak": 3024121.0,
-      "keterangan": "3 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0037",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB DEMAK",
-      "namaKaryawan": "AHMAD FARUQ",
-      "nominalDampak": 3024121.0,
-      "keterangan": "2 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0038",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB DEMAK",
-      "namaKaryawan": "RAGA MUHAMMAD FADHOLI",
-      "nominalDampak": 3024121.0,
-      "keterangan": "3 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0039",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB DEMAK",
-      "namaKaryawan": "IMAM FATKHUR ROHMAN",
-      "nominalDampak": 3024121.0,
-      "keterangan": "3 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0040",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB BREBES",
-      "namaKaryawan": "ADE SETYO UTOMO",
-      "nominalDampak": 2827000.0,
-      "keterangan": "2 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0041",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB BREBES",
-      "namaKaryawan": "IMAM SAFII",
-      "nominalDampak": 2827000.0,
-      "keterangan": "2 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0042",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB BREBES",
-      "namaKaryawan": "ADITYA YOGI HADIRGANTARA",
-      "nominalDampak": 2827000.0,
-      "keterangan": "3 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0043",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB BREBES",
-      "namaKaryawan": "TOFIK BUDIYONO",
-      "nominalDampak": 2827000.0,
-      "keterangan": "4 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0044",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB PEKALONGAN",
-      "namaKaryawan": "MUHAMMAD FIRMAN",
-      "nominalDampak": 2721400.0,
-      "keterangan": "2 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0045",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KAB PEKALONGAN",
-      "namaKaryawan": "SLAMET EFRIASIH",
-      "nominalDampak": 2721400.0,
-      "keterangan": "4 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0046",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KOTA PEKALONGAN",
-      "namaKaryawan": "ARI KURNIAWAN",
-      "nominalDampak": 3050500.0,
-      "keterangan": "5 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0047",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KOTA PEKALONGAN",
-      "namaKaryawan": "RONI YULIANTO",
-      "nominalDampak": 3050500.0,
-      "keterangan": "2 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0048",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KOTA PEKALONGAN",
-      "namaKaryawan": "JOHAN IRAWADI",
-      "nominalDampak": 3050500.0,
-      "keterangan": "2 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0052",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "BAPENDA PENGECEKAN",
-      "namaKaryawan": "ARIF KURNIAWAN",
-      "nominalDampak": 3446932.0,
-      "keterangan": "5 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0054",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "BAPENDA PENGECEKAN",
-      "namaKaryawan": "ARIF SANTOSO",
-      "nominalDampak": 3446932.0,
-      "keterangan": "2 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0057",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "BAPENDA PENGECEKAN",
-      "namaKaryawan": "GAGARINO KURNIAWAN",
-      "nominalDampak": 1856932.0,
-      "keterangan": "2 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0059",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "BAPENDA PENGECEKAN",
-      "namaKaryawan": "KADARIYONO DWI PRASETYO",
-      "nominalDampak": 3446932.0,
-      "keterangan": "2 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0069",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KOTA SEMARANG 1",
-      "namaKaryawan": "EKO BUDIYONO",
-      "nominalDampak": 2448920.0,
-      "keterangan": "3 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0070",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KOTA SEMARANG 1",
-      "namaKaryawan": "SUSILO",
-      "nominalDampak": 3548920.0,
-      "keterangan": "2 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0071",
-      "kategori": "double-transfer",
-      "severity": "tinggi",
-      "lokasi": "UPPD KOTA SEMARANG 2",
-      "namaKaryawan": "BUDI ARI SETIYAWAN",
-      "nominalDampak": 2348932.0,
-      "keterangan": "2 baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda."
-    },
-    {
-      "id": "N0083",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "BBPMP JAWA TENGAH",
@@ -20227,7 +19786,7 @@
       "keterangan": "19 dari 19 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0093",
+      "id": "N0043",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "BPSMB PROVINSI JATENG",
@@ -20236,7 +19795,7 @@
       "keterangan": "3 dari 3 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0097",
+      "id": "N0047",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "DINAS ESDM MERAPI MAGELANG",
@@ -20245,7 +19804,7 @@
       "keterangan": "4 dari 4 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0098",
+      "id": "N0048",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "DINAS ESDM MERAPI MAGELANG CAKRA",
@@ -20254,7 +19813,7 @@
       "keterangan": "3 dari 3 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0099",
+      "id": "N0049",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "DINAS ESDM PROVINSI JATENG",
@@ -20263,7 +19822,7 @@
       "keterangan": "3 dari 3 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0127",
+      "id": "N0077",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "DRH NUGROHO ANIMAL CENTER",
@@ -20272,7 +19831,7 @@
       "keterangan": "2 dari 2 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0130",
+      "id": "N0080",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "HOTEL PURI ASRI MAGELANG",
@@ -20281,7 +19840,7 @@
       "keterangan": "11 dari 11 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0180",
+      "id": "N0130",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT BPR BKK LASEM",
@@ -20290,7 +19849,7 @@
       "keterangan": "29 dari 29 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0181",
+      "id": "N0131",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT CITRA MANDIRI KENCANA",
@@ -20299,7 +19858,7 @@
       "keterangan": "2 dari 2 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0182",
+      "id": "N0132",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT EKA FARMA",
@@ -20308,7 +19867,7 @@
       "keterangan": "6 dari 6 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0184",
+      "id": "N0134",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT KIDO MULIA INDONESIA",
@@ -20317,7 +19876,7 @@
       "keterangan": "18 dari 18 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0185",
+      "id": "N0135",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT KIMIA FARMA TRADING & DISTRIBUTION",
@@ -20326,7 +19885,7 @@
       "keterangan": "4 dari 4 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0187",
+      "id": "N0137",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT LIEBRA PERMANA SEMARANG",
@@ -20335,7 +19894,7 @@
       "keterangan": "38 dari 38 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0188",
+      "id": "N0138",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT LIEBRA PERMANA WONOGIRI",
@@ -20344,7 +19903,7 @@
       "keterangan": "36 dari 36 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0189",
+      "id": "N0139",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT POLIPLAS MAKMUR SANTOSA SMG",
@@ -20353,7 +19912,7 @@
       "keterangan": "3 dari 3 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0190",
+      "id": "N0140",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT POLIPLAS MAKMUR SANTOSA UNG CS",
@@ -20362,7 +19921,7 @@
       "keterangan": "11 dari 11 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0191",
+      "id": "N0141",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT POLIPLAS MAKMUR SANTOSA UNG PAM",
@@ -20371,7 +19930,7 @@
       "keterangan": "31 dari 31 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0192",
+      "id": "N0142",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT PWKWI TEMANGGUNG",
@@ -20380,7 +19939,7 @@
       "keterangan": "8 dari 8 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0193",
+      "id": "N0143",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT QUEEN MUKTI",
@@ -20389,7 +19948,7 @@
       "keterangan": "3 dari 3 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0194",
+      "id": "N0144",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT RAJAWALI DIESEL INDONESIA",
@@ -20398,7 +19957,7 @@
       "keterangan": "4 dari 4 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0196",
+      "id": "N0146",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT SAT DC CILACAP",
@@ -20407,7 +19966,7 @@
       "keterangan": "27 dari 27 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0197",
+      "id": "N0147",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT SAT DC REMBANG",
@@ -20416,7 +19975,7 @@
       "keterangan": "28 dari 28 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0198",
+      "id": "N0148",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT SAT DC SEMARANG",
@@ -20425,7 +19984,7 @@
       "keterangan": "29 dari 29 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0199",
+      "id": "N0149",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT SAT DEPO BALIKPAPAN",
@@ -20434,7 +19993,7 @@
       "keterangan": "8 dari 8 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0200",
+      "id": "N0150",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT SAT DEPO KUPANG",
@@ -20443,7 +20002,7 @@
       "keterangan": "8 dari 8 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0201",
+      "id": "N0151",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT SAT DEPO SAMARINDA",
@@ -20452,7 +20011,7 @@
       "keterangan": "10 dari 10 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0202",
+      "id": "N0152",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT SATORIA DISTRIBUSI LESTARI",
@@ -20461,7 +20020,7 @@
       "keterangan": "12 dari 12 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0203",
+      "id": "N0153",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT SUKA SARI MITRA MANDIRI",
@@ -20470,7 +20029,7 @@
       "keterangan": "6 dari 6 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0204",
+      "id": "N0154",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT SUMBER MASANDA JAYA BREBES KEAMANAN",
@@ -20479,7 +20038,7 @@
       "keterangan": "97 dari 97 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0205",
+      "id": "N0155",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT SUMBER MASANDA JAYA BREBES KEBERSIHAN",
@@ -20488,7 +20047,7 @@
       "keterangan": "42 dari 42 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0206",
+      "id": "N0156",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT TAICHANG WRAPPER INDONESIA",
@@ -20497,7 +20056,7 @@
       "keterangan": "6 dari 6 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0207",
+      "id": "N0157",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT UNZA VITALIS",
@@ -20506,7 +20065,7 @@
       "keterangan": "16 dari 16 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0208",
+      "id": "N0158",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT VICTORY FOOTWEAR INDONESIA",
@@ -20515,7 +20074,7 @@
       "keterangan": "6 dari 6 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0209",
+      "id": "N0159",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "PT YOUNG INDONESIA PRATAMA",
@@ -20524,7 +20083,7 @@
       "keterangan": "6 dari 6 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0220",
+      "id": "N0170",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "RS CEPOKO SEMARANG",
@@ -20533,7 +20092,7 @@
       "keterangan": "12 dari 12 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0222",
+      "id": "N0172",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "RS PALANG BIRU",
@@ -20542,7 +20101,7 @@
       "keterangan": "10 dari 10 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0223",
+      "id": "N0173",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "RS PANTI WALUYO",
@@ -20551,7 +20110,7 @@
       "keterangan": "4 dari 4 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0224",
+      "id": "N0174",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "RS ROEMANI SEMARANG",
@@ -20560,7 +20119,7 @@
       "keterangan": "21 dari 21 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0226",
+      "id": "N0176",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "RSJS MAGELANG",
@@ -20569,7 +20128,7 @@
       "keterangan": "50 dari 50 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0227",
+      "id": "N0177",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "RSUD BREBES",
@@ -20578,7 +20137,7 @@
       "keterangan": "43 dari 43 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0228",
+      "id": "N0178",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "RSUD BUMIAYU",
@@ -20587,7 +20146,7 @@
       "keterangan": "12 dari 12 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0230",
+      "id": "N0180",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "RSUD DR ADHIYATMA ADMIN",
@@ -20596,7 +20155,7 @@
       "keterangan": "16 dari 16 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0231",
+      "id": "N0181",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "RSUD DR ADHIYATMA SATPAM",
@@ -20605,7 +20164,7 @@
       "keterangan": "44 dari 44 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0249",
+      "id": "N0199",
       "kategori": "belum-transfer",
       "severity": "sedang",
       "lokasi": "UPPD KOTA SEMARANG 2",
@@ -20614,7 +20173,7 @@
       "keterangan": "1 dari 7 karyawan belum ditemukan padanan mutasinya (belum tertransfer / belum ter-import)."
     },
     {
-      "id": "N0066",
+      "id": "N0019",
       "kategori": "konfirmasi-tanpa-nominal",
       "severity": "sedang",
       "lokasi": "BAPENDA PENGECEKAN",
@@ -20623,7 +20182,7 @@
       "keterangan": "Sudah dicek manual dan ditandai \"SESUAI\", tapi kolom NOMINAL MUTASI di HASIL_PENGECEKAN masih kosong sehingga tidak ikut terhitung di Total Gaji Tertransfer. Cek lagi: kalau memang sudah tertransfer, lengkapi nominal & tanggal mutasinya di HASIL_PENGECEKAN; kalau memang belum, tidak perlu tindakan lebih lanjut."
     },
     {
-      "id": "N0072",
+      "id": "N0022",
       "kategori": "konfirmasi-tanpa-nominal",
       "severity": "sedang",
       "lokasi": "UPPD KOTA SEMARANG 2",
@@ -20632,7 +20191,7 @@
       "keterangan": "Sudah dicek manual dan ditandai \"SESUAI\", tapi kolom NOMINAL MUTASI di HASIL_PENGECEKAN masih kosong sehingga tidak ikut terhitung di Total Gaji Tertransfer. Cek lagi: kalau memang sudah tertransfer, lengkapi nominal & tanggal mutasinya di HASIL_PENGECEKAN; kalau memang belum, tidak perlu tindakan lebih lanjut."
     },
     {
-      "id": "N0073",
+      "id": "N0023",
       "kategori": "konfirmasi-tanpa-nominal",
       "severity": "sedang",
       "lokasi": "DINAS ESDM PROVINSI JATENG",
@@ -20641,7 +20200,7 @@
       "keterangan": "Sudah dicek manual dan ditandai \"SESUAI\", tapi kolom NOMINAL MUTASI di HASIL_PENGECEKAN masih kosong sehingga tidak ikut terhitung di Total Gaji Tertransfer. Cek lagi: kalau memang sudah tertransfer, lengkapi nominal & tanggal mutasinya di HASIL_PENGECEKAN; kalau memang belum, tidak perlu tindakan lebih lanjut."
     },
     {
-      "id": "N0074",
+      "id": "N0024",
       "kategori": "konfirmasi-tanpa-nominal",
       "severity": "sedang",
       "lokasi": "DINAS ESDM PROVINSI JATENG",
@@ -20650,7 +20209,7 @@
       "keterangan": "Sudah dicek manual dan ditandai \"SESUAI\", tapi kolom NOMINAL MUTASI di HASIL_PENGECEKAN masih kosong sehingga tidak ikut terhitung di Total Gaji Tertransfer. Cek lagi: kalau memang sudah tertransfer, lengkapi nominal & tanggal mutasinya di HASIL_PENGECEKAN; kalau memang belum, tidak perlu tindakan lebih lanjut."
     },
     {
-      "id": "N0075",
+      "id": "N0025",
       "kategori": "konfirmasi-tanpa-nominal",
       "severity": "sedang",
       "lokasi": "DINAS ESDM PROVINSI JATENG",
@@ -20659,7 +20218,7 @@
       "keterangan": "Sudah dicek manual dan ditandai \"SESUAI\", tapi kolom NOMINAL MUTASI di HASIL_PENGECEKAN masih kosong sehingga tidak ikut terhitung di Total Gaji Tertransfer. Cek lagi: kalau memang sudah tertransfer, lengkapi nominal & tanggal mutasinya di HASIL_PENGECEKAN; kalau memang belum, tidak perlu tindakan lebih lanjut."
     },
     {
-      "id": "N0076",
+      "id": "N0026",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "ATR BPN PULANG PISAU",
@@ -20668,7 +20227,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0077",
+      "id": "N0027",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "ATR BPN KENDAL",
@@ -20677,7 +20236,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0078",
+      "id": "N0028",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "ATR BPN PALANGKARAYA",
@@ -20686,7 +20245,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0079",
+      "id": "N0029",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "ATR BPN SUKAMARA",
@@ -20695,7 +20254,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0080",
+      "id": "N0030",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "ATR BPN WONOGIRI",
@@ -20704,7 +20263,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0081",
+      "id": "N0031",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "BALAI TEKNIK SABO",
@@ -20713,7 +20272,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0082",
+      "id": "N0032",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "BALMON PALANGKARAYA",
@@ -20722,7 +20281,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0084",
+      "id": "N0034",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "BPTIK PROV JATENG",
@@ -20731,7 +20290,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0085",
+      "id": "N0035",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "BPTIK PROV JATENG CAKRA",
@@ -20740,7 +20299,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0086",
+      "id": "N0036",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "BGTK PALANGKARAYA",
@@ -20749,7 +20308,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0087",
+      "id": "N0037",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "BKK KELAS I SEMARANG",
@@ -20758,7 +20317,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0088",
+      "id": "N0038",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "BKK KLS II PALANGKARAYA",
@@ -20767,7 +20326,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0089",
+      "id": "N0039",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "BKK PROBOLINGO",
@@ -20776,7 +20335,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0090",
+      "id": "N0040",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "BKK SAMPIT",
@@ -20785,7 +20344,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0091",
+      "id": "N0041",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "BPN PROV KALTENG",
@@ -20794,7 +20353,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0092",
+      "id": "N0042",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "BPOM BANYUMAS",
@@ -20803,7 +20362,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0094",
+      "id": "N0044",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "CABDIN 3 PATI",
@@ -20812,7 +20371,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0095",
+      "id": "N0045",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "CABDINDIK 1 UNGARAN",
@@ -20821,7 +20380,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0096",
+      "id": "N0046",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "CV DIWAK PLYWOOD INDONESIA",
@@ -20830,7 +20389,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0100",
+      "id": "N0050",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DINAS KEBUDAYAAN JOGJA",
@@ -20839,7 +20398,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0101",
+      "id": "N0051",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DINAS KEPEMUDAAN, OLAHRAGA DAN PARIWISATA KAB PURWOREJO",
@@ -20848,7 +20407,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0102",
+      "id": "N0052",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DINAS KOPERASI KAB MAGELANG",
@@ -20857,7 +20416,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0103",
+      "id": "N0053",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DINAS PARIWISATA KOTA SEMARANG",
@@ -20866,7 +20425,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0104",
+      "id": "N0054",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DINAS PENDIDIKAN KENDAL",
@@ -20875,7 +20434,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0105",
+      "id": "N0055",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DINAS PERHUBUNGAN KOTA SEMARANG",
@@ -20884,7 +20443,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0106",
+      "id": "N0056",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DINAS PERIKANAN KOTA SEMARANG",
@@ -20893,7 +20452,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0107",
+      "id": "N0057",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DINAS PERTANIAN DAN PANGAN PURWOREJO",
@@ -20902,7 +20461,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0108",
+      "id": "N0058",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DINAS PERTANIAN KOTA SEMARANG",
@@ -20911,7 +20470,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0109",
+      "id": "N0059",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DINAS PERTANIAN MAGELANG",
@@ -20920,7 +20479,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0110",
+      "id": "N0060",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DINKOP KOTA SEMARANG",
@@ -20929,7 +20488,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0111",
+      "id": "N0061",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DISBUDPAREKRAF",
@@ -20938,7 +20497,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0112",
+      "id": "N0062",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DISDUKCAPIL KABUPATEN MAGELANG",
@@ -20947,7 +20506,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0113",
+      "id": "N0063",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DISDUKCAPIL PURWOREJO",
@@ -20956,7 +20515,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0114",
+      "id": "N0064",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DISHUB KOTA SALATIGA",
@@ -20965,7 +20524,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0115",
+      "id": "N0065",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DISKOMINFO PURWOREJO",
@@ -20974,7 +20533,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0116",
+      "id": "N0066",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DISNAKKESWAN",
@@ -20983,7 +20542,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0117",
+      "id": "N0067",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DISPERINAKER KENDAL",
@@ -20992,7 +20551,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0118",
+      "id": "N0068",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DISPERMADES KABUPATEN MAGELANG",
@@ -21001,7 +20560,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0119",
+      "id": "N0069",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DLH KOTA SEMARANG KEMANANAN",
@@ -21010,7 +20569,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0120",
+      "id": "N0070",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DLH KOTA SEMARANG PENGEMUDI",
@@ -21019,7 +20578,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0121",
+      "id": "N0071",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DP2KBP2PA KENDAL",
@@ -21028,7 +20587,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0122",
+      "id": "N0072",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DPMPTSP PROV JATENG",
@@ -21037,7 +20596,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0123",
+      "id": "N0073",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DPRKP KABUPATEN MAGELANG",
@@ -21046,7 +20605,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0124",
+      "id": "N0074",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DPU ADMINISTRASI",
@@ -21055,7 +20614,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0125",
+      "id": "N0075",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DPU KEAMANAN",
@@ -21064,7 +20623,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0126",
+      "id": "N0076",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DPU KEBERSIHAN",
@@ -21073,7 +20632,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0128",
+      "id": "N0078",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "ESDM SERAYU SELATAN PURWOREJO",
@@ -21082,7 +20641,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0129",
+      "id": "N0079",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "HOTEL ATRIA MAGELANG",
@@ -21091,7 +20650,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0131",
+      "id": "N0081",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "KECAMATAN BAYAN",
@@ -21100,7 +20659,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0132",
+      "id": "N0082",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "KECAMATAN KUTOARJO",
@@ -21109,7 +20668,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0133",
+      "id": "N0083",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "KECAMATAN PURWOREJO",
@@ -21118,7 +20677,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0134",
+      "id": "N0084",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "KEJARI BARITO SELATAN",
@@ -21127,7 +20686,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0135",
+      "id": "N0085",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "KEJARI BARITO TIMUR",
@@ -21136,7 +20695,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0136",
+      "id": "N0086",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "KEJARI DOMPU",
@@ -21145,7 +20704,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0137",
+      "id": "N0087",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "KEJARI GUNUNG MAS",
@@ -21154,7 +20713,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0138",
+      "id": "N0088",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "KEJARI KAPUAS",
@@ -21163,7 +20722,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0139",
+      "id": "N0089",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "KEJARI KAPUAS PALINGKAU",
@@ -21172,7 +20731,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0140",
+      "id": "N0090",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "KEJARI KATINGAN",
@@ -21181,7 +20740,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0141",
+      "id": "N0091",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "KEJARI KOTAWARINGIN TIMUR",
@@ -21190,7 +20749,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0142",
+      "id": "N0092",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "KEJARI LAMANDAU",
@@ -21199,7 +20758,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0143",
+      "id": "N0093",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "KEJARI SERUYEN",
@@ -21208,7 +20767,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0144",
+      "id": "N0094",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "KEJARI SUKAMARA",
@@ -21217,7 +20776,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0145",
+      "id": "N0095",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "KEMENAG BLORA",
@@ -21226,7 +20785,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0146",
+      "id": "N0096",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "KEMENAG KOTA",
@@ -21235,7 +20794,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0147",
+      "id": "N0097",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "KEMENTERIAN AGAMA KOTA MAGELANG",
@@ -21244,7 +20803,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0148",
+      "id": "N0098",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "KEMENTERIAN AGAMA PROVINSI JAWA TENGAH",
@@ -21253,7 +20812,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0149",
+      "id": "N0099",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "KESBANGPOL KENDAL",
@@ -21262,7 +20821,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0150",
+      "id": "N0100",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "LABKESMAS BANJARNEGARA",
@@ -21271,7 +20830,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0151",
+      "id": "N0101",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "MAN 1 MAGELANG",
@@ -21280,7 +20839,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0152",
+      "id": "N0102",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "MAN PURWOREJO",
@@ -21289,7 +20848,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0153",
+      "id": "N0103",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "MTS N 1 KOTA MAGELANG",
@@ -21298,7 +20857,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0154",
+      "id": "N0104",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "MTS N 2 KABUPATEN MAGELANG",
@@ -21307,7 +20866,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0155",
+      "id": "N0105",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "MTS N 2 KOTA MAGELANG",
@@ -21316,7 +20875,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0156",
+      "id": "N0106",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "MTS N 3 KABUPATEN MAGELANG",
@@ -21325,7 +20884,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0157",
+      "id": "N0107",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "MTS N 4 KABUPATEN MAGELANG",
@@ -21334,7 +20893,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0158",
+      "id": "N0108",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "MTS N 5 KABUPATEN MAGELANG",
@@ -21343,7 +20902,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0159",
+      "id": "N0109",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PENGADILAN AGAMA BANTUL JOGJA",
@@ -21352,7 +20911,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0160",
+      "id": "N0110",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PENGADILAN AGAMA GUNUNG MAS",
@@ -21361,7 +20920,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0161",
+      "id": "N0111",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PENGADILAN AGAMA KAPUAS",
@@ -21370,7 +20929,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0162",
+      "id": "N0112",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PENGADILAN AGAMA WONOSARI JOGJA",
@@ -21379,7 +20938,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0163",
+      "id": "N0113",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PENGADILAN NEGERI BARITO SELATAN",
@@ -21388,7 +20947,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0164",
+      "id": "N0114",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PENGADILAN NEGERI BARITO TIMUR",
@@ -21397,7 +20956,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0165",
+      "id": "N0115",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PENGADILAN NEGERI GUNUNG MAS",
@@ -21406,7 +20965,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0166",
+      "id": "N0116",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PENGADILAN NEGERI KEBUMEN",
@@ -21415,7 +20974,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0167",
+      "id": "N0117",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PENGADILAN NEGERI KOTA MAGELANG",
@@ -21424,7 +20983,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0168",
+      "id": "N0118",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PENGADILAN NEGERI KOTAWARINGIN BARAT",
@@ -21433,7 +20992,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0169",
+      "id": "N0119",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PENGADILAN NEGERI MUARA TEWEH",
@@ -21442,7 +21001,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0170",
+      "id": "N0120",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PENGADILAN NEGERI PALANGKARAYA",
@@ -21451,7 +21010,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0171",
+      "id": "N0121",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PENGADILAN NEGERI PULANG PISAU",
@@ -21460,7 +21019,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0172",
+      "id": "N0122",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PENGADILAN NEGERI SAMPIT",
@@ -21469,7 +21028,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0173",
+      "id": "N0123",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PENGADILAN NEGERI TEMANGGUNG",
@@ -21478,7 +21037,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0174",
+      "id": "N0124",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PENGADILAN TINGGI JOGJA",
@@ -21487,7 +21046,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0175",
+      "id": "N0125",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PSDA PEMALI COMAL CAKRA",
@@ -21496,7 +21055,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0176",
+      "id": "N0126",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PSDA PEMALI COMAL RAY",
@@ -21505,7 +21064,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0177",
+      "id": "N0127",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PSDA SERAYU PURWOKERTO",
@@ -21514,7 +21073,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0178",
+      "id": "N0128",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PSDA SERAYU PURWOKERTO CAKRA",
@@ -21523,7 +21082,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0179",
+      "id": "N0129",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PT AIM DAIHATSU",
@@ -21532,7 +21091,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0183",
+      "id": "N0133",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PT HOMEWELL",
@@ -21541,7 +21100,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0186",
+      "id": "N0136",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PT LESTARI ALAM & CV KINDO",
@@ -21550,7 +21109,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0195",
+      "id": "N0145",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PT S2DIO KEAMANAN",
@@ -21559,7 +21118,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0210",
+      "id": "N0160",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PTA PALANGKARAYA",
@@ -21568,7 +21127,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0211",
+      "id": "N0161",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PTN PALANGKARAYA",
@@ -21577,7 +21136,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0212",
+      "id": "N0162",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PTUN PALANGKARAYA",
@@ -21586,7 +21145,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0213",
+      "id": "N0163",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PUPR PROVINSI JAWA TENGAH",
@@ -21595,7 +21154,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0214",
+      "id": "N0164",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PUPR PURWOREJO",
@@ -21604,7 +21163,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0215",
+      "id": "N0165",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PUSKESMAS GANDUMANGU 1 CILACAP",
@@ -21613,7 +21172,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0216",
+      "id": "N0166",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PUSKESMAS MERTOYUDAN",
@@ -21622,7 +21181,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0217",
+      "id": "N0167",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PUSKESMAS SAWANGAN",
@@ -21631,7 +21190,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0218",
+      "id": "N0168",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "RS AT TAUROT",
@@ -21640,7 +21199,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0219",
+      "id": "N0169",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "RS BANYUMANIK",
@@ -21649,7 +21208,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0221",
+      "id": "N0171",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "RS EMMANUEL BANJARNEGARA",
@@ -21658,7 +21217,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0225",
+      "id": "N0175",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "RSIA GLADIOOL MAGELANG",
@@ -21667,7 +21226,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0229",
+      "id": "N0179",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "RSUD CANDI UMBUL",
@@ -21676,7 +21235,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0232",
+      "id": "N0182",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "RSUD HANAU",
@@ -21685,7 +21244,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0233",
+      "id": "N0183",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "RSUD MERAH PUTIH MAGELANG",
@@ -21694,7 +21253,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0234",
+      "id": "N0184",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "RSUD RAA TJOKRONEGORO",
@@ -21703,7 +21262,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0235",
+      "id": "N0185",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "RSUD SALATIGA",
@@ -21712,7 +21271,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0236",
+      "id": "N0186",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "RSUD TEMANGGUNG",
@@ -21721,7 +21280,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0237",
+      "id": "N0187",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "SEKDA PROV JATENG KEAMANAN",
@@ -21730,7 +21289,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0238",
+      "id": "N0188",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "SEKDA PROV JATENG KEBERSIHAN",
@@ -21739,7 +21298,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0239",
+      "id": "N0189",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "SEKDA PROV JATENG PENGEMUDI",
@@ -21748,7 +21307,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0240",
+      "id": "N0190",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "SEKDA PURWOREJO",
@@ -21757,7 +21316,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0241",
+      "id": "N0191",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "SEKRETARIAT DPRD KAB MAGELANG",
@@ -21766,7 +21325,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0242",
+      "id": "N0192",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "SEKRETARIS DEWAN KOTA SEMARANG",
@@ -21775,7 +21334,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0243",
+      "id": "N0193",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "SETDA KABUPATEN MAGELANG",
@@ -21784,7 +21343,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0244",
+      "id": "N0194",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "SETWAN PROV KALTENG",
@@ -21793,7 +21352,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0245",
+      "id": "N0195",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "SMA N 8 SEMARANG",
@@ -21802,7 +21361,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0246",
+      "id": "N0196",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "SMK 7 PURWOREJO",
@@ -21811,7 +21370,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0247",
+      "id": "N0197",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "SMK SEMINARI",
@@ -21820,7 +21379,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0248",
+      "id": "N0198",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "UMKM PURWOREJO",
@@ -21829,7 +21388,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0250",
+      "id": "N0200",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "POLDA KALTENG",
@@ -21838,7 +21397,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0251",
+      "id": "N0201",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "KECAMATAN SIDOREJO SALATIGA",
@@ -21847,7 +21406,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0252",
+      "id": "N0202",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "MAN TEMANGGUNG",
@@ -21856,7 +21415,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0253",
+      "id": "N0203",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "KECAMATAN NGALIYAN",
@@ -21865,7 +21424,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0254",
+      "id": "N0204",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PENGADILAN NEGERI YOGYAKARTA",
@@ -21874,7 +21433,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0255",
+      "id": "N0205",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "DINAS KEPEMUDAAN, OLAHRAGA DAN PARIWISATA KAB PURWOREJO SUB KEGIATAN",
@@ -21883,7 +21442,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0256",
+      "id": "N0206",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PUSKESMAS MAJENANG CILACAP",
@@ -21892,7 +21451,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0257",
+      "id": "N0207",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "KANTOR HAJI UMROH KOTA MAGELANG",
@@ -21901,7 +21460,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0258",
+      "id": "N0208",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "KEMENTERIAN HAJI UMROH BLORA",
@@ -21910,7 +21469,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0259",
+      "id": "N0209",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "KANTOR HAJI UMROH PURWOREJO",
@@ -21919,7 +21478,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0260",
+      "id": "N0210",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PT HSG",
@@ -21928,7 +21487,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0261",
+      "id": "N0211",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "KEMENHAJ PROV JATENG",
@@ -21937,7 +21496,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0262",
+      "id": "N0212",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "UPT ASRAMA HAJI MANYARAN",
@@ -21946,7 +21505,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0263",
+      "id": "N0213",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "KEMENHAJ KOTA SEMARANG",
@@ -21955,7 +21514,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0264",
+      "id": "N0214",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PUSKESMAS GRABAG 2",
@@ -21964,7 +21523,7 @@
       "keterangan": "Lokasi ini belum ditemukan di data rekonsiliasi (HASIL_PENGECEKAN) — rekonsiliasi mungkin belum dimulai untuk lokasi ini, atau nama lokasi berbeda antara kedua spreadsheet."
     },
     {
-      "id": "N0265",
+      "id": "N0215",
       "kategori": "lokasi-tidak-ketemu",
       "severity": "sedang",
       "lokasi": "PT. TULIP DIAGNOSTIC INDONESIA",
@@ -21982,7 +21541,7 @@
       "keterangan": "Status pencocokan: 🟡 NOMINAL & LOKASI SESUAI • NAMA PERLU CEK."
     },
     {
-      "id": "N0017",
+      "id": "N0002",
       "kategori": "nama-lokasi-perlu-cek",
       "severity": "sedang",
       "lokasi": "UPPD KAB REMBANG",
@@ -21991,7 +21550,7 @@
       "keterangan": "Status pencocokan: 🟡 NOMINAL & LOKASI SESUAI • NAMA PERLU CEK."
     },
     {
-      "id": "N0022",
+      "id": "N0003",
       "kategori": "nama-lokasi-perlu-cek",
       "severity": "sedang",
       "lokasi": "UPPD KAB PATI",
@@ -22000,7 +21559,7 @@
       "keterangan": "Status pencocokan: 🟡 NOMINAL & LOKASI SESUAI • NAMA PERLU CEK."
     },
     {
-      "id": "N0028",
+      "id": "N0004",
       "kategori": "nama-lokasi-perlu-cek",
       "severity": "sedang",
       "lokasi": "UPPD KAB KUDUS",
@@ -22009,7 +21568,7 @@
       "keterangan": "Status pencocokan: 🟡 NOMINAL & LOKASI SESUAI • NAMA PERLU CEK."
     },
     {
-      "id": "N0034",
+      "id": "N0005",
       "kategori": "nama-lokasi-perlu-cek",
       "severity": "sedang",
       "lokasi": "UPPD KAB JEPARA",
@@ -22018,7 +21577,7 @@
       "keterangan": "Status pencocokan: 🟡 NOMINAL & LOKASI SESUAI • NAMA PERLU CEK."
     },
     {
-      "id": "N0049",
+      "id": "N0006",
       "kategori": "nama-lokasi-perlu-cek",
       "severity": "sedang",
       "lokasi": "BAPENDA PENGECEKAN",
@@ -22027,7 +21586,7 @@
       "keterangan": "Status pencocokan: 🟡 NAMA PERLU CEK."
     },
     {
-      "id": "N0050",
+      "id": "N0007",
       "kategori": "nama-lokasi-perlu-cek",
       "severity": "sedang",
       "lokasi": "BAPENDA PENGECEKAN",
@@ -22036,7 +21595,7 @@
       "keterangan": "Status pencocokan: 🟡 NAMA & NOMINAL SESUAI • LOKASI PERLU CEK."
     },
     {
-      "id": "N0051",
+      "id": "N0008",
       "kategori": "nama-lokasi-perlu-cek",
       "severity": "sedang",
       "lokasi": "BAPENDA PENGECEKAN",
@@ -22045,7 +21604,7 @@
       "keterangan": "Status pencocokan: 🟡 NAMA & NOMINAL SESUAI • LOKASI PERLU CEK."
     },
     {
-      "id": "N0053",
+      "id": "N0009",
       "kategori": "nama-lokasi-perlu-cek",
       "severity": "sedang",
       "lokasi": "BAPENDA PENGECEKAN",
@@ -22054,7 +21613,7 @@
       "keterangan": "Status pencocokan: 🟡 NAMA & NOMINAL SESUAI • LOKASI PERLU CEK."
     },
     {
-      "id": "N0055",
+      "id": "N0010",
       "kategori": "nama-lokasi-perlu-cek",
       "severity": "sedang",
       "lokasi": "BAPENDA PENGECEKAN",
@@ -22063,7 +21622,7 @@
       "keterangan": "Status pencocokan: 🟡 NAMA & NOMINAL SESUAI • LOKASI PERLU CEK."
     },
     {
-      "id": "N0056",
+      "id": "N0011",
       "kategori": "nama-lokasi-perlu-cek",
       "severity": "sedang",
       "lokasi": "BAPENDA PENGECEKAN",
@@ -22072,7 +21631,7 @@
       "keterangan": "Status pencocokan: 🟡 NAMA & NOMINAL SESUAI • LOKASI PERLU CEK."
     },
     {
-      "id": "N0058",
+      "id": "N0012",
       "kategori": "nama-lokasi-perlu-cek",
       "severity": "sedang",
       "lokasi": "BAPENDA PENGECEKAN",
@@ -22081,7 +21640,7 @@
       "keterangan": "Status pencocokan: 🟡 NAMA & NOMINAL SESUAI • LOKASI PERLU CEK."
     },
     {
-      "id": "N0060",
+      "id": "N0013",
       "kategori": "nama-lokasi-perlu-cek",
       "severity": "sedang",
       "lokasi": "BAPENDA PENGECEKAN",
@@ -22090,7 +21649,7 @@
       "keterangan": "Status pencocokan: 🟡 NAMA & NOMINAL SESUAI • LOKASI PERLU CEK."
     },
     {
-      "id": "N0061",
+      "id": "N0014",
       "kategori": "nama-lokasi-perlu-cek",
       "severity": "sedang",
       "lokasi": "BAPENDA PENGECEKAN",
@@ -22099,7 +21658,7 @@
       "keterangan": "Status pencocokan: 🟡 NAMA & NOMINAL SESUAI • LOKASI PERLU CEK."
     },
     {
-      "id": "N0062",
+      "id": "N0015",
       "kategori": "nama-lokasi-perlu-cek",
       "severity": "sedang",
       "lokasi": "BAPENDA PENGECEKAN",
@@ -22108,7 +21667,7 @@
       "keterangan": "Status pencocokan: 🟡 NAMA & NOMINAL SESUAI • LOKASI PERLU CEK."
     },
     {
-      "id": "N0063",
+      "id": "N0016",
       "kategori": "nama-lokasi-perlu-cek",
       "severity": "sedang",
       "lokasi": "BAPENDA PENGECEKAN",
@@ -22117,7 +21676,7 @@
       "keterangan": "Status pencocokan: 🟡 NAMA & NOMINAL SESUAI • LOKASI PERLU CEK."
     },
     {
-      "id": "N0064",
+      "id": "N0017",
       "kategori": "nama-lokasi-perlu-cek",
       "severity": "sedang",
       "lokasi": "BAPENDA PENGECEKAN",
@@ -22126,7 +21685,7 @@
       "keterangan": "Status pencocokan: 🟡 NAMA & NOMINAL SESUAI • LOKASI PERLU CEK."
     },
     {
-      "id": "N0065",
+      "id": "N0018",
       "kategori": "nama-lokasi-perlu-cek",
       "severity": "sedang",
       "lokasi": "BAPENDA PENGECEKAN",
@@ -22135,7 +21694,7 @@
       "keterangan": "Status pencocokan: 🟡 NAMA & NOMINAL SESUAI • LOKASI PERLU CEK."
     },
     {
-      "id": "N0067",
+      "id": "N0020",
       "kategori": "nama-lokasi-perlu-cek",
       "severity": "sedang",
       "lokasi": "BAPENDA PENGECEKAN",
@@ -22144,7 +21703,7 @@
       "keterangan": "Status pencocokan: 🟡 NAMA PERLU CEK."
     },
     {
-      "id": "N0068",
+      "id": "N0021",
       "kategori": "nama-lokasi-perlu-cek",
       "severity": "sedang",
       "lokasi": "BAPENDA PENGECEKAN",

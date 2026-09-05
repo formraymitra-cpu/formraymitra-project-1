@@ -139,6 +139,50 @@ function parseSumberMutasi_(ss) {
   return out;
 }
 
+function parseNamaMutasi_(keterangan) {
+  // Format umum: "[BULK BPD] NAMA KARYAWAN | GAJI AGSTS 26 ..."
+  if (!keterangan) return null;
+  var m = String(keterangan).match(/\[.*?\]\s*(.+?)\s*\|/);
+  return (m ? m[1].trim() : String(keterangan).trim()).toUpperCase();
+}
+
+function parseMutasi_(ss) {
+  var sheet = ss.getSheetByName("MUTASI");
+  var out = [];
+  if (!sheet) return out;
+  var lastRow = sheet.getLastRow();
+  if (lastRow < 2) return out;
+  var rows = sheet.getRange(2, 1, lastRow - 1, 8).getValues();
+  rows.forEach(function (r) {
+    if (!r[0]) return;
+    var nama = parseNamaMutasi_(r[5]);
+    if (!nama) return;
+    out.push({ nama: nama, tanggal: isoDate_(r[1]), bank: cleanStr_(r[2]), nominal: num_(r[6]), sumberFile: cleanStr_(r[7]) });
+  });
+  return out;
+}
+
+/**
+ * Deteksi transfer ganda SUNGGUHAN: nama yang benar-benar muncul >1x sebagai
+ * baris mutasi terpisah di sheet MUTASI (bank asli) -- BUKAN dari kolom
+ * ACUAN TRANSFER GANDA di HASIL_PENGECEKAN, yang cuma menandai baris lain
+ * dengan NOMINAL SAMA sebagai kandidat pencocokan (lumrah kalau banyak
+ * karyawan segolongan gajinya sama persis, jadi selalu memicu false
+ * positive kalau dipakai sebagai indikasi double transfer).
+ */
+function findTransferGanda_(mutasiRows) {
+  var byName = {};
+  mutasiRows.forEach(function (m) {
+    if (!byName[m.nama]) byName[m.nama] = [];
+    byName[m.nama].push(m);
+  });
+  var out = {};
+  for (var nama in byName) {
+    if (byName[nama].length > 1) out[nama] = byName[nama];
+  }
+  return out;
+}
+
 function parseHasilPengecekan_(ss) {
   var sheet = ss.getSheetByName("HASIL_PENGECEKAN");
   var byLokasi = {};
@@ -332,7 +376,7 @@ function buildLocations_(rekapRows, hasilByLokasi, manualMap) {
   });
 }
 
-function buildNotices_(locations, hasilByLokasi) {
+function buildNotices_(locations, hasilByLokasi, mutasiRows) {
   var notices = [];
   var nid = 0;
   function add(kategori, severity, lokasi, nama, nominal, ket) {
@@ -357,10 +401,6 @@ function buildNotices_(locations, hasilByLokasi) {
   for (var rawLokasi in hasilByLokasi) {
     var lokasiLabel = labelByRaw[rawLokasi] || rawLokasi;
     hasilByLokasi[rawLokasi].forEach(function (m) {
-      if (m.transferGanda) {
-        add("double-transfer", "tinggi", lokasiLabel, m.namaRekap, m.nominalMutasi,
-          m.jumlahRefGanda + " baris mutasi bank cocok dengan nama ini — cek kemungkinan transfer ganda.");
-      }
       if (m.nominalMutasi !== null && m.selisih !== null && Math.abs(m.selisih) > TOLERANSI_RUPIAH) {
         if (m.selisih > 0) {
           add("transfer-kurang", "tinggi", lokasiLabel, m.namaRekap, m.selisih,
@@ -405,6 +445,18 @@ function buildNotices_(locations, hasilByLokasi) {
         "GAJI (" + fmt(loc.gaji) + ") tidak sama dengan RAB (" + fmt(loc.rab) + ") — cek apakah karena perubahan jumlah anggota (resign/belum ada pengganti) atau kesalahan input.");
     }
   });
+
+  var ganda = findTransferGanda_(mutasiRows);
+  for (var nama in ganda) {
+    var rowsGanda = ganda[nama];
+    var total = rowsGanda.reduce(function (s, r) { return s + (r.nominal || 0); }, 0);
+    var rincian = rowsGanda.map(function (r) {
+      return (r.sumberFile || "sumber tidak diketahui") + " (" + fmt(r.nominal || 0) + ", " + (r.tanggal || "-") + ")";
+    }).join("; ");
+    add("double-transfer", "tinggi", rowsGanda[0].sumberFile || "?", nama, total,
+      "Nama ini muncul " + rowsGanda.length + "x sebagai baris mutasi terpisah di sheet MUTASI: " + rincian +
+      ". Cek apakah ini benar 1 orang yang ditransfer 2x, atau 2 orang berbeda dengan nama sama.");
+  }
 
   var order = { tinggi: 0, sedang: 1 };
   notices.sort(function (a, b) { return order[a.severity] - order[b.severity] || (a.kategori < b.kategori ? -1 : 1); });
@@ -454,6 +506,7 @@ function buildPayrollDataset() {
   var wbRekon = rekonInfo.id === CONFIG.REKONSILIASI_SEED_ID ? seedWb : SpreadsheetApp.openById(rekonInfo.id);
   var periode = parsePeriode_(wbRekon);
   var hasilByLokasi = parseHasilPengecekan_(wbRekon);
+  var mutasiRows = parseMutasi_(wbRekon);
   var picImports = parseSumberMutasi_(wbRekon);
 
   var wbRekap = SpreadsheetApp.openById(CONFIG.REKAP_GAJI_ID);
@@ -466,7 +519,7 @@ function buildPayrollDataset() {
   var manualMap = parseManualMapping_(wbRekap);
 
   var locations = buildLocations_(rekapRows, hasilByLokasi, manualMap);
-  var notices = buildNotices_(locations, hasilByLokasi);
+  var notices = buildNotices_(locations, hasilByLokasi, mutasiRows);
   var kpi = buildKpi_(locations, hasilByLokasi);
   var totals = monthlyTotals_(wbRekap);
 
