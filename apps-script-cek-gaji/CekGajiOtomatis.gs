@@ -101,17 +101,24 @@ const CONFIG_CEK_GAJI = {
  * 1B. KONFIGURASI NOMINAL MUTASI
  *
  * NOMINAL MUTASI diambil dari spreadsheet "Salinan REKONSILIASI
- * GAJI [BULAN] [TAHUN]", sheet MUTASI, dengan menjumlahkan
- * semua baris mutasi yang lokasinya "sejenis" dengan NAMA LOKASI
- * pada sheet tujuan (mis. "BAPENDA PENGECEKAN" di MUTASI dianggap
- * sejenis dengan "BAPENDA PROV JATENG" di sheet tujuan).
+ * GAJI [BULAN] [TAHUN]", sheet "NOMINAL LOKASI" (sheet ini sudah
+ * berisi total per lokasi hasil rekap dari sheet MUTASI: kolom
+ * NAMA LOKASI + TOTAL GAJI TERTRANSFER). Nilainya dijumlahkan lagi
+ * di sini untuk lokasi-lokasi yang "sejenis" dengan NAMA LOKASI
+ * pada sheet tujuan (mis. "BAPENDA PENGECEKAN" di NOMINAL LOKASI
+ * dianggap sejenis dengan "BAPENDA PROV JATENG" di sheet tujuan).
+ *
+ * Sheet mentah "MUTASI" sendiri hanya berisi transaksi bank per
+ * baris (tanpa kolom NAMA LOKASI terpisah), jadi tidak dipakai
+ * langsung -- tapi tetap dicoba sebagai fallback lewat
+ * cariBlokRincianMutasi_ kalau suatu saat "NOMINAL LOKASI" tidak ada.
  * ============================================================
  */
 
 const CONFIG_MUTASI = {
 
   // Nama sheet sumber data mutasi di spreadsheet REKONSILIASI.
-  SHEET_NAME: "MUTASI",
+  SHEET_NAME: "NOMINAL LOKASI",
 
   // Kata-kata "noise" yang dibuang dari NAMA LOKASI di sheet MUTASI
   // sebelum dicocokkan dengan NAMA LOKASI di sheet tujuan.
@@ -3135,72 +3142,24 @@ function jalankanIsiNominalMutasi_(sheet) {
 
   /*
    * ==========================================================
-   * PASS 1
-   *
-   * Cocokkan tiap baris tujuan dengan grup lokasi mutasi
-   * yang relevan, sekaligus hitung berapa kali tiap grup
-   * mutasi terpakai (untuk deteksi ambigu).
+   * COCOKKAN (dua tahap: exact dulu, baru containment).
+   * Lihat cocokkanSemuaLokasiMutasi_ untuk detail alasannya.
    * ==========================================================
    */
 
-  const matchesPerRow = [];
+  const targets =
+    locations.map(function(row) {
 
-  const usageCountPerMutasi =
-    mutasiKeys.map(function() { return 0; });
+      const v = row[0];
 
-  for (let i = 0; i < numRows; i++) {
+      return (v && String(v).trim() !== "")
+        ? normalizeLocationName_(v)
+        : "";
 
-    const lokasiTujuan =
-      locations[i][0];
+    });
 
-    if (!lokasiTujuan || String(lokasiTujuan).trim() === "") {
-
-      matchesPerRow.push(null);
-      continue;
-
-    }
-
-    const target =
-      normalizeLocationName_(lokasiTujuan);
-
-    const found = [];
-
-    for (let m = 0; m < mutasiKeys.length; m++) {
-
-      const key =
-        mutasiKeys[m];
-
-      if (!key || key.length < CONFIG_MUTASI.MIN_MATCH_LENGTH) {
-        continue;
-      }
-
-      if (
-        target.indexOf(key) !== -1 ||
-        key.indexOf(target) !== -1
-      ) {
-
-        found.push(m);
-
-      }
-
-    }
-
-    matchesPerRow.push(found);
-
-    for (const m of found) {
-      usageCountPerMutasi[m]++;
-    }
-
-  }
-
-  /*
-   * ==========================================================
-   * PASS 2
-   *
-   * Tulis hasil. Grup mutasi yang terpakai lebih dari satu
-   * lokasi tujuan dianggap ambigu dan dilewati.
-   * ==========================================================
-   */
+  const cocok =
+    cocokkanSemuaLokasiMutasi_(targets, mutasiKeys);
 
   let terisi = 0;
   let kosong = 0;
@@ -3211,26 +3170,10 @@ function jalankanIsiNominalMutasi_(sheet) {
     const rowNumber =
       startRow + i;
 
-    const found =
-      matchesPerRow[i];
-
     const nominalCell =
       sheet.getRange(rowNumber, headerMap[nominalMutasiKey]);
 
-    if (!found || found.length === 0) {
-
-      nominalCell.clearContent();
-      kosong++;
-      continue;
-
-    }
-
-    const adaAmbigu =
-      found.some(function(m) {
-        return usageCountPerMutasi[m] > 1;
-      });
-
-    if (adaAmbigu) {
+    if (cocok.ambiguous[i]) {
 
       nominalCell.clearContent();
 
@@ -3242,6 +3185,17 @@ function jalankanIsiNominalMutasi_(sheet) {
       );
 
       ambigu++;
+      continue;
+
+    }
+
+    const found =
+      cocok.assigned[i];
+
+    if (!found || found.length === 0) {
+
+      nominalCell.clearContent();
+      kosong++;
       continue;
 
     }
@@ -3274,6 +3228,197 @@ function jalankanIsiNominalMutasi_(sheet) {
     kosong: kosong,
     ambigu: ambigu,
     totalGrupMutasi: mutasiTotals.length
+  };
+
+}
+
+
+/* ============================================================
+ * 38B. COCOKKAN SEMUA LOKASI MUTASI (DUA TAHAP)
+ *
+ * TAHAP 1 - EXACT: kalau kunci grup mutasi PERSIS SAMA dengan
+ * kunci satu lokasi tujuan (dan cuma satu lokasi tujuan itu),
+ * langsung dipasangkan. Ini penting supaya nama pendek seperti
+ * "BPTIK PROV JATENG" tidak "merebut" grup mutasi milik
+ * "BPTIK PROV JATENG CAKRA" hanya karena sama-sama mengandung
+ * kata itu sebagai substring.
+ *
+ * TAHAP 2 - CONTAINMENT: baru untuk lokasi tujuan & grup mutasi
+ * yang BELUM terpasang di tahap 1, dicocokkan lagi dengan
+ * substring (containment) seperti sebelumnya. Ambigu (dipakai
+ * lebih dari satu lokasi tujuan) dihitung HANYA di antara sisa
+ * ini, bukan dari keseluruhan.
+ *
+ * targets    : array kunci lokasi tujuan (hasil normalizeLocationName_,
+ *              "" untuk baris yang lokasinya kosong).
+ * mutasiKeys : array kunci grup mutasi (hasil buatKunciLokasiMutasi_).
+ *
+ * Return: { assigned: [...], ambiguous: [...] } -- keduanya
+ * sepanjang targets. assigned[i] adalah array index mutasiKeys
+ * yang harus dijumlah untuk baris ke-i (atau null kalau tidak ada
+ * yang cocok). ambiguous[i] = true kalau baris ke-i sengaja tidak
+ * diisi karena ambigu.
+ * ============================================================
+ */
+
+function cocokkanSemuaLokasiMutasi_(targets, mutasiKeys) {
+
+  const n = targets.length;
+  const m = mutasiKeys.length;
+
+  const assigned = [];
+  const ambiguous = [];
+
+  for (let i = 0; i < n; i++) {
+    assigned.push(null);
+    ambiguous.push(false);
+  }
+
+  const consumed = [];
+
+  for (let i = 0; i < m; i++) {
+    consumed.push(false);
+  }
+
+  /*
+   * ---- TAHAP 1: EXACT ----
+   */
+
+  const exactUsage = {};
+
+  for (let d = 0; d < n; d++) {
+
+    const target = targets[d];
+
+    if (!target) continue;
+
+    for (let mi = 0; mi < m; mi++) {
+
+      const key = mutasiKeys[mi];
+
+      if (key && key === target) {
+
+        if (!exactUsage[mi]) {
+          exactUsage[mi] = [];
+        }
+
+        exactUsage[mi].push(d);
+
+      }
+
+    }
+
+  }
+
+  for (const mi in exactUsage) {
+
+    const dests = exactUsage[mi];
+
+    /*
+     * Kalau grup mutasi ini persis sama dengan lebih dari satu
+     * lokasi tujuan (jarang -- berarti ada dua lokasi tujuan
+     * dengan nama identik), jangan dipasangkan di tahap ini.
+     * Biarkan jatuh ke tahap 2 supaya tetap terdeteksi ambigu.
+     */
+    if (dests.length !== 1) {
+      continue;
+    }
+
+    const d = dests[0];
+
+    if (!assigned[d]) {
+      assigned[d] = [];
+    }
+
+    assigned[d].push(Number(mi));
+    consumed[mi] = true;
+
+  }
+
+  /*
+   * ---- TAHAP 2: CONTAINMENT, hanya untuk sisa ----
+   */
+
+  const remainingDest = [];
+
+  for (let d = 0; d < n; d++) {
+
+    if (assigned[d] === null && targets[d]) {
+      remainingDest.push(d);
+    }
+
+  }
+
+  const remainingMut = [];
+
+  for (let mi = 0; mi < m; mi++) {
+
+    if (!consumed[mi]) {
+      remainingMut.push(mi);
+    }
+
+  }
+
+  const usageCount = {};
+  const foundPerDest = {};
+
+  for (const d of remainingDest) {
+
+    const target = targets[d];
+
+    const found = [];
+
+    for (const mi of remainingMut) {
+
+      const key = mutasiKeys[mi];
+
+      if (!key || key.length < CONFIG_MUTASI.MIN_MATCH_LENGTH) {
+        continue;
+      }
+
+      if (
+        target.indexOf(key) !== -1 ||
+        key.indexOf(target) !== -1
+      ) {
+
+        found.push(mi);
+
+      }
+
+    }
+
+    foundPerDest[d] = found;
+
+    for (const mi of found) {
+      usageCount[mi] = (usageCount[mi] || 0) + 1;
+    }
+
+  }
+
+  for (const d of remainingDest) {
+
+    const found = foundPerDest[d];
+
+    if (!found || found.length === 0) {
+      continue;
+    }
+
+    const adaAmbigu =
+      found.some(function(mi) {
+        return usageCount[mi] > 1;
+      });
+
+    if (adaAmbigu) {
+      ambiguous[d] = true;
+    } else {
+      assigned[d] = found;
+    }
+
+  }
+
+  return {
+    assigned: assigned,
+    ambiguous: ambiguous
   };
 
 }
@@ -3526,16 +3671,27 @@ function cariBlokRincianMutasi_(
 
 function cariSheetMutasi_(spreadsheet) {
 
-  const target =
-    normalizeHeader_(CONFIG_MUTASI.SHEET_NAME);
+  /*
+   * Coba nama utama dulu ("NOMINAL LOKASI"), lalu fallback
+   * ke sheet mentah "MUTASI" kalau tidak ada.
+   */
+  const candidateNames =
+    [CONFIG_MUTASI.SHEET_NAME, "MUTASI"];
 
   const sheets =
     spreadsheet.getSheets();
 
-  for (const sh of sheets) {
+  for (const nama of candidateNames) {
 
-    if (normalizeHeader_(sh.getName()) === target) {
-      return sh;
+    const target =
+      normalizeHeader_(nama);
+
+    for (const sh of sheets) {
+
+      if (normalizeHeader_(sh.getName()) === target) {
+        return sh;
+      }
+
     }
 
   }
