@@ -165,6 +165,7 @@ function onOpen() {
     .addSeparator()
     .addItem("💵 Isi Nominal Mutasi (Sheet Aktif)", "menuIsiNominalMutasi")
     .addItem("🧪 Test Nominal Mutasi (Baris Aktif)", "testNominalMutasiAktif")
+    .addItem("🔎 Debug Sheet MUTASI", "debugSheetMutasi")
     .addSeparator()
     .addItem("⚙️ Tampilkan Daftar PIC", "menuTampilkanPIC")
     .addToUi();
@@ -3776,6 +3777,126 @@ function testNominalMutasiAktif() {
 
     ui.alert(
       "❌ TEST GAGAL",
+      err.message,
+      ui.ButtonSet.OK
+    );
+
+  }
+
+}
+
+
+/* ============================================================
+ * 47. DEBUG SHEET MUTASI
+ *
+ * Kalau "Isi Nominal Mutasi" gagal membaca data, jalankan menu
+ * ini untuk melihat isi mentah sheet MUTASI (nama sheet, ukuran,
+ * dan beberapa baris pertama) supaya bisa dicek kenapa header-nya
+ * tidak terdeteksi oleh cariBlokRingkasanMutasi_ / cariBlokRincianMutasi_.
+ * ============================================================
+ */
+
+function debugSheetMutasi() {
+
+  const ss =
+    SpreadsheetApp.getActiveSpreadsheet();
+
+  const ui =
+    SpreadsheetApp.getUi();
+
+  const sheet =
+    ss.getActiveSheet();
+
+  const sheetName =
+    sheet.getName();
+
+  try {
+
+    const sourceUrl =
+      getMutasiSourceUrl_(sheetName);
+
+    if (!sourceUrl) {
+
+      throw new Error(
+        'Link REKONSILIASI untuk bulan "' +
+        sheetName + '" belum diatur di CONFIG_MUTASI.SOURCES.'
+      );
+
+    }
+
+    const sourceId =
+      extractSpreadsheetId_(sourceUrl);
+
+    const sourceSS =
+      SpreadsheetApp.openById(sourceId);
+
+    const allSheetNames =
+      sourceSS.getSheets().map(function(sh) {
+        return sh.getName();
+      }).join(", ");
+
+    const mutasiSheet =
+      cariSheetMutasi_(sourceSS);
+
+    if (!mutasiSheet) {
+
+      throw new Error(
+        'Sheet "' + CONFIG_MUTASI.SHEET_NAME +
+        '" tidak ditemukan.\n\nDaftar sheet yang ada:\n' +
+        allSheetNames
+      );
+
+    }
+
+    const lastRow =
+      mutasiSheet.getLastRow();
+
+    const lastColumn =
+      mutasiSheet.getLastColumn();
+
+    const previewRows =
+      Math.min(20, lastRow);
+
+    const previewCols =
+      Math.min(10, lastColumn);
+
+    let text =
+      "Spreadsheet: " + sourceSS.getName() + "\n" +
+      "Semua sheet: " + allSheetNames + "\n\n" +
+      "Sheet MUTASI ditemukan: \"" + mutasiSheet.getName() + "\"\n" +
+      "Ukuran: " + lastRow + " baris x " + lastColumn + " kolom\n\n" +
+      "Isi " + previewRows + " baris pertama (maks " + previewCols + " kolom):\n\n";
+
+    if (previewRows > 0 && previewCols > 0) {
+
+      const data =
+        mutasiSheet
+          .getRange(1, 1, previewRows, previewCols)
+          .getDisplayValues();
+
+      for (let r = 0; r < data.length; r++) {
+
+        text +=
+          (r + 1) + ": " + data[r].join(" | ") + "\n";
+
+      }
+
+    } else {
+
+      text += "(sheet kosong)";
+
+    }
+
+    ui.alert(
+      "🔎 DEBUG SHEET MUTASI",
+      text.substring(0, 4500),
+      ui.ButtonSet.OK
+    );
+
+  } catch (err) {
+
+    ui.alert(
+      "❌ DEBUG GAGAL",
       err.message,
       ui.ButtonSet.OK
     );
