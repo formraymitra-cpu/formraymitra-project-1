@@ -128,6 +128,12 @@ const CONFIG_MUTASI = {
   // boleh dicocokkan. Mencegah kata pendek generik salah nempel.
   MIN_MATCH_LENGTH: 4,
 
+  // Pengaman: kalau NOMINAL MUTASI beda lebih dari rasio ini
+  // (mis. 0.15 = 15%) dari DITERIMA KARYAWAN, tetap ditulis tapi
+  // ditandai "CEK MANUAL" -- biasanya tanda data sumber di
+  // MUTASI/NOMINAL LOKASI kena dobel-impor atau masalah lain.
+  SANITY_CHECK_RATIO: 0.15,
+
   /*
    * ==========================================================
    * TAMBAHKAN LINK REKONSILIASI BULAN LAIN DI SINI
@@ -2999,6 +3005,8 @@ function menuIsiNominalMutasi() {
       "Grup lokasi mutasi ditemukan: " +
       hasil.totalGrupMutasi + "\n\n" +
       "Terisi: " + hasil.terisi + "\n" +
+      "  (di antaranya, beda jauh dari DITERIMA KARYAWAN: " +
+      hasil.curigai + ")\n" +
       "Kosong / tidak ada mutasi: " + hasil.kosong + "\n" +
       "Ambigu (perlu cek manual): " + hasil.ambigu,
       ui.ButtonSet.OK
@@ -3088,9 +3096,9 @@ function jalankanIsiNominalMutasi_(sheet) {
 
   }
 
-  const mutasiKeys =
+  const mutasiTokensList =
     mutasiTotals.map(function(item) {
-      return buatKunciLokasiMutasi_(item.rawLocation);
+      return tokenisasiLokasi_(item.rawLocation);
     });
 
   const headerMap =
@@ -3141,29 +3149,46 @@ function jalankanIsiNominalMutasi_(sheet) {
       .getDisplayValues();
 
   /*
+   * Kolom DITERIMA KARYAWAN dipakai sebagai pengaman (sanity
+   * check) -- kalau tersedia, dipakai untuk mendeteksi NOMINAL
+   * MUTASI yang kelihatan mencurigakan (mis. karena data sumber
+   * di MUTASI/NOMINAL LOKASI kena dobel-impor). Opsional: kalau
+   * headernya tidak ada, pengaman ini dilewati saja.
+   */
+
+  const diterimaColumn =
+    headerMap[normalizeHeader_("DITERIMA KARYAWAN")];
+
+  const diterimaValues =
+    diterimaColumn
+      ? sheet.getRange(startRow, diterimaColumn, numRows, 1).getDisplayValues()
+      : null;
+
+  /*
    * ==========================================================
-   * COCOKKAN (dua tahap: exact dulu, baru containment).
+   * COCOKKAN (dua tahap: exact dulu, baru subset token).
    * Lihat cocokkanSemuaLokasiMutasi_ untuk detail alasannya.
    * ==========================================================
    */
 
-  const targets =
+  const targetTokensList =
     locations.map(function(row) {
 
       const v = row[0];
 
       return (v && String(v).trim() !== "")
-        ? normalizeLocationName_(v)
-        : "";
+        ? tokenisasiLokasi_(v)
+        : [];
 
     });
 
   const cocok =
-    cocokkanSemuaLokasiMutasi_(targets, mutasiKeys);
+    cocokkanSemuaLokasiMutasi_(targetTokensList, mutasiTokensList);
 
   let terisi = 0;
   let kosong = 0;
   let ambigu = 0;
+  let curigai = 0;
 
   for (let i = 0; i < numRows; i++) {
 
@@ -3209,8 +3234,43 @@ function jalankanIsiNominalMutasi_(sheet) {
     if (total > 0) {
 
       nominalCell.setValue(total);
-      clearError_(sheet, rowNumber, headerMap);
       terisi++;
+
+      /*
+       * Pengaman: bandingkan dengan DITERIMA KARYAWAN. Kalau
+       * bedanya jauh (mis. karena data MUTASI dobel-impor di
+       * sumbernya), tetap ditulis (ini tetap data terbaik yang
+       * kita punya) tapi diberi tanda supaya dicek manual --
+       * bukan disembunyikan begitu saja.
+       */
+
+      const diterima =
+        diterimaValues
+          ? parseNumber_(diterimaValues[i][0])
+          : null;
+
+      if (diterima !== null && diterima > 0) {
+
+        const rasio =
+          Math.abs(total - diterima) / diterima;
+
+        if (rasio > CONFIG_MUTASI.SANITY_CHECK_RATIO) {
+
+          tulisError_(
+            sheet,
+            rowNumber,
+            headerMap,
+            "NOMINAL MUTASI BEDA JAUH DARI DITERIMA KARYAWAN, CEK MANUAL"
+          );
+
+          curigai++;
+          continue;
+
+        }
+
+      }
+
+      clearError_(sheet, rowNumber, headerMap);
 
     } else {
 
@@ -3227,6 +3287,7 @@ function jalankanIsiNominalMutasi_(sheet) {
     terisi: terisi,
     kosong: kosong,
     ambigu: ambigu,
+    curigai: curigai,
     totalGrupMutasi: mutasiTotals.length
   };
 
@@ -3234,37 +3295,48 @@ function jalankanIsiNominalMutasi_(sheet) {
 
 
 /* ============================================================
- * 38B. COCOKKAN SEMUA LOKASI MUTASI (DUA TAHAP)
+ * 38B. COCOKKAN SEMUA LOKASI MUTASI (DUA TAHAP, BERBASIS TOKEN)
  *
- * TAHAP 1 - EXACT: kalau kunci grup mutasi PERSIS SAMA dengan
- * kunci satu lokasi tujuan (dan cuma satu lokasi tujuan itu),
- * langsung dipasangkan. Ini penting supaya nama pendek seperti
+ * Dicocokkan per-KATA (token), bukan per-substring mentah.
+ * Alasannya: nama lokasi di sheet mutasi sering lebih pendek /
+ * berbeda urutan dari nama di sheet tujuan, mis.
+ * "BSN KENDAL 0 PENGECEKAN" (mutasi) vs "PT BSN TEKNOLOGI KENDAL"
+ * (tujuan) -- kata "TEKNOLOGI" di tengah bikin pencocokan
+ * substring gagal walau lokasinya sama. Dengan token, cukup cek
+ * semua kata dari yang lebih pendek ada di yang lebih panjang,
+ * tanpa peduli urutan.
+ *
+ * TAHAP 1 - EXACT: kalau kumpulan token grup mutasi PERSIS SAMA
+ * (sebagai set kata, bukan string) dengan kumpulan token satu
+ * lokasi tujuan (dan cuma satu lokasi tujuan itu), langsung
+ * dipasangkan. Ini penting supaya nama pendek seperti
  * "BPTIK PROV JATENG" tidak "merebut" grup mutasi milik
  * "BPTIK PROV JATENG CAKRA" hanya karena sama-sama mengandung
- * kata itu sebagai substring.
+ * kata-kata itu.
  *
- * TAHAP 2 - CONTAINMENT: baru untuk lokasi tujuan & grup mutasi
- * yang BELUM terpasang di tahap 1, dicocokkan lagi dengan
- * substring (containment) seperti sebelumnya. Ambigu (dipakai
- * lebih dari satu lokasi tujuan) dihitung HANYA di antara sisa
- * ini, bukan dari keseluruhan.
+ * TAHAP 2 - SUBSET: baru untuk lokasi tujuan & grup mutasi yang
+ * BELUM terpasang di tahap 1, dicocokkan lagi -- cocok kalau
+ * token yang lebih pendek adalah SUBSET dari token yang lebih
+ * panjang (kedua arah dicoba). Ambigu (dipakai lebih dari satu
+ * lokasi tujuan) dihitung HANYA di antara sisa ini.
  *
- * targets    : array kunci lokasi tujuan (hasil normalizeLocationName_,
- *              "" untuk baris yang lokasinya kosong).
- * mutasiKeys : array kunci grup mutasi (hasil buatKunciLokasiMutasi_).
+ * targetTokensList : array token lokasi tujuan (hasil
+ *                    tokenisasiLokasi_, [] untuk baris kosong).
+ * mutasiTokensList : array token grup mutasi (hasil
+ *                    tokenisasiLokasi_ dari rawLocation).
  *
  * Return: { assigned: [...], ambiguous: [...] } -- keduanya
- * sepanjang targets. assigned[i] adalah array index mutasiKeys
- * yang harus dijumlah untuk baris ke-i (atau null kalau tidak ada
- * yang cocok). ambiguous[i] = true kalau baris ke-i sengaja tidak
- * diisi karena ambigu.
+ * sepanjang targetTokensList. assigned[i] adalah array index
+ * mutasiTokensList yang harus dijumlah untuk baris ke-i (atau
+ * null kalau tidak ada yang cocok). ambiguous[i] = true kalau
+ * baris ke-i sengaja tidak diisi karena ambigu.
  * ============================================================
  */
 
-function cocokkanSemuaLokasiMutasi_(targets, mutasiKeys) {
+function cocokkanSemuaLokasiMutasi_(targetTokensList, mutasiTokensList) {
 
-  const n = targets.length;
-  const m = mutasiKeys.length;
+  const n = targetTokensList.length;
+  const m = mutasiTokensList.length;
 
   const assigned = [];
   const ambiguous = [];
@@ -3281,22 +3353,22 @@ function cocokkanSemuaLokasiMutasi_(targets, mutasiKeys) {
   }
 
   /*
-   * ---- TAHAP 1: EXACT ----
+   * ---- TAHAP 1: EXACT (set token sama persis) ----
    */
 
   const exactUsage = {};
 
   for (let d = 0; d < n; d++) {
 
-    const target = targets[d];
+    const target = targetTokensList[d];
 
-    if (!target) continue;
+    if (!target || target.length === 0) continue;
 
     for (let mi = 0; mi < m; mi++) {
 
-      const key = mutasiKeys[mi];
+      const key = mutasiTokensList[mi];
 
-      if (key && key === target) {
+      if (key && key.length > 0 && tokenSetSama_(key, target)) {
 
         if (!exactUsage[mi]) {
           exactUsage[mi] = [];
@@ -3336,14 +3408,14 @@ function cocokkanSemuaLokasiMutasi_(targets, mutasiKeys) {
   }
 
   /*
-   * ---- TAHAP 2: CONTAINMENT, hanya untuk sisa ----
+   * ---- TAHAP 2: SUBSET TOKEN, hanya untuk sisa ----
    */
 
   const remainingDest = [];
 
   for (let d = 0; d < n; d++) {
 
-    if (assigned[d] === null && targets[d]) {
+    if (assigned[d] === null && targetTokensList[d] && targetTokensList[d].length > 0) {
       remainingDest.push(d);
     }
 
@@ -3364,21 +3436,21 @@ function cocokkanSemuaLokasiMutasi_(targets, mutasiKeys) {
 
   for (const d of remainingDest) {
 
-    const target = targets[d];
+    const target = targetTokensList[d];
 
     const found = [];
 
     for (const mi of remainingMut) {
 
-      const key = mutasiKeys[mi];
+      const key = mutasiTokensList[mi];
 
-      if (!key || key.length < CONFIG_MUTASI.MIN_MATCH_LENGTH) {
+      if (!key || key.length === 0 || tokenSetPanjang_(key) < CONFIG_MUTASI.MIN_MATCH_LENGTH) {
         continue;
       }
 
       if (
-        target.indexOf(key) !== -1 ||
-        key.indexOf(target) !== -1
+        tokenSetSubsetDari_(key, target) ||
+        tokenSetSubsetDari_(target, key)
       ) {
 
         found.push(mi);
@@ -3777,6 +3849,120 @@ function buatKunciLokasiMutasi_(text) {
 
 
 /* ============================================================
+ * 45B. TOKENISASI LOKASI (UNTUK PENCOCOKAN PER-KATA)
+ *
+ * Kunci string (buatKunciLokasiMutasi_) gagal kalau urutan kata
+ * beda, mis. "BSN KENDAL 0 PENGECEKAN" (di MUTASI) vs
+ * "PT BSN TEKNOLOGI KENDAL" (di sheet tujuan) -- kata "TEKNOLOGI"
+ * di tengah bikin pencocokan substring gagal walau lokasinya sama.
+ *
+ * Jadi dipecah jadi kumpulan kata (token), lalu dicek apakah
+ * SEMUA kata dari yang lebih pendek ada di yang lebih panjang
+ * (tanpa peduli urutan). "0" yang nyasar (mis. dari bug proses
+ * lain) dibuang juga -- tidak ada lokasi asli yang cuma "0".
+ * ============================================================
+ */
+
+function tokenisasiLokasi_(text) {
+
+  if (!text) {
+    return [];
+  }
+
+  const raw =
+    String(text)
+      .toUpperCase()
+      .replace(/[^A-Z0-9]+/g, " ")
+      .trim();
+
+  if (!raw) {
+    return [];
+  }
+
+  const noise =
+    CONFIG_MUTASI.NOISE_WORDS;
+
+  return raw.split(" ").filter(function(tok) {
+
+    if (!tok) return false;
+    if (noise.indexOf(tok) !== -1) return false;
+    if (tok === "0") return false;
+
+    return true;
+
+  });
+
+}
+
+
+/* ============================================================
+ * 45C. BANDINGKAN DUA KUMPULAN TOKEN LOKASI
+ * ============================================================
+ */
+
+function tokenSetPanjang_(tokens) {
+
+  let total = 0;
+
+  for (const t of tokens) {
+    total += t.length;
+  }
+
+  return total;
+
+}
+
+function tokenSetSama_(a, b) {
+
+  if (a.length === 0 || a.length !== b.length) {
+    return false;
+  }
+
+  const hitungA = {};
+  const hitungB = {};
+
+  for (const t of a) {
+    hitungA[t] = (hitungA[t] || 0) + 1;
+  }
+
+  for (const t of b) {
+    hitungB[t] = (hitungB[t] || 0) + 1;
+  }
+
+  for (const k in hitungA) {
+    if (hitungA[k] !== hitungB[k]) return false;
+  }
+
+  for (const k in hitungB) {
+    if (hitungB[k] !== hitungA[k]) return false;
+  }
+
+  return true;
+
+}
+
+function tokenSetSubsetDari_(kecil, besar) {
+
+  if (kecil.length === 0) {
+    return false;
+  }
+
+  const setBesar = {};
+
+  for (const t of besar) {
+    setBesar[t] = true;
+  }
+
+  for (const t of kecil) {
+    if (!setBesar[t]) return false;
+  }
+
+  return true;
+
+}
+
+
+/* ============================================================
  * 46. TEST NOMINAL MUTASI SATU LOKASI
  *
  * Cara pakai: pilih salah satu baris data lokasi pada sheet
@@ -3871,22 +4057,23 @@ function testNominalMutasiAktif() {
       buildMutasiLocationTotals_(mutasiSheet);
 
     const target =
-      normalizeLocationName_(namaLokasi);
+      tokenisasiLokasi_(namaLokasi);
 
     const found = [];
 
     for (const item of mutasiTotals) {
 
       const key =
-        buatKunciLokasiMutasi_(item.rawLocation);
+        tokenisasiLokasi_(item.rawLocation);
 
-      if (!key || key.length < CONFIG_MUTASI.MIN_MATCH_LENGTH) {
+      if (!key || key.length === 0 || tokenSetPanjang_(key) < CONFIG_MUTASI.MIN_MATCH_LENGTH) {
         continue;
       }
 
       if (
-        target.indexOf(key) !== -1 ||
-        key.indexOf(target) !== -1
+        tokenSetSama_(key, target) ||
+        tokenSetSubsetDari_(key, target) ||
+        tokenSetSubsetDari_(target, key)
       ) {
 
         found.push(item);
