@@ -63,7 +63,17 @@ SOURCES: {
      dicek manual (mis. kalau mutasinya cuma tertulis "BAPENDA PENGECEKAN"
      padahal ada dua kandidat lokasi tujuan, "BAPENDA PROV JATENG" dan
      "BAPENDA KALTENG").
-4. **Pengaman tambahan**: kalau kolom DITERIMA KARYAWAN sudah terisi, hasil
+4. **Alias istilah** (`CONFIG_MUTASI.ALIASES`): sebagian lokasi ditulis dengan
+   ISTILAH BERBEDA SAMA SEKALI antara MUTASI dan sheet tujuan (bukan cuma
+   beda singkatan/urutan kata) — mis. "SAMSAT" (mutasi) = "UPPD" (tujuan),
+   "RSUD"/"RSU" = "RS", "KABUPATEN" = "KAB", "SATPAM" = "KEAMANAN", nama
+   perusahaan yang disingkat beda ("...TD" = "...TRADING DISTRIBUTION"), dll.
+   Alias ini diterapkan ke KEDUA sisi sebelum tokenisasi, jadi kata di kedua
+   sisi berakhir sama. **Ini daftar yang terus berkembang** — kalau nanti
+   ketemu lokasi lain yang tidak ke-detect padahal datanya ada di MUTASI,
+   cek dulu apakah istilahnya beda total (bukan cuma pencocokan token biasa
+   yang kurang), lalu tambahkan alias barunya di sini.
+5. **Pengaman tambahan**: kalau kolom DITERIMA KARYAWAN sudah terisi, hasil
    NOMINAL MUTASI dibandingkan dengan nilai itu. Kalau bedanya lebih dari
    `CONFIG_MUTASI.SANITY_CHECK_RATIO` (default 15%), nilainya TETAP ditulis
    (masih data terbaik yang ada) tapi ditandai "NOMINAL MUTASI BEDA JAUH DARI

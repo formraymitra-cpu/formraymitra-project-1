@@ -122,7 +122,12 @@ const CONFIG_MUTASI = {
 
   // Kata-kata "noise" yang dibuang dari NAMA LOKASI di sheet MUTASI
   // sebelum dicocokkan dengan NAMA LOKASI di sheet tujuan.
-  NOISE_WORDS: ["PENGECEKAN", "PTSP", "KERJA", "ADMIN"],
+  //
+  // CATATAN: "ADMIN" sengaja TIDAK dibuang -- di beberapa lokasi kata
+  // itu justru pembeda sub-bagian yang penting (mis. "RSUD DR
+  // ADHIYATMA ADMIN" vs "...SATPAM"). Membuangnya bikin dua sub-bagian
+  // itu jadi ambigu satu sama lain.
+  NOISE_WORDS: ["PENGECEKAN", "PTSP", "KERJA"],
 
   // Panjang minimum (setelah normalisasi) supaya sebuah lokasi
   // boleh dicocokkan. Mencegah kata pendek generik salah nempel.
@@ -133,6 +138,70 @@ const CONFIG_MUTASI = {
   // ditandai "CEK MANUAL" -- biasanya tanda data sumber di
   // MUTASI/NOMINAL LOKASI kena dobel-impor atau masalah lain.
   SANITY_CHECK_RATIO: 0.15,
+
+  /*
+   * ==========================================================
+   * ALIAS / SINONIM NAMA LOKASI
+   * ==========================================================
+   *
+   * Sebagian lokasi ditulis DENGAN ISTILAH BERBEDA SAMA SEKALI
+   * antara sheet MUTASI dan sheet tujuan (bukan cuma beda
+   * singkatan/urutan kata, yang sudah ditangani token matching
+   * biasa). Untuk kasus ini, tambahkan alias di sini: KEY = kata
+   * (boleh beberapa kata) yang dipakai di salah satu sisi, VALUE
+   * = kata pengganti yang disamakan. Berlaku dua arah (dipakai
+   * untuk lokasi tujuan MAUPUN lokasi di MUTASI).
+   *
+   * Contoh:
+   *
+   * "SAMSAT": "UPPD"
+   *   -> MUTASI menulis "SAMSAT 1", tujuan menulis
+   *      "UPPD KOTA SEMARANG 1". Setelah alias, keduanya
+   *      sama-sama punya token UPPD + 1.
+   *
+   * JANGAN HAPUS alias yang sudah ada. Tambahkan yang baru kalau
+   * ketemu lokasi lain yang istilahnya beda total.
+   */
+
+  ALIASES: {
+
+    "SAMSAT": "UPPD",
+
+    "KABUPATEN": "KAB",
+
+    "PROVINSI": "PROV",
+
+    "MGL": "MAGELANG",
+
+    "ADHYATMA": "ADHIYATMA",
+
+    "SEKRETARIAT": "SEKRETARIS",
+
+    "SATPAM": "KEAMANAN",
+
+    "RSUD": "RS",
+
+    "RSU": "RS",
+
+    "IND": "INDONESIA",
+
+    "EMMANUEL": "EMANUEL",
+
+    "TAUROT": "TAUROTS",
+
+    "N": "NEGERI",
+
+    "MM": "MITRA MANDIRI",
+
+    "TD": "TRADING DISTRIBUTION"
+
+    /*
+     * CONTOH ALIAS BARU:
+     *
+     * "ISTILAH DI SATU SISI": "ISTILAH DI SISI LAIN",
+     */
+
+  },
 
   /*
    * ==========================================================
@@ -3869,7 +3938,7 @@ function tokenisasiLokasi_(text) {
     return [];
   }
 
-  const raw =
+  let raw =
     String(text)
       .toUpperCase()
       .replace(/[^A-Z0-9]+/g, " ")
@@ -3878,6 +3947,9 @@ function tokenisasiLokasi_(text) {
   if (!raw) {
     return [];
   }
+
+  raw =
+    terapkanAliasLokasi_(raw);
 
   const noise =
     CONFIG_MUTASI.NOISE_WORDS;
@@ -3891,6 +3963,43 @@ function tokenisasiLokasi_(text) {
     return true;
 
   });
+
+}
+
+
+/* ============================================================
+ * 45D. TERAPKAN ALIAS LOKASI
+ *
+ * Ganti kata/frasa di CONFIG_MUTASI.ALIASES dengan padanannya,
+ * sebelum teks dipecah jadi token. Berlaku untuk kedua sisi
+ * (lokasi tujuan maupun lokasi di MUTASI), jadi keduanya berakhir
+ * dengan istilah yang sama walau aslinya beda sama sekali
+ * (mis. "SAMSAT" vs "UPPD").
+ * ============================================================
+ */
+
+function terapkanAliasLokasi_(raw) {
+
+  let hasil =
+    " " + raw + " ";
+
+  const aliases =
+    CONFIG_MUTASI.ALIASES || {};
+
+  for (const key in aliases) {
+
+    const keyPadded =
+      " " + key + " ";
+
+    const valuePadded =
+      " " + aliases[key] + " ";
+
+    hasil =
+      hasil.split(keyPadded).join(valuePadded);
+
+  }
+
+  return hasil.trim();
 
 }
 
