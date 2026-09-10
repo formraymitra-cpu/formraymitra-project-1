@@ -91,7 +91,41 @@
   .segmented button.active{ background:var(--surface); color:var(--ink); box-shadow:0 1px 2px rgba(0,0,0,.08); font-weight:600; }
   .segmented button:focus-visible{ outline:2px solid var(--ink); outline-offset:1px; }
 
-  .controls-row{ display:flex; flex-wrap:wrap; gap:10px; }
+  .controls-row{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+
+  .select-wrap{ position:relative; display:inline-flex; align-items:center; }
+  .select-wrap::after{
+    content:""; position:absolute; right:11px; pointer-events:none;
+    width:8px; height:8px; border-right:1.5px solid var(--ink-muted); border-bottom:1.5px solid var(--ink-muted);
+    transform:rotate(45deg) translateY(-3px);
+  }
+  .month-select{
+    font:inherit; font-family:"IBM Plex Sans",sans-serif; font-size:12.5px; font-weight:500;
+    color:var(--ink); background:var(--surface-2); border:1px solid transparent;
+    border-radius:8px; padding:7px 30px 7px 12px; cursor:pointer;
+    appearance:none; -webkit-appearance:none; -moz-appearance:none;
+  }
+  .month-select:focus-visible{ outline:2px solid var(--ink); outline-offset:1px; }
+
+  .search-wrap{ position:relative; flex:none; }
+  .log-search{
+    font:inherit; font-family:"IBM Plex Sans",sans-serif; font-size:13px;
+    border:1px solid var(--line-strong); border-radius:8px; padding:7px 12px 7px 30px;
+    background:var(--surface); color:var(--ink); width:220px; max-width:60vw;
+  }
+  .log-search::placeholder{ color:var(--ink-muted); }
+  .log-search:focus-visible{ outline:2px solid var(--ink); outline-offset:1px; }
+  .search-wrap::before{
+    content:""; position:absolute; left:10px; top:50%; width:11px; height:11px;
+    transform:translateY(-50%);
+    border:1.5px solid var(--ink-muted); border-radius:50%;
+    box-sizing:border-box;
+  }
+  .search-wrap::after{
+    content:""; position:absolute; left:19px; top:calc(50% + 5px); width:6px; height:1.5px;
+    background:var(--ink-muted); transform:rotate(45deg);
+  }
+  .log-count{ font-size:12px; color:var(--ink-muted); white-space:nowrap; }
 
   .chart-scroll{ overflow-x:auto; padding-bottom:4px; }
   .chart-legend{ display:flex; gap:16px; font-size:12.5px; color:var(--ink-2); margin-top:10px; flex-wrap:wrap; }
@@ -204,7 +238,9 @@
           <button data-metric="tasks" class="active">Jumlah Tugas</button>
           <button data-metric="lokasi">Lokasi Ditangani</button>
         </div>
-        <div class="segmented" id="month-filter"></div>
+        <div class="select-wrap">
+          <select id="month-select" class="month-select" aria-label="Filter bulan"></select>
+        </div>
       </div>
     </div>
     <div class="chart-scroll">
@@ -231,6 +267,12 @@
   <section class="panel">
     <div class="panel-head">
       <div><h2>Jurnal Harian</h2><p class="note">Klik baris untuk melihat rincian tugas</p></div>
+      <div class="controls-row">
+        <span class="log-count" id="log-count"></span>
+        <div class="search-wrap">
+          <input type="search" id="log-search" class="log-search" placeholder="Cari tugas / tanggal…" aria-label="Cari jurnal">
+        </div>
+      </div>
     </div>
     <div class="table-scroll">
       <table class="log-table">
@@ -312,13 +354,13 @@
 
   document.getElementById('donut-note').textContent = summary.total_tasks + ' tugas · klasifikasi dari judul pekerjaan';
 
-  /* ---------------- month filter + legend ---------------- */
-  var monthFilterEl = document.getElementById('month-filter');
-  var buttonsHtml = '<button data-month="ALL" class="active">Semua</button>';
+  /* ---------------- month filter (dropdown, scales to many months) + legend ---------------- */
+  var monthSelectEl = document.getElementById('month-select');
+  var optionsHtml = '<option value="ALL">Semua Bulan (' + summary.total_days + ' hari)</option>';
   summary.months.forEach(function(m){
-    buttonsHtml += '<button data-month="' + m.name + '">' + titleCase(m.name) + '</button>';
+    optionsHtml += '<option value="' + m.name + '">' + titleCase(m.name) + ' (' + m.days + ' hari)</option>';
   });
-  monthFilterEl.innerHTML = buttonsHtml;
+  monthSelectEl.innerHTML = optionsHtml;
 
   document.getElementById('chart-legend').innerHTML = summary.months.map(function(m){
     return '<span class="item"><span class="swatch" style="background:' + monthColor(m.name) + '"></span>' + titleCase(m.name) + '</span>';
@@ -328,14 +370,26 @@
   var svg = document.getElementById('bar');
   var svgNS = 'http://www.w3.org/2000/svg';
   var tooltip = document.getElementById('tooltip');
-  var state = { metric: 'tasks', month: 'ALL' };
+  var state = { metric: 'tasks', month: 'ALL', search: '' };
 
-  function filteredDays(){
+  function monthFilteredDays(){
     return state.month === 'ALL' ? days : days.filter(function(d){ return d.month === state.month; });
   }
 
+  function logFilteredDays(){
+    var list = monthFilteredDays();
+    var q = state.search.trim().toLowerCase();
+    if (!q) return list;
+    return list.filter(function(d){
+      if (d.date.toLowerCase().indexOf(q) !== -1) return true;
+      return d.tasks.some(function(t){
+        return t.task.toLowerCase().indexOf(q) !== -1 || t.ket.toLowerCase().indexOf(q) !== -1;
+      });
+    });
+  }
+
   function drawChart(){
-    var list = filteredDays();
+    var list = monthFilteredDays();
     var barW = 20, gap = 6;
     var padL = 44, padR = 12, padT = 14, padB = 28;
     var plotH = 210;
@@ -420,13 +474,20 @@
     state.metric = btn.dataset.metric;
     drawChart();
   });
-  monthFilterEl.addEventListener('click', function(e){
-    var btn = e.target.closest('button'); if (!btn) return;
-    document.querySelectorAll('#month-filter button').forEach(function(b){ b.classList.remove('active'); });
-    btn.classList.add('active');
-    state.month = btn.dataset.month;
+  monthSelectEl.addEventListener('change', function(){
+    state.month = monthSelectEl.value;
     drawChart();
     renderLog();
+  });
+
+  var logSearchEl = document.getElementById('log-search');
+  var searchDebounce;
+  logSearchEl.addEventListener('input', function(){
+    clearTimeout(searchDebounce);
+    searchDebounce = setTimeout(function(){
+      state.search = logSearchEl.value;
+      renderLog();
+    }, 120);
   });
 
   drawChart();
@@ -514,9 +575,20 @@
 
   /* ---------------- log table ---------------- */
   var logBody = document.getElementById('log-body');
+  var logCountEl = document.getElementById('log-count');
   function renderLog(){
-    var list = filteredDays();
+    var list = logFilteredDays();
+    var q = state.search.trim().toLowerCase();
+    logCountEl.textContent = q ? (list.length + ' dari ' + monthFilteredDays().length + ' hari') : (list.length + ' hari');
     logBody.innerHTML = '';
+
+    if (!list.length){
+      var emptyTr = document.createElement('tr');
+      emptyTr.innerHTML = '<td colspan="5" class="empty-note">Tidak ada jurnal yang cocok dengan pencarian.</td>';
+      logBody.appendChild(emptyTr);
+      return;
+    }
+
     list.forEach(function(d){
       var tr = document.createElement('tr');
       tr.className = 'log-row';
@@ -548,6 +620,11 @@
         detailTr.classList.toggle('open');
       });
 
+      if (q){
+        tr.classList.add('open');
+        detailTr.classList.add('open');
+      }
+
       logBody.appendChild(tr);
       logBody.appendChild(detailTr);
     });
@@ -555,6 +632,7 @@
   renderLog();
 
   function jumpToRow(date){
+    if (state.search){ state.search = ''; logSearchEl.value = ''; renderLog(); }
     var row = Array.prototype.find.call(document.querySelectorAll('.log-row'), function(r){ return r.dataset.date === date; });
     if (!row) return;
     row.scrollIntoView({behavior:'smooth', block:'center'});
