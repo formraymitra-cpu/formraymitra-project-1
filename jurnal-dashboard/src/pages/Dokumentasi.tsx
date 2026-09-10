@@ -2,7 +2,9 @@ import { useMemo, useState } from "react";
 import { useDataset } from "../useDataset";
 import DinoGreeting from "../components/DinoGreeting";
 import EmojiBadge from "../components/EmojiBadge";
+import FotoModal from "../components/FotoModal";
 import { formatTanggal } from "../lib/format";
+import { getFotoUntukTanggal } from "../lib/gas";
 
 const PAGE_SIZE = 20;
 
@@ -10,10 +12,26 @@ export default function Dokumentasi() {
   const d = useDataset();
   const [page, setPage] = useState(1);
 
+  const [modalTanggal, setModalTanggal] = useState<string | null>(null);
+  const [images, setImages] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const hariBerfoto = useMemo(() => d.days.filter((day) => day.jumlahFoto > 0).sort((a, b) => (a.tanggal < b.tanggal ? 1 : -1)), [d.days]);
 
   const totalPages = Math.max(1, Math.ceil(hariBerfoto.length / PAGE_SIZE));
   const pageRows = hariBerfoto.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  function bukaFoto(tanggal: string, jumlahFoto: number) {
+    setModalTanggal(tanggal);
+    setImages([]);
+    setError(null);
+    setLoading(true);
+    getFotoUntukTanggal(tanggal, jumlahFoto)
+      .then(setImages)
+      .catch((err: Error) => setError(err.message))
+      .finally(() => setLoading(false));
+  }
 
   return (
     <div className="flex flex-col gap-5 px-6 py-8 sm:px-10 sm:pb-14">
@@ -59,15 +77,16 @@ export default function Dokumentasi() {
               ))}
             </div>
             {pageRows.map((day) => (
-              <div
+              <button
                 key={day.tanggal}
-                className="grid grid-cols-[1.2fr_1fr_1fr_1fr] items-center gap-3 border-b border-border px-5 py-3 last:border-b-0"
+                onClick={() => bukaFoto(day.tanggal, day.jumlahFoto)}
+                className="grid w-full grid-cols-[1.2fr_1fr_1fr_1fr] items-center gap-3 border-b border-border bg-transparent px-5 py-3 text-left last:border-b-0 hover:bg-surface-alt"
               >
                 <span className="text-[13px] font-semibold">{formatTanggal(day.tanggal)}</span>
                 <span className="text-[13px] text-ink-secondary">{day.hari}</span>
                 <span className="text-[13px] text-ink-secondary">{day.totalTugas}</span>
-                <span className="text-[13px] font-bold">📸 {day.jumlahFoto}</span>
-              </div>
+                <span className="text-[13px] font-bold text-accent">📸 {day.jumlahFoto} &middot; Lihat</span>
+              </button>
             ))}
           </div>
         </div>
@@ -99,9 +118,19 @@ export default function Dokumentasi() {
       </div>
 
       <p className="text-xs text-ink-tertiary">
-        Foto asli (screenshot layar) ada di sheet <strong>"&lt;BULAN&gt; FOTO"</strong> pada spreadsheet sumber
-        "JURNAL HARIAN DINI SAFFANAH 2026" — dashboard ini hanya menampilkan rekap jumlahnya per hari/bulan.
+        Klik salah satu baris untuk memuat foto aslinya langsung dari sheet <strong>"&lt;BULAN&gt; FOTO"</strong> di
+        spreadsheet sumber (hanya bisa saat dashboard dibuka sebagai Apps Script Web App).
       </p>
+
+      {modalTanggal && (
+        <FotoModal
+          tanggalLabel={formatTanggal(modalTanggal)}
+          images={images}
+          loading={loading}
+          error={error}
+          onClose={() => setModalTanggal(null)}
+        />
+      )}
     </div>
   );
 }

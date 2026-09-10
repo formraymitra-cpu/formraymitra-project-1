@@ -1,8 +1,12 @@
 # Dashboard Monitoring Pekerjaan Harian — Dini Saffanah
 
-Web app untuk memantau jurnal harian ("JURNAL HARIAN DINI SAFFANAH 2026"): 3
+Web app untuk memantau jurnal harian ("JURNAL HARIAN DINI SAFFANAH 2026"): 4
 halaman — Overview (KPI eksekutif + chart), Rekap Bulanan (tabel ringkasan per
-bulan), dan Monitoring Harian (tabel semua tugas, bisa difilter & dicari).
+bulan), Monitoring Harian (tabel semua tugas, bisa difilter & dicari), dan
+Dokumentasi (rekap screenshot bukti kerja — klik satu hari untuk melihat foto
+aslinya, dimuat langsung dari sheet galeri di spreadsheet; fitur ini hanya
+aktif saat dashboard dibuka sebagai Apps Script Web App, bukan di preview
+lokal).
 
 ## Menjalankan (dev lokal)
 

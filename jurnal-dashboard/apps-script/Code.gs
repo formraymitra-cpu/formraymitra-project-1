@@ -202,6 +202,54 @@ function buildDataset() {
 }
 
 /**
+ * Ambil foto asli (base64) untuk satu tanggal, dari sheet galeri "<BULAN> FOTO".
+ * Dipanggil on-demand dari frontend (google.script.run) saat user klik satu
+ * baris di halaman Dokumentasi — TIDAK ikut dimuat di buildDataset() supaya
+ * dataset awal tetap ringan (ratusan foto terlalu berat untuk dikirim sekaligus).
+ *
+ * Mengandalkan format sheet galeri hasil merge.py: header per tanggal berbunyi
+ * persis "DD/MM/YYYY (Hari) - N foto" di kolom A, lalu N baris berikutnya
+ * masing-masing berisi satu gambar (satu gambar per baris, berurutan).
+ */
+function getFotoUntukTanggal(tanggalIso, jumlahFoto) {
+  var d = new Date(tanggalIso + "T00:00:00");
+  var monthLabel = MONTH_LABEL_ID[d.getMonth() + 1].toUpperCase();
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(monthLabel + " FOTO");
+  if (!sheet) return [];
+
+  var tanggalStr = Utilities.formatDate(d, Session.getScriptTimeZone() || "Asia/Jakarta", "dd/MM/yyyy");
+  var lastRow = sheet.getLastRow();
+  var colA = sheet.getRange(1, 1, lastRow, 1).getValues();
+  var headerRow = -1;
+  for (var r = 0; r < colA.length; r++) {
+    var v = colA[r][0];
+    if (typeof v === "string" && v.indexOf(tanggalStr) === 0) {
+      headerRow = r + 1; // getRange di atas 1-indexed, r+1 = nomor baris asli
+      break;
+    }
+  }
+  if (headerRow === -1) return [];
+
+  var count = jumlahFoto || 0;
+  var minRow = headerRow + 1;
+  var maxRow = headerRow + count;
+
+  var images = sheet.getImages().filter(function (img) {
+    var row = img.getAnchorCell().getRow();
+    return row >= minRow && row <= maxRow;
+  });
+  images.sort(function (a, b) {
+    return a.getAnchorCell().getRow() - b.getAnchorCell().getRow();
+  });
+
+  return images.map(function (img) {
+    var blob = img.getBlob();
+    return "data:" + blob.getContentType() + ";base64," + Utilities.base64Encode(blob.getBytes());
+  });
+}
+
+/**
  * Sisipkan isi mentah file lain TANPA evaluasi scriptlet (aman untuk bundle JS
  * hasil minify yang mungkin kebetulan mengandung teks "<?" atau "?>").
  */
