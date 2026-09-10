@@ -4,7 +4,7 @@ import { useDataset } from "../useDataset";
 import type { ShellContext } from "../AppShell";
 import { KpiCard } from "../components/KpiCard";
 import { DonutChart, KesTkLegend, StageBarChart, TrendLineChart } from "../components/charts";
-import { formatPct, formatRupiah } from "../lib/format";
+import { formatPct, formatRupiah, formatRupiahCompact } from "../lib/format";
 import { STAGE_DEFS } from "../types";
 
 export default function Overview() {
@@ -53,7 +53,11 @@ export default function Overview() {
         />
         <KpiCard label="Lokasi Selesai Tuntas" value={String(month.lokasiSelesai)} tone="good" />
         <KpiCard label="Belum Disentuh" value={String(belumDisentuh)} tone={belumDisentuh > 0 ? "bad" : "default"} />
-        <KpiCard label="Total Tagihan (Rumah Baru)" value={formatRupiah(totalTagihan)} sub={`${dataset.payments.length} lokasi baru`} />
+        <KpiCard
+          label="Total Tagihan (Rumah Baru)"
+          value={formatRupiahCompact(totalTagihan)}
+          sub={`${formatRupiah(totalTagihan)} · ${dataset.payments.length} lokasi baru`}
+        />
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -83,7 +87,9 @@ export default function Overview() {
 
       <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
         <h2 className="mb-1 font-mn text-sm font-bold text-ink">Tren Penyelesaian Antar Bulan</h2>
-        <p className="mb-4 text-xs text-ink-secondary">April – Agustus 2026</p>
+        <p className="mb-4 text-xs text-ink-secondary">
+          {dataset.months[0].label} – {dataset.months[dataset.months.length - 1].label}
+        </p>
         <TrendLineChart points={trendPoints} />
       </section>
     </div>

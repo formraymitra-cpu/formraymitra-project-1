@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { createHashRouter, RouterProvider } from "react-router-dom";
 import { AppShell } from "./AppShell";
+import { DatasetProvider } from "./useDataset";
 import Overview from "./pages/Overview";
 import MonthlyProgress from "./pages/MonthlyProgress";
 import LocationDetail from "./pages/LocationDetail";
@@ -26,6 +27,8 @@ const router = createHashRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <DatasetProvider>
+      <RouterProvider router={router} />
+    </DatasetProvider>
   </React.StrictMode>,
 );

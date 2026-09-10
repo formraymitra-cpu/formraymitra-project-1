@@ -20,6 +20,13 @@ npm install
 npm run dev
 ```
 
+## Deploy live-sync lewat Google Apps Script (opsional, direkomendasikan)
+
+Ada versi yang jalan langsung di dalam Google Sheets sumbernya sendiri lewat
+Apps Script — tidak perlu build/deploy ulang tiap kali spreadsheet diupdate,
+karena setiap dashboard dibuka, datanya dibaca ulang live dari spreadsheet.
+Lihat **[`apps-script/README.md`](apps-script/README.md)** untuk langkah deploy-nya.
+
 ## Data
 
 Dataset di `src/data/dashboard-data.json` dihasilkan dari sheet `APRIL`–`AGUSTUS`
