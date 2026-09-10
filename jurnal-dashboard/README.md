@@ -3,10 +3,10 @@
 Web app untuk memantau jurnal harian ("JURNAL HARIAN DINI SAFFANAH 2026"): 4
 halaman — Overview (KPI eksekutif + chart), Rekap Bulanan (tabel ringkasan per
 bulan), Monitoring Harian (tabel semua tugas, bisa difilter & dicari), dan
-Dokumentasi (rekap screenshot bukti kerja — klik satu hari untuk melihat foto
-aslinya, dimuat langsung dari sheet galeri di spreadsheet; fitur ini hanya
-aktif saat dashboard dibuka sebagai Apps Script Web App, bukan di preview
-lokal).
+Dokumentasi (rekap screenshot bukti kerja, bisa difilter per bulan/tanggal —
+klik satu hari untuk membuka galeri foto aslinya di tab baru, langsung ke
+baris tanggal itu pada sheet galeri di spreadsheet; fitur ini hanya aktif saat
+dashboard dibuka sebagai Apps Script Web App, bukan di preview lokal).
 
 ## Menjalankan (dev lokal)
 

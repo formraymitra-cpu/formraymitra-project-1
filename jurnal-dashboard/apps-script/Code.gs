@@ -202,21 +202,26 @@ function buildDataset() {
 }
 
 /**
- * Ambil foto asli (base64) untuk satu tanggal, dari sheet galeri "<BULAN> FOTO".
- * Dipanggil on-demand dari frontend (google.script.run) saat user klik satu
- * baris di halaman Dokumentasi — TIDAK ikut dimuat di buildDataset() supaya
- * dataset awal tetap ringan (ratusan foto terlalu berat untuk dikirim sekaligus).
+ * Cari baris tanggal di sheet galeri "<BULAN> FOTO" dan kembalikan URL
+ * spreadsheet yang langsung meloncat ke baris itu. Dipanggil on-demand dari
+ * frontend (google.script.run) saat user klik satu baris di halaman
+ * Dokumentasi, lalu dibuka di tab baru.
+ *
+ * Catatan: Apps Script (SpreadsheetApp) tidak punya API untuk mengambil isi
+ * mentah (bytes) gambar yang ditempel mengambang di sheet ("over the grid
+ * image") — OverGridImage tidak punya getBlob(). Makanya di sini kita hanya
+ * cari lokasinya lalu antar user ke sana, bukan menampilkan gambarnya inline
+ * di dashboard.
  *
  * Mengandalkan format sheet galeri hasil merge.py: header per tanggal berbunyi
- * persis "DD/MM/YYYY (Hari) - N foto" di kolom A, lalu N baris berikutnya
- * masing-masing berisi satu gambar (satu gambar per baris, berurutan).
+ * persis "DD/MM/YYYY (Hari) - N foto" di kolom A.
  */
-function getFotoUntukTanggal(tanggalIso, jumlahFoto) {
+function getFotoLinkUntukTanggal(tanggalIso) {
   var d = new Date(tanggalIso + "T00:00:00");
   var monthLabel = MONTH_LABEL_ID[d.getMonth() + 1].toUpperCase();
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName(monthLabel + " FOTO");
-  if (!sheet) return [];
+  if (!sheet) return null;
 
   var tanggalStr = Utilities.formatDate(d, Session.getScriptTimeZone() || "Asia/Jakarta", "dd/MM/yyyy");
   var lastRow = sheet.getLastRow();
@@ -229,24 +234,9 @@ function getFotoUntukTanggal(tanggalIso, jumlahFoto) {
       break;
     }
   }
-  if (headerRow === -1) return [];
+  if (headerRow === -1) return null;
 
-  var count = jumlahFoto || 0;
-  var minRow = headerRow + 1;
-  var maxRow = headerRow + count;
-
-  var images = sheet.getImages().filter(function (img) {
-    var row = img.getAnchorCell().getRow();
-    return row >= minRow && row <= maxRow;
-  });
-  images.sort(function (a, b) {
-    return a.getAnchorCell().getRow() - b.getAnchorCell().getRow();
-  });
-
-  return images.map(function (img) {
-    var blob = img.getBlob();
-    return "data:" + blob.getContentType() + ";base64," + Utilities.base64Encode(blob.getBytes());
-  });
+  return ss.getUrl() + "#gid=" + sheet.getSheetId() + "&range=A" + headerRow;
 }
 
 /**

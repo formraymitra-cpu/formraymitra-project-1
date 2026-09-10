@@ -2,9 +2,10 @@ import { useMemo, useState } from "react";
 import { useDataset } from "../useDataset";
 import DinoGreeting from "../components/DinoGreeting";
 import EmojiBadge from "../components/EmojiBadge";
-import FotoModal from "../components/FotoModal";
+import FilterChip from "../components/FilterChip";
+import { Search } from "../components/icons";
 import { formatTanggal } from "../lib/format";
-import { getFotoUntukTanggal } from "../lib/gas";
+import { getFotoLinkUntukTanggal } from "../lib/gas";
 
 const PAGE_SIZE = 20;
 
@@ -12,25 +13,67 @@ export default function Dokumentasi() {
   const d = useDataset();
   const [page, setPage] = useState(1);
 
-  const [modalTanggal, setModalTanggal] = useState<string | null>(null);
-  const [images, setImages] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const bulanOptions = useMemo(() => ["Semua", ...d.months.map((m) => m.label)], [d.months]);
+  const [bulan, setBulan] = useState("Semua");
+  const [q, setQ] = useState("");
 
-  const hariBerfoto = useMemo(() => d.days.filter((day) => day.jumlahFoto > 0).sort((a, b) => (a.tanggal < b.tanggal ? 1 : -1)), [d.days]);
+  const [openingTanggal, setOpeningTanggal] = useState<string | null>(null);
+  const [openError, setOpenError] = useState<string | null>(null);
 
-  const totalPages = Math.max(1, Math.ceil(hariBerfoto.length / PAGE_SIZE));
-  const pageRows = hariBerfoto.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const monthCodeByLabel = useMemo(() => {
+    const map = new Map<string, string>();
+    d.months.forEach((m) => map.set(m.label, m.code));
+    return map;
+  }, [d.months]);
 
-  function bukaFoto(tanggal: string, jumlahFoto: number) {
-    setModalTanggal(tanggal);
-    setImages([]);
-    setError(null);
-    setLoading(true);
-    getFotoUntukTanggal(tanggal, jumlahFoto)
-      .then(setImages)
-      .catch((err: Error) => setError(err.message))
-      .finally(() => setLoading(false));
+  const hariBerfoto = useMemo(
+    () => d.days.filter((day) => day.jumlahFoto > 0).sort((a, b) => (a.tanggal < b.tanggal ? 1 : -1)),
+    [d.days]
+  );
+
+  const filtered = useMemo(() => {
+    return hariBerfoto.filter((day) => {
+      if (bulan !== "Semua" && !day.tanggal.startsWith(monthCodeByLabel.get(bulan) ?? "\0")) return false;
+      if (q.trim()) {
+        const needle = q.trim().toLowerCase();
+        const haystack = `${formatTanggal(day.tanggal)} ${day.hari ?? ""}`.toLowerCase();
+        if (!haystack.includes(needle)) return false;
+      }
+      return true;
+    });
+  }, [hariBerfoto, bulan, q, monthCodeByLabel]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const pageRows = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  function resetPage<T>(setter: (v: T) => void) {
+    return (v: T) => {
+      setter(v);
+      setPage(1);
+    };
+  }
+
+  function bukaFoto(tanggal: string) {
+    setOpenError(null);
+    setOpeningTanggal(tanggal);
+    // Dibuka sinkron di dalam click handler supaya tidak diblokir popup blocker,
+    // lalu diarahkan ke URL asli setelah didapat dari Apps Script.
+    const win = window.open("", "_blank");
+    getFotoLinkUntukTanggal(tanggal)
+      .then((url) => {
+        if (!url) {
+          win?.close();
+          setOpenError("Tidak menemukan galeri foto untuk tanggal ini di spreadsheet.");
+          return;
+        }
+        if (win) win.location.href = url;
+        else window.open(url, "_blank");
+      })
+      .catch((err: Error) => {
+        win?.close();
+        setOpenError(err.message);
+      })
+      .finally(() => setOpeningTanggal(null));
   }
 
   return (
@@ -62,10 +105,32 @@ export default function Dokumentasi() {
         </div>
       </div>
 
+      {openError && (
+        <div className="flex items-center justify-between rounded-xl border border-[oklch(82%_0.08_25)] bg-bad-tint px-4 py-3 text-[13px] font-semibold text-bad-text">
+          {openError}
+          <button onClick={() => setOpenError(null)} className="text-xs font-bold underline">
+            Tutup
+          </button>
+        </div>
+      )}
+
+      <div className="flex flex-wrap items-center gap-3">
+        <FilterChip label="Bulan" value={bulan} options={bulanOptions} onChange={resetPage(setBulan)} />
+        <div className="ml-auto flex min-w-[240px] items-center gap-2 rounded-lg border border-border bg-surface px-3.5 py-2.5">
+          <Search className="text-ink-tertiary" />
+          <input
+            value={q}
+            onChange={(e) => resetPage(setQ)(e.target.value)}
+            placeholder="Cari tanggal atau hari..."
+            className="w-full border-none bg-transparent text-[13px] outline-none placeholder:text-ink-tertiary"
+          />
+        </div>
+      </div>
+
       <div className="overflow-hidden rounded-2xl border border-border bg-surface">
         <div className="flex items-center justify-between border-b border-border-strong px-5 py-3.5">
           <span className="font-mn text-[15px] font-bold">Hari dengan Dokumentasi</span>
-          <span className="text-xs text-ink-tertiary">{hariBerfoto.length} hari</span>
+          <span className="text-xs text-ink-tertiary">{filtered.length} hari</span>
         </div>
         <div className="overflow-x-auto">
           <div className="min-w-[600px]">
@@ -76,24 +141,30 @@ export default function Dokumentasi() {
                 </span>
               ))}
             </div>
+            {pageRows.length === 0 && (
+              <div className="px-5 py-10 text-center text-sm text-ink-tertiary">Tidak ada hari yang cocok dengan filter.</div>
+            )}
             {pageRows.map((day) => (
               <button
                 key={day.tanggal}
-                onClick={() => bukaFoto(day.tanggal, day.jumlahFoto)}
-                className="grid w-full grid-cols-[1.2fr_1fr_1fr_1fr] items-center gap-3 border-b border-border bg-transparent px-5 py-3 text-left last:border-b-0 hover:bg-surface-alt"
+                onClick={() => bukaFoto(day.tanggal)}
+                disabled={openingTanggal === day.tanggal}
+                className="grid w-full grid-cols-[1.2fr_1fr_1fr_1fr] items-center gap-3 border-b border-border bg-transparent px-5 py-3 text-left last:border-b-0 hover:bg-surface-alt disabled:opacity-60"
               >
                 <span className="text-[13px] font-semibold">{formatTanggal(day.tanggal)}</span>
                 <span className="text-[13px] text-ink-secondary">{day.hari}</span>
                 <span className="text-[13px] text-ink-secondary">{day.totalTugas}</span>
-                <span className="text-[13px] font-bold text-accent">📸 {day.jumlahFoto} &middot; Lihat</span>
+                <span className="text-[13px] font-bold text-accent">
+                  {openingTanggal === day.tanggal ? "Membuka..." : `📸 ${day.jumlahFoto} · Lihat`}
+                </span>
               </button>
             ))}
           </div>
         </div>
         <div className="flex items-center justify-between px-5 py-3.5">
           <span className="text-xs text-ink-tertiary">
-            Menampilkan {hariBerfoto.length === 0 ? 0 : (page - 1) * PAGE_SIZE + 1}&ndash;
-            {Math.min(page * PAGE_SIZE, hariBerfoto.length)} dari {hariBerfoto.length} hari
+            Menampilkan {filtered.length === 0 ? 0 : (page - 1) * PAGE_SIZE + 1}&ndash;
+            {Math.min(page * PAGE_SIZE, filtered.length)} dari {filtered.length} hari
           </span>
           <div className="flex items-center gap-1.5">
             <button
@@ -118,19 +189,10 @@ export default function Dokumentasi() {
       </div>
 
       <p className="text-xs text-ink-tertiary">
-        Klik salah satu baris untuk memuat foto aslinya langsung dari sheet <strong>"&lt;BULAN&gt; FOTO"</strong> di
-        spreadsheet sumber (hanya bisa saat dashboard dibuka sebagai Apps Script Web App).
+        Klik salah satu baris untuk membuka galeri foto asli di tab baru, langsung ke baris tanggal itu pada sheet{" "}
+        <strong>"&lt;BULAN&gt; FOTO"</strong> di spreadsheet sumber (hanya bisa saat dashboard dibuka sebagai Apps
+        Script Web App, bukan di preview lokal).
       </p>
-
-      {modalTanggal && (
-        <FotoModal
-          tanggalLabel={formatTanggal(modalTanggal)}
-          images={images}
-          loading={loading}
-          error={error}
-          onClose={() => setModalTanggal(null)}
-        />
-      )}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 interface GasScriptRun {
   withSuccessHandler: (fn: (result: unknown) => void) => GasScriptRun;
   withFailureHandler: (fn: (err: Error) => void) => GasScriptRun;
-  getFotoUntukTanggal: (tanggal: string, jumlahFoto: number) => void;
+  getFotoLinkUntukTanggal: (tanggal: string) => void;
 }
 
 declare global {
@@ -14,7 +14,7 @@ export function isGasRuntime() {
   return typeof window !== "undefined" && !!window.google?.script?.run;
 }
 
-export function getFotoUntukTanggal(tanggal: string, jumlahFoto: number): Promise<string[]> {
+export function getFotoLinkUntukTanggal(tanggal: string): Promise<string | null> {
   return new Promise((resolve, reject) => {
     const run = window.google?.script?.run;
     if (!run) {
@@ -22,8 +22,8 @@ export function getFotoUntukTanggal(tanggal: string, jumlahFoto: number): Promis
       return;
     }
     run
-      .withSuccessHandler((result) => resolve(result as string[]))
+      .withSuccessHandler((result) => resolve(result as string | null))
       .withFailureHandler((err: Error) => reject(err))
-      .getFotoUntukTanggal(tanggal, jumlahFoto);
+      .getFotoLinkUntukTanggal(tanggal);
   });
 }
