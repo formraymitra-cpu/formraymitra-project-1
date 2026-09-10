@@ -1,6 +1,7 @@
 import { useDataset } from "../useDataset";
 import { formatJam, formatPct } from "../lib/format";
 import { Download } from "../components/icons";
+import DinoGreeting from "../components/DinoGreeting";
 
 function toCsv(rows: ReturnType<typeof useDataset>["months"]) {
   const header = ["Bulan", "Hari Tercatat", "Total Tugas", "Selesai", "Belum", "% Selesai", "Rata-rata Jam Kerja", "Total Foto"];
@@ -54,6 +55,16 @@ export default function RekapBulanan() {
           Unduh CSV
         </button>
       </div>
+
+      <DinoGreeting
+        size={56}
+        message={
+          <>
+            ini rekap {d.months.length} bulan yang sudah aku catat — total {totalTugas} tugas dari {totalHari} hari
+            kerja.
+          </>
+        }
+      />
 
       <div className="overflow-hidden rounded-2xl border border-border bg-surface">
         <div className="overflow-x-auto">

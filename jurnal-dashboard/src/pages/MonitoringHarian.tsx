@@ -3,6 +3,7 @@ import { useDataset } from "../useDataset";
 import StatusBadge from "../components/StatusBadge";
 import { Download, Search } from "../components/icons";
 import { formatTanggalPendek } from "../lib/format";
+import DinoGreeting from "../components/DinoGreeting";
 import type { Task } from "../types";
 
 const PAGE_SIZE = 20;
@@ -77,6 +78,15 @@ export default function MonitoringHarian() {
           Unduh CSV
         </button>
       </div>
+
+      <DinoGreeting
+        size={56}
+        message={
+          <>
+            aku sudah mencatat {d.totalTugas} tugas harian, {d.totalSelesai} di antaranya sudah selesai.
+          </>
+        }
+      />
 
       <div className="flex flex-wrap items-center gap-3">
         <FilterChip label="Bulan" value={bulan} options={bulanOptions} onChange={resetPage(setBulan)} />

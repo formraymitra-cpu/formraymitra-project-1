@@ -7,6 +7,7 @@ const TABS = [
   { to: "/overview", label: "Overview" },
   { to: "/rekap-bulanan", label: "Rekap Bulanan" },
   { to: "/monitoring-harian", label: "Monitoring Harian" },
+  { to: "/dokumentasi", label: "Dokumentasi" },
 ];
 
 export default function AppShell() {
