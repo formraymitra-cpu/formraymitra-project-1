@@ -21,7 +21,7 @@ function onOpen() {
 }
 
 function showDashboard() {
-  var tmpl = HtmlService.createTemplateFromFile('index');
+  var tmpl = HtmlService.createTemplateFromFile('Index');
   tmpl.dataJson = toSafeJson(buildDashboardData());
   var html = tmpl.evaluate().setWidth(1300).setHeight(880);
   SpreadsheetApp.getUi().showModalDialog(html, 'Rekap Kerja Khanifa');
@@ -30,7 +30,7 @@ function showDashboard() {
 // Opsional: deploy sebagai Web App (Deploy > New deployment > Web app)
 // untuk mendapat link penuh satu halaman, bukan popup.
 function doGet() {
-  var tmpl = HtmlService.createTemplateFromFile('index');
+  var tmpl = HtmlService.createTemplateFromFile('Index');
   tmpl.dataJson = toSafeJson(buildDashboardData());
   return tmpl.evaluate()
     .setTitle('Rekap Kerja Khanifa')

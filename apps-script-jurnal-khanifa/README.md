@@ -13,7 +13,7 @@ bulan baru (JULI, AGUSTUS, SEPTEMBER, dst) selama header kolomnya sama:
 ## Isi folder
 
 - **`Code.gs`** — logika server: membaca semua sheet bulan & menyiapkan data
-- **`index.html`** — tampilan dashboard (HTML/CSS/JS, tanpa dependency luar)
+- **`Index.html`** — tampilan dashboard (HTML/CSS/JS, tanpa dependency luar)
 - **`appsscript.json`** — manifest project (opsional)
 
 ## Langkah deploy (sekali saja, ~5 menit)
@@ -24,8 +24,8 @@ bulan baru (JULI, AGUSTUS, SEPTEMBER, dst) selama header kolomnya sama:
    `SpreadsheetApp.getActiveSpreadsheet()` otomatis menunjuk ke sheet yang benar.
 3. Di editor Apps Script:
    - **`Code.gs`** — hapus isi default, ganti dengan isi `Code.gs` di folder ini
-   - **`index.html`** (File → New → HTML, beri nama persis `index`) — isi
-     dengan isi `index.html` di folder ini
+   - **`Index.html`** (File → New → HTML, beri nama persis `Index`) — isi
+     dengan isi `Index.html` di folder ini
    - **`appsscript.json`** (opsional) — ikon gerigi "Project Settings" →
      centang "Show appsscript.json in editor" → isi sesuai `appsscript.json`
      di folder ini
