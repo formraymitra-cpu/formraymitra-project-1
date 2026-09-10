@@ -3,6 +3,7 @@ import { COLORS } from "../lib/colors";
 import { linePoints, xFor, yFor } from "../lib/chart";
 import { formatTanggal, formatJam, formatPct } from "../lib/format";
 import EmojiBadge from "../components/EmojiBadge";
+import DinoRajin from "../components/DinoRajin";
 
 function pctColor(pct: number | null) {
   if (pct === null) return COLORS.inkTertiary;
@@ -30,6 +31,36 @@ export default function Overview() {
           Rekap jurnal harian &middot; {d.rentangTanggal.mulai ? formatTanggal(d.rentangTanggal.mulai) : "—"} s.d.{" "}
           {d.rentangTanggal.akhir ? formatTanggal(d.rentangTanggal.akhir) : "—"}
         </p>
+      </div>
+
+      <div className="flex flex-col items-center gap-5 rounded-2xl border border-border bg-gradient-to-br from-warn-tint to-surface p-6 sm:flex-row sm:gap-7">
+        <DinoRajin size={104} className="flex-shrink-0" />
+        <div className="flex flex-col gap-3 text-center sm:text-left">
+          <div>
+            <span className="font-mn text-lg font-extrabold tracking-tight">Halo, aku Dino Rajin! 🦕</span>
+            <p className="mt-1 text-[13.5px] leading-relaxed text-ink-secondary">
+              Sudah menemani {d.totalHariTercatat} hari kerja Dini Saffanah, mencatat {d.totalTugas} tugas dengan{" "}
+              <strong className="text-good-text">{formatPct(d.pctSelesaiKeseluruhan)}</strong> selesai, dan menyimpan{" "}
+              {d.totalFoto} foto bukti kerja. Rajin, suka mencatat, kreatif, dan selalu ceria — itu aku! ✨
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
+            {[
+              ["💪", "Rajin"],
+              ["✍️", "Suka Mencatat"],
+              ["🎨", "Kreatif"],
+              ["😄", "Ceria"],
+            ].map(([emoji, label]) => (
+              <span
+                key={label}
+                className="inline-flex items-center gap-1.5 rounded-full border border-border-strong bg-surface px-3 py-1.5 text-[12px] font-bold text-ink-secondary"
+              >
+                <span>{emoji}</span>
+                {label}
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">

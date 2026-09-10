@@ -1,6 +1,7 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { useDataset } from "./useDataset";
 import { formatTanggalPendek } from "./lib/format";
+import DinoRajin from "./components/DinoRajin";
 
 const TABS = [
   { to: "/overview", label: "Overview" },
@@ -16,11 +17,11 @@ export default function AppShell() {
       <div className="sticky top-0 z-10 flex h-[72px] items-center justify-between border-b border-border bg-surface px-6 sm:px-10">
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-[34px] w-[34px] items-center justify-center rounded-[9px] bg-accent text-[18px]">
-              📔
+            <div className="flex h-[38px] w-[38px] flex-shrink-0 items-center justify-center rounded-full bg-warn-tint">
+              <DinoRajin size={30} />
             </div>
             <span className="hidden font-mn text-[15px] font-bold tracking-tight sm:inline">
-              Monitoring Pekerjaan Harian &middot; Dini Saffanah
+              Dino Rajin &middot; Monitoring Pekerjaan Harian Dini Saffanah
             </span>
           </div>
           <nav className="flex items-center gap-1">
