@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rekap Kerja Khanifa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+  :root{
+    --page:#f4f2ec;
+    --surface:#ffffff;
+    --surface-2:#eeece3;
+    --ink:#191712;
+    --ink-2:#5c574c;
+    --ink-muted:#928c7c;
+    --line:#e2ddcf;
+    --line-strong:#cfc8b4;
+    --good:#0ca30c;
+    --good-bg:#e4f4e1;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --page:#111110; --surface:#1a1a19; --surface-2:#232320;
+      --ink:#f5f3ec; --ink-2:#c3beac; --ink-muted:#8f8a79;
+      --line:#312e26; --line-strong:#433f33;
+      --good:#28c228; --good-bg:#193519;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --page:#111110; --surface:#1a1a19; --surface-2:#232320;
+    --ink:#f5f3ec; --ink-2:#c3beac; --ink-muted:#8f8a79;
+    --line:#312e26; --line-strong:#433f33;
+    --good:#28c228; --good-bg:#193519;
+    color-scheme: dark;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; background:var(--page); color:var(--ink);
+    font-family:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding:0 20px 64px;
+  }
+  .wrap{ max-width:1180px; margin:0 auto; }
+  .num, .tabular{ font-family:"IBM Plex Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+  h1,h2,h3{ font-family:"Libre Franklin", system-ui, sans-serif; text-wrap:balance; margin:0; }
+
+  .masthead{
+    padding:32px 0 22px; border-bottom:1px solid var(--line);
+    display:flex; flex-wrap:wrap; gap:18px 28px; align-items:flex-end; justify-content:space-between;
+  }
+  .masthead .eyebrow{
+    font-family:"IBM Plex Mono", monospace; font-size:12px; letter-spacing:.09em;
+    text-transform:uppercase; color:var(--ink-muted); margin:0 0 10px;
+  }
+  .masthead h1{ font-size:clamp(24px,3.4vw,34px); font-weight:800; letter-spacing:-.01em; }
+  .masthead p.sub{ margin:8px 0 0; color:var(--ink-2); font-size:14.5px; max-width:54ch; line-height:1.55; }
+  .period-badge{
+    font-family:"IBM Plex Mono", monospace; font-size:13px; color:var(--ink-2);
+    border:1px solid var(--line-strong); border-radius:100px; padding:7px 14px; white-space:nowrap;
+  }
+  .period-badge b{ color:var(--ink); font-weight:600; }
+
+  .kpis{
+    margin-top:24px; display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+    background:var(--line); border:1px solid var(--line); border-radius:12px; overflow:hidden;
+  }
+  .kpi{ background:var(--surface); padding:18px 20px; display:flex; flex-direction:column; gap:6px; min-width:0; }
+  .kpi .label{ font-size:12px; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-muted); font-weight:600; }
+  .kpi .value{ font-size:26px; font-weight:600; letter-spacing:-.01em; }
+  .kpi .split{ font-size:12px; color:var(--ink-2); line-height:1.6; }
+  .kpi .split .dot{ display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:5px; position:relative; top:-1px; }
+
+  .panel{
+    background:var(--surface); border:1px solid var(--line); border-radius:12px;
+    margin-top:20px; padding:20px 22px 22px;
+  }
+  .panel-head{ display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; margin-bottom:16px; }
+  .panel-head h2{ font-size:16.5px; font-weight:700; }
+  .panel-head .note{ font-size:12.5px; color:var(--ink-muted); margin-top:3px; }
+
+  .segmented{ display:inline-flex; background:var(--surface-2); border-radius:8px; padding:3px; gap:2px; flex-wrap:wrap; }
+  .segmented button{
+    font:inherit; font-family:"IBM Plex Sans",sans-serif; font-size:12.5px; font-weight:500;
+    border:0; background:transparent; color:var(--ink-2); padding:6px 12px; border-radius:6px; cursor:pointer;
+  }
+  .segmented button.active{ background:var(--surface); color:var(--ink); box-shadow:0 1px 2px rgba(0,0,0,.08); font-weight:600; }
+  .segmented button:focus-visible{ outline:2px solid var(--ink); outline-offset:1px; }
+
+  .controls-row{ display:flex; flex-wrap:wrap; gap:10px; }
+
+  .chart-scroll{ overflow-x:auto; padding-bottom:4px; }
+  .chart-legend{ display:flex; gap:16px; font-size:12.5px; color:var(--ink-2); margin-top:10px; flex-wrap:wrap; }
+  .chart-legend .item{ display:flex; align-items:center; gap:6px; }
+  .chart-legend .swatch{ width:10px; height:10px; border-radius:2px; }
+  #bar{ display:block; }
+  .bar-rect{ cursor:pointer; }
+  .bar-rect:hover{ filter:brightness(1.08); }
+  .axis-line{ stroke:var(--line-strong); stroke-width:1; }
+  .grid-line{ stroke:var(--line); stroke-width:1; }
+  .tick-label{ fill:var(--ink-muted); font-size:10px; font-family:"IBM Plex Mono",monospace; }
+
+  .tooltip{
+    position:fixed; pointer-events:none; z-index:40;
+    background:var(--ink); color:var(--page); font-size:12.5px; line-height:1.5;
+    padding:10px 12px; border-radius:8px; max-width:280px; opacity:0; transform:translateY(4px);
+    transition:opacity .1s ease, transform .1s ease; box-shadow:0 8px 24px rgba(0,0,0,.25);
+  }
+  .tooltip.show{ opacity:1; transform:translateY(0); }
+  .tooltip .t-date{ font-family:"IBM Plex Mono",monospace; font-weight:600; margin-bottom:3px; }
+  .tooltip .t-task{ color:var(--page); opacity:.82; }
+
+  .row2{ display:grid; grid-template-columns:1.05fr 1fr; gap:16px; margin-top:16px; }
+
+  .donut-wrap{ display:flex; align-items:center; gap:22px; flex-wrap:wrap; }
+  .legend-list{ display:flex; flex-direction:column; gap:11px; flex:1; min-width:180px; }
+  .legend-row{ display:flex; align-items:center; gap:10px; font-size:13.5px; }
+  .legend-row .swatch{ width:11px; height:11px; border-radius:3px; flex:none; }
+  .legend-row .name{ flex:1; color:var(--ink); }
+  .legend-row .val{ font-family:"IBM Plex Mono",monospace; font-size:12.5px; color:var(--ink-2); }
+
+  .cmp-table{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  .cmp-table th{ text-align:left; font-size:11.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-muted); font-weight:600; padding:0 0 8px; }
+  .cmp-table td{ padding:9px 0; border-top:1px solid var(--line); }
+  .cmp-table td.month-cell{ display:flex; align-items:center; gap:8px; font-weight:600; }
+  .cmp-table td.month-cell .swatch{ width:9px; height:9px; border-radius:50%; }
+  .cmp-table td.num{ font-family:"IBM Plex Mono",monospace; text-align:right; }
+  .insight{
+    margin-top:14px; padding:11px 13px; background:var(--surface-2); border-radius:8px;
+    font-size:12.5px; color:var(--ink-2); line-height:1.55;
+  }
+  .insight b{ color:var(--ink); font-weight:600; }
+
+  .log-table{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  .log-table thead th{
+    text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-muted);
+    font-weight:600; padding:0 10px 10px; border-bottom:1px solid var(--line-strong);
+  }
+  .log-table thead th.num-h{ text-align:right; }
+  .log-row{ cursor:pointer; }
+  .log-row td{ padding:10px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+  .log-row:hover td{ background:var(--surface-2); }
+  .log-row .date-cell{ font-family:"IBM Plex Mono",monospace; font-weight:500; white-space:nowrap; }
+  .log-row .date-cell .month-tag{ display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:7px; }
+  .log-row td.num{ font-family:"IBM Plex Mono",monospace; text-align:right; white-space:nowrap; }
+  .chevron{ display:inline-block; transition:transform .15s ease; color:var(--ink-muted); margin-right:2px; }
+  .log-row.open .chevron{ transform:rotate(90deg); }
+  .status-pill{
+    display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:600;
+    padding:3px 9px; border-radius:100px;
+  }
+  .status-pill.done{ background:var(--good-bg); color:var(--good); }
+  .status-pill.na{ background:var(--surface-2); color:var(--ink-muted); font-weight:500; }
+  .detail-row td{ padding:0; border-bottom:1px solid var(--line); }
+  .detail-row .detail-inner{ padding:4px 10px 16px 30px; display:none; }
+  .detail-row.open .detail-inner{ display:block; }
+  .task-item{ display:flex; gap:10px; padding:8px 0; border-top:1px solid var(--line); font-size:13px; }
+  .task-item:first-child{ border-top:0; }
+  .task-item .no{ font-family:"IBM Plex Mono",monospace; color:var(--ink-muted); flex:none; width:16px; }
+  .task-item .body{ flex:1; }
+  .task-item .txt{ color:var(--ink); line-height:1.5; }
+  .task-item .meta{ margin-top:3px; font-size:11.5px; color:var(--ink-muted); display:flex; gap:8px; flex-wrap:wrap; }
+  .cat-chip{ font-size:10.5px; font-weight:600; padding:2px 7px; border-radius:100px; }
+
+  .table-scroll{ overflow-x:auto; }
+  .table-scroll table{ min-width:640px; }
+
+  .empty-note{ font-size:13px; color:var(--ink-muted); padding:20px 0; text-align:center; }
+
+  footer{ margin-top:26px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-muted); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+
+  @media (max-width:760px){
+    .kpis{ grid-template-columns:repeat(2,1fr); }
+    .row2{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <div>
+      <p class="eyebrow">Jurnal Kerja Harian &middot; EDABU / SIPP</p>
+      <h1>Rekap Kerja Khanifa</h1>
+      <p class="sub">Administrasi kepesertaan &amp; tagihan BPJS Kesehatan dan BPJS Ketenagakerjaan — rekap harian, crosscheck tagihan, dan pemrosesan lokasi peserta.</p>
+    </div>
+    <div class="period-badge" id="period-badge">Periode <b>&hellip;</b></div>
+  </header>
+
+  <section class="kpis" id="kpis"></section>
+
+  <section class="panel" id="chart-panel">
+    <div class="panel-head">
+      <div>
+        <h2>Volume Kerja Harian</h2>
+        <p class="note">Per hari kerja tercatat, diurutkan kronologis</p>
+      </div>
+      <div class="controls-row">
+        <div class="segmented" id="metric-toggle">
+          <button data-metric="tasks" class="active">Jumlah Tugas</button>
+          <button data-metric="lokasi">Lokasi Ditangani</button>
+        </div>
+        <div class="segmented" id="month-filter"></div>
+      </div>
+    </div>
+    <div class="chart-scroll">
+      <svg id="bar" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="chart-legend" id="chart-legend"></div>
+  </section>
+
+  <section class="row2">
+    <div class="panel">
+      <div class="panel-head"><div><h2>Distribusi Jenis Tugas</h2><p class="note" id="donut-note">klasifikasi dari judul pekerjaan</p></div></div>
+      <div class="donut-wrap">
+        <svg id="donut" width="150" height="150" viewBox="0 0 150 150"></svg>
+        <div class="legend-list" id="donut-legend"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div><h2>Perbandingan Bulan</h2><p class="note">Rata-rata beban kerja per hari</p></div></div>
+      <table class="cmp-table" id="cmp-table"></table>
+      <div class="insight" id="cmp-insight"></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <div><h2>Jurnal Harian</h2><p class="note">Klik baris untuk melihat rincian tugas</p></div>
+    </div>
+    <div class="table-scroll">
+      <table class="log-table">
+        <thead>
+          <tr><th>Tanggal</th><th>Jam</th><th class="num-h">Tugas</th><th class="num-h">Lokasi</th><th>Status</th></tr>
+        </thead>
+        <tbody id="log-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <span id="footer-source">Sumber: sheet jurnal harian pada spreadsheet ini</span>
+    <span>Dasbor dibaca langsung dari data sheet setiap kali dibuka</span>
+  </footer>
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script id="dashboard-data" type="application/json">
+<?!= dataJson ?>
+</script>
+
+<script>
+(function(){
+  var DATA = JSON.parse(document.getElementById('dashboard-data').textContent);
+  var summary = DATA.summary;
+  var days = DATA.days;
+
+  if (!summary.months.length) {
+    document.querySelector('.wrap').innerHTML =
+      '<p class="empty-note" style="padding-top:60px">Tidak ada sheet jurnal yang terbaca. Pastikan ada sheet dengan header ' +
+      '<b>TANGGAL | JAM | NO | DAILY WORKING PLAN | STATUS | KETERANGAN</b> di baris manapun kolom A.</p>';
+    return;
+  }
+
+  // 8-slot categorical palette (validated order, dataviz skill default)
+  var PALETTE_LIGHT = ['#2a78d6','#eb6834','#1baf7a','#eda100','#e87ba4','#008300','#4a3aa7','#e34948'];
+  var PALETTE_DARK  = ['#3987e5','#d95926','#199e70','#c98500','#d55181','#008300','#9085e9','#e66767'];
+  var isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches &&
+               document.documentElement.getAttribute('data-theme') !== 'light';
+  if (document.documentElement.getAttribute('data-theme') === 'dark') isDark = true;
+  var PALETTE = isDark ? PALETTE_DARK : PALETTE_LIGHT;
+
+  function cvar(name){ return getComputedStyle(document.body).getPropertyValue(name).trim(); }
+  var fmt = function(n){ return Number(n).toLocaleString('id-ID'); };
+  var titleCase = function(s){ return s.charAt(0) + s.slice(1).toLowerCase(); };
+
+  var monthIndex = {};
+  summary.months.forEach(function(m, i){ monthIndex[m.name] = i; });
+  var monthColor = function(name){ return PALETTE[monthIndex[name] % PALETTE.length]; };
+
+  var catColor = function(c){ return c === 'KESEHATAN' ? PALETTE[0] : c === 'KETENAGAKERJAAN' ? PALETTE[1] : PALETTE[2]; };
+  var catLabel = function(c){ return c === 'KESEHATAN' ? 'Kesehatan' : c === 'KETENAGAKERJAAN' ? 'Ketenagakerjaan' : 'Lainnya'; };
+
+  /* ---------------- header period badge ---------------- */
+  var monthLabels = summary.months.map(function(m){ return titleCase(m.name); });
+  document.getElementById('period-badge').innerHTML = 'Periode <b>' + monthLabels.join(' – ') + ' 2026</b>';
+  document.getElementById('footer-source').textContent =
+    'Sumber: ' + summary.total_days + ' entri jurnal pada sheet ' + summary.months.map(function(m){return m.name;}).join(', ');
+
+  /* ---------------- KPI strip ---------------- */
+  function splitLine(getVal, unit){
+    return summary.months.map(function(m){
+      return '<span class="dot" style="background:' + monthColor(m.name) + '"></span>' + getVal(m) + ' ' + titleCase(m.name);
+    }).join(' &middot; ');
+  }
+  var doneRate = summary.status_tracked ? Math.round(summary.status_done / summary.status_tracked * 100) : 0;
+  document.getElementById('kpis').innerHTML =
+    '<div class="kpi"><div class="label">Hari Kerja Tercatat</div><div class="value num">' + summary.total_days +
+      '</div><div class="split">' + splitLine(function(m){return m.days;}) + '</div></div>' +
+    '<div class="kpi"><div class="label">Total Tugas Harian</div><div class="value num">' + fmt(summary.total_tasks) +
+      '</div><div class="split">' + splitLine(function(m){return m.tasks;}) + '</div></div>' +
+    '<div class="kpi"><div class="label">Lokasi Ditangani</div><div class="value num">' + fmt(summary.total_lokasi) +
+      '</div><div class="split">' + splitLine(function(m){return fmt(m.lokasi);}) + '</div></div>' +
+    '<div class="kpi"><div class="label">Status Tercatat Selesai</div><div class="value num">' + summary.status_done + '/' + summary.status_tracked +
+      ' <span style="font-size:14px;color:' + cvar('--ink-muted') + ';font-weight:500">(' + doneRate + '%)</span></div>' +
+      '<div class="split">' + summary.status_untracked + ' tugas lain tanpa kolom status di jurnal asli</div></div>';
+
+  document.getElementById('donut-note').textContent = summary.total_tasks + ' tugas · klasifikasi dari judul pekerjaan';
+
+  /* ---------------- month filter + legend ---------------- */
+  var monthFilterEl = document.getElementById('month-filter');
+  var buttonsHtml = '<button data-month="ALL" class="active">Semua</button>';
+  summary.months.forEach(function(m){
+    buttonsHtml += '<button data-month="' + m.name + '">' + titleCase(m.name) + '</button>';
+  });
+  monthFilterEl.innerHTML = buttonsHtml;
+
+  document.getElementById('chart-legend').innerHTML = summary.months.map(function(m){
+    return '<span class="item"><span class="swatch" style="background:' + monthColor(m.name) + '"></span>' + titleCase(m.name) + '</span>';
+  }).join('');
+
+  /* ---------------- bar chart ---------------- */
+  var svg = document.getElementById('bar');
+  var svgNS = 'http://www.w3.org/2000/svg';
+  var tooltip = document.getElementById('tooltip');
+  var state = { metric: 'tasks', month: 'ALL' };
+
+  function filteredDays(){
+    return state.month === 'ALL' ? days : days.filter(function(d){ return d.month === state.month; });
+  }
+
+  function drawChart(){
+    var list = filteredDays();
+    var barW = 20, gap = 6;
+    var padL = 44, padR = 12, padT = 14, padB = 28;
+    var plotH = 210;
+    var width = padL + padR + Math.max(list.length,1) * (barW + gap);
+    var height = padT + plotH + padB;
+    svg.setAttribute('width', width);
+    svg.setAttribute('height', height);
+    svg.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
+    svg.innerHTML = '';
+
+    var values = list.map(function(d){ return state.metric === 'tasks' ? d.n_tasks : d.lokasi; });
+    var maxV = Math.max.apply(null, [1].concat(values));
+    var niceMax = Math.ceil(maxV / 5) * 5 || 5;
+    var yScale = function(v){ return plotH - (v / niceMax) * plotH; };
+
+    var ticks = 5;
+    for (var i = 0; i <= ticks; i++){
+      var v = Math.round(niceMax / ticks * i);
+      var y = padT + yScale(v);
+      var line = document.createElementNS(svgNS,'line');
+      line.setAttribute('x1', padL); line.setAttribute('x2', width - padR);
+      line.setAttribute('y1', y); line.setAttribute('y2', y);
+      line.setAttribute('class', i===0 ? 'axis-line' : 'grid-line');
+      svg.appendChild(line);
+      var t = document.createElementNS(svgNS,'text');
+      t.setAttribute('x', padL - 8); t.setAttribute('y', y + 3);
+      t.setAttribute('text-anchor','end'); t.setAttribute('class','tick-label');
+      t.textContent = fmt(v);
+      svg.appendChild(t);
+    }
+
+    list.forEach(function(d, i){
+      var v = state.metric === 'tasks' ? d.n_tasks : d.lokasi;
+      var x = padL + i * (barW + gap);
+      var h = (v / niceMax) * plotH;
+      var y = padT + plotH - h;
+      var rect = document.createElementNS(svgNS,'rect');
+      rect.setAttribute('x', x); rect.setAttribute('y', y);
+      rect.setAttribute('width', barW); rect.setAttribute('height', Math.max(h, v>0?2:0));
+      rect.setAttribute('rx', 4); rect.setAttribute('ry', 4);
+      rect.setAttribute('fill', monthColor(d.month));
+      rect.setAttribute('class','bar-rect');
+      rect.addEventListener('mouseenter', function(e, dd, vv){ return function(e){ showTip(e, dd, vv); }; }(null, d, v));
+      rect.addEventListener('mousemove', moveTip);
+      rect.addEventListener('mouseleave', hideTip);
+      rect.addEventListener('click', function(dd){ return function(){ jumpToRow(dd.date); }; }(d));
+      svg.appendChild(rect);
+
+      var stride = Math.ceil(list.length/24 || 1);
+      if (i % stride === 0){
+        var lt = document.createElementNS(svgNS,'text');
+        lt.setAttribute('x', x + barW/2); lt.setAttribute('y', height - 10);
+        lt.setAttribute('text-anchor','middle'); lt.setAttribute('class','tick-label');
+        lt.textContent = d.day;
+        svg.appendChild(lt);
+      }
+    });
+  }
+
+  function showTip(e, d, v){
+    var metricLabel = state.metric === 'tasks' ? 'tugas' : 'lokasi';
+    var topTask = d.tasks[0] ? d.tasks[0].task : '';
+    tooltip.innerHTML = '<div class="t-date">' + d.date + '</div>' + v + ' ' + metricLabel + ' · ' + d.n_tasks +
+      ' item tercatat<div class="t-task">' + (topTask.length>70?topTask.slice(0,70)+'…':topTask) + '</div>';
+    tooltip.classList.add('show');
+    moveTip(e);
+  }
+  function moveTip(e){
+    var pad = 14;
+    var x = e.clientX + pad, y = e.clientY + pad;
+    var tw = 280, th = 90;
+    if (x + tw > window.innerWidth) x = e.clientX - tw - pad;
+    if (y + th > window.innerHeight) y = e.clientY - th - pad;
+    tooltip.style.left = x + 'px'; tooltip.style.top = y + 'px';
+  }
+  function hideTip(){ tooltip.classList.remove('show'); }
+
+  document.getElementById('metric-toggle').addEventListener('click', function(e){
+    var btn = e.target.closest('button'); if (!btn) return;
+    document.querySelectorAll('#metric-toggle button').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    state.metric = btn.dataset.metric;
+    drawChart();
+  });
+  monthFilterEl.addEventListener('click', function(e){
+    var btn = e.target.closest('button'); if (!btn) return;
+    document.querySelectorAll('#month-filter button').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    state.month = btn.dataset.month;
+    drawChart();
+    renderLog();
+  });
+
+  drawChart();
+
+  /* ---------------- donut ---------------- */
+  (function drawDonut(){
+    var cats = [
+      {key:'KESEHATAN', val: summary.categories.KESEHATAN},
+      {key:'KETENAGAKERJAAN', val: summary.categories.KETENAGAKERJAAN},
+      {key:'LAINNYA', val: summary.categories.LAINNYA}
+    ];
+    var total = cats.reduce(function(s,c){ return s+c.val; }, 0) || 1;
+    var donut = document.getElementById('donut');
+    var r = 60, cx = 75, cy = 75, sw = 20;
+    var circ = 2 * Math.PI * r;
+    var offset = 0;
+    donut.innerHTML = '';
+    var bg = document.createElementNS(svgNS,'circle');
+    bg.setAttribute('cx',cx); bg.setAttribute('cy',cy); bg.setAttribute('r',r);
+    bg.setAttribute('fill','none'); bg.setAttribute('stroke', cvar('--surface-2')); bg.setAttribute('stroke-width', sw);
+    donut.appendChild(bg);
+    cats.forEach(function(c){
+      var frac = c.val / total;
+      var len = frac * circ;
+      var circle = document.createElementNS(svgNS,'circle');
+      circle.setAttribute('cx',cx); circle.setAttribute('cy',cy); circle.setAttribute('r',r);
+      circle.setAttribute('fill','none');
+      circle.setAttribute('stroke', catColor(c.key));
+      circle.setAttribute('stroke-width', sw);
+      circle.setAttribute('stroke-dasharray', len + ' ' + (circ-len));
+      circle.setAttribute('stroke-dashoffset', -offset);
+      circle.setAttribute('transform', 'rotate(-90 ' + cx + ' ' + cy + ')');
+      donut.appendChild(circle);
+      offset += len;
+    });
+    var centerVal = document.createElementNS(svgNS,'text');
+    centerVal.setAttribute('x',cx); centerVal.setAttribute('y',cy+2);
+    centerVal.setAttribute('text-anchor','middle');
+    centerVal.setAttribute('font-family','IBM Plex Mono, monospace');
+    centerVal.setAttribute('font-size','20'); centerVal.setAttribute('font-weight','600');
+    centerVal.setAttribute('fill', cvar('--ink'));
+    centerVal.textContent = total;
+    donut.appendChild(centerVal);
+    var centerLbl = document.createElementNS(svgNS,'text');
+    centerLbl.setAttribute('x',cx); centerLbl.setAttribute('y',cy+17);
+    centerLbl.setAttribute('text-anchor','middle');
+    centerLbl.setAttribute('font-family','IBM Plex Sans, sans-serif');
+    centerLbl.setAttribute('font-size','9.5'); centerLbl.setAttribute('fill', cvar('--ink-muted'));
+    centerLbl.textContent = 'tugas';
+    donut.appendChild(centerLbl);
+
+    document.getElementById('donut-legend').innerHTML = cats.map(function(c){
+      return '<div class="legend-row"><span class="swatch" style="background:' + catColor(c.key) + '"></span>' +
+        '<span class="name">' + catLabel(c.key) + '</span>' +
+        '<span class="val">' + c.val + ' · ' + Math.round(c.val/total*100) + '%</span></div>';
+    }).join('');
+  })();
+
+  /* ---------------- month comparison ---------------- */
+  (function drawCmp(){
+    var rows = summary.months.map(function(m){
+      var avgTasks = (m.tasks / m.days).toFixed(1);
+      var avgLok = Math.round(m.lokasi / m.days);
+      return { m: m, avgTasks: avgTasks, avgLok: avgLok };
+    });
+    var body = rows.map(function(r){
+      return '<tr><td class="month-cell"><span class="swatch" style="background:' + monthColor(r.m.name) + '"></span>' + titleCase(r.m.name) + '</td>' +
+        '<td class="num">' + r.m.days + '</td><td class="num">' + r.avgTasks + '</td><td class="num">' + fmt(r.avgLok) + '</td></tr>';
+    }).join('');
+    document.getElementById('cmp-table').innerHTML =
+      '<thead><tr><th>Bulan</th><th style="text-align:right">Hari</th><th style="text-align:right">Tugas/hari</th><th style="text-align:right">Lokasi/hari</th></tr></thead><tbody>' + body + '</tbody>';
+
+    var insightEl = document.getElementById('cmp-insight');
+    if (rows.length >= 2) {
+      var maxRow = rows.reduce(function(a,b){ return b.avgLok > a.avgLok ? b : a; });
+      var minRow = rows.reduce(function(a,b){ return b.avgLok < a.avgLok ? b : a; });
+      var mult = minRow.avgLok ? (maxRow.avgLok / minRow.avgLok).toFixed(1) : '—';
+      insightEl.innerHTML = 'Rata-rata lokasi yang ditangani per hari paling tinggi di <b>' + titleCase(maxRow.m.name) + '</b> (' + fmt(maxRow.avgLok) +
+        ' lokasi/hari), ' + mult + '&times; dibanding <b>' + titleCase(minRow.m.name) + '</b> (' + fmt(minRow.avgLok) + ' lokasi/hari). ' +
+        'Hari beban tugas terbanyak: <b>' + summary.max_tasks_day + '</b>; hari lokasi terbanyak: <b>' + summary.max_lokasi_day + '</b>.';
+    } else {
+      insightEl.innerHTML = 'Hari beban tugas terbanyak: <b>' + summary.max_tasks_day + '</b>; hari lokasi terbanyak: <b>' + summary.max_lokasi_day + '</b>.';
+    }
+  })();
+
+  /* ---------------- log table ---------------- */
+  var logBody = document.getElementById('log-body');
+  function renderLog(){
+    var list = filteredDays();
+    logBody.innerHTML = '';
+    list.forEach(function(d){
+      var tr = document.createElement('tr');
+      tr.className = 'log-row';
+      tr.dataset.date = d.date;
+      var statusHtml = d.has_status
+        ? '<span class="status-pill done">' + d.n_done + '/' + d.n_tasks + ' selesai</span>'
+        : '<span class="status-pill na">tidak tercatat</span>';
+      tr.innerHTML =
+        '<td class="date-cell"><span class="chevron">▸</span><span class="month-tag" style="background:' + monthColor(d.month) + '"></span>' + d.date + '</td>' +
+        '<td class="tabular">' + d.time + '</td>' +
+        '<td class="num">' + d.n_tasks + '</td>' +
+        '<td class="num">' + (d.lokasi ? fmt(d.lokasi) : '–') + '</td>' +
+        '<td>' + statusHtml + '</td>';
+
+      var detailTr = document.createElement('tr');
+      detailTr.className = 'detail-row';
+      var itemsHtml = d.tasks.map(function(t){
+        return '<div class="task-item"><span class="no">' + t.no + '</span><div class="body">' +
+          '<div class="txt">' + t.task + '</div><div class="meta">' +
+          '<span class="cat-chip" style="background:' + catColor(t.cat) + '22;color:' + catColor(t.cat) + '">' + catLabel(t.cat) + '</span>' +
+          (t.lokasi ? '<span>' + t.lokasi + ' lokasi</span>' : '') +
+          (t.done ? '<span style="color:' + cvar('--good') + '">✓ selesai</span>' : '') +
+          '</div></div></div>';
+      }).join('');
+      detailTr.innerHTML = '<td colspan="5"><div class="detail-inner">' + itemsHtml + '</div></td>';
+
+      tr.addEventListener('click', function(){
+        tr.classList.toggle('open');
+        detailTr.classList.toggle('open');
+      });
+
+      logBody.appendChild(tr);
+      logBody.appendChild(detailTr);
+    });
+  }
+  renderLog();
+
+  function jumpToRow(date){
+    var row = Array.prototype.find.call(document.querySelectorAll('.log-row'), function(r){ return r.dataset.date === date; });
+    if (!row) return;
+    row.scrollIntoView({behavior:'smooth', block:'center'});
+    if (!row.classList.contains('open')) row.click();
+  }
+})();
+</script>
+</body>
+</html>
