@@ -16,8 +16,8 @@ export default function AppShell() {
       <div className="sticky top-0 z-10 flex h-[72px] items-center justify-between border-b border-border bg-surface px-6 sm:px-10">
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-[34px] w-[34px] items-center justify-center rounded-[9px] bg-accent font-mn text-[15px] font-extrabold text-white">
-              J
+            <div className="flex h-[34px] w-[34px] items-center justify-center rounded-[9px] bg-accent text-[18px]">
+              📔
             </div>
             <span className="hidden font-mn text-[15px] font-bold tracking-tight sm:inline">
               Monitoring Pekerjaan Harian &middot; Dini Saffanah

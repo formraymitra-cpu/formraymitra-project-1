@@ -2,7 +2,7 @@ import { useDataset } from "../useDataset";
 import { COLORS } from "../lib/colors";
 import { linePoints, xFor, yFor } from "../lib/chart";
 import { formatTanggal, formatJam, formatPct } from "../lib/format";
-import { Camera, Clock } from "../components/icons";
+import EmojiBadge from "../components/EmojiBadge";
 
 function pctColor(pct: number | null) {
   if (pct === null) return COLORS.inkTertiary;
@@ -34,7 +34,10 @@ export default function Overview() {
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
         <div className="rounded-2xl border border-border bg-surface p-5">
-          <span className="text-xs font-semibold uppercase tracking-wide text-ink-secondary">Hari Tercatat</span>
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold uppercase tracking-wide text-ink-secondary">Hari Tercatat</span>
+            <EmojiBadge emoji="🗓️" tint="accent" />
+          </div>
           <div className="mt-2.5 flex items-baseline gap-2">
             <span className="font-mn text-[34px] font-extrabold tracking-tight">{d.totalHariTercatat}</span>
             <span className="text-xs font-bold text-ink-tertiary">hari</span>
@@ -43,7 +46,10 @@ export default function Overview() {
         </div>
 
         <div className="rounded-2xl border border-border bg-surface p-5">
-          <span className="text-xs font-semibold uppercase tracking-wide text-ink-secondary">Total Tugas</span>
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold uppercase tracking-wide text-ink-secondary">Total Tugas</span>
+            <EmojiBadge emoji="✅" tint="good" />
+          </div>
           <div className="mt-2.5 flex items-baseline gap-2">
             <span className="font-mn text-[34px] font-extrabold tracking-tight">{d.totalTugas}</span>
             <span className="text-xs font-bold text-good-text">{formatPct(d.pctSelesaiKeseluruhan)} selesai</span>
@@ -54,23 +60,27 @@ export default function Overview() {
         </div>
 
         <div className="rounded-2xl border border-border bg-surface p-5">
-          <span className="text-xs font-semibold uppercase tracking-wide text-ink-secondary">Rata-rata Jam Kerja</span>
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold uppercase tracking-wide text-ink-secondary">Rata-rata Jam Kerja</span>
+            <EmojiBadge emoji="⏰" tint="warn" />
+          </div>
           <div className="mt-2.5 flex items-baseline gap-2">
             <span className="font-mn text-[34px] font-extrabold tracking-tight">
               {formatJam(d.rataJamKerjaKeseluruhan)}
             </span>
-            <Clock className="text-ink-tertiary" />
           </div>
           <span className="mt-2 block text-xs text-ink-tertiary">per hari, dari jam masuk s.d. jam pulang</span>
         </div>
 
         <div className="rounded-2xl border border-border bg-surface p-5">
-          <span className="text-xs font-semibold uppercase tracking-wide text-ink-secondary">
-            Dokumentasi Foto
-          </span>
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold uppercase tracking-wide text-ink-secondary">
+              Dokumentasi Foto
+            </span>
+            <EmojiBadge emoji="📸" tint="accent" />
+          </div>
           <div className="mt-2.5 flex items-baseline gap-2">
             <span className="font-mn text-[34px] font-extrabold tracking-tight">{d.totalFoto}</span>
-            <Camera className="text-ink-tertiary" />
           </div>
           <span className="mt-2 block text-xs text-ink-tertiary">screenshot bukti progres/hasil kerja</span>
         </div>
@@ -79,7 +89,7 @@ export default function Overview() {
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
         <div className="rounded-2xl border border-border bg-surface p-5">
           <div className="mb-3.5 flex items-center justify-between">
-            <span className="font-mn text-[15px] font-bold">% Tugas Selesai per Bulan</span>
+            <span className="font-mn text-[15px] font-bold">🎯 % Tugas Selesai per Bulan</span>
           </div>
           <div className="flex items-end gap-3 overflow-x-auto pb-2" style={{ minHeight: 200 }}>
             {d.months.map((m) => {
@@ -103,7 +113,7 @@ export default function Overview() {
 
         <div className="rounded-2xl border border-border bg-surface p-5">
           <div className="mb-3.5 flex items-center justify-between">
-            <span className="font-mn text-[15px] font-bold">Rata-rata Jam Kerja per Bulan</span>
+            <span className="font-mn text-[15px] font-bold">⏱️ Rata-rata Jam Kerja per Bulan</span>
           </div>
           <svg viewBox="0 0 800 300" width="100%" height="230">
             {[10, 70, 130, 190, 250].map((y) => (
@@ -132,7 +142,7 @@ export default function Overview() {
 
       <div className="rounded-2xl border border-border bg-surface p-5">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <span className="font-mn text-[15px] font-bold">Cakupan Hari Terisi per Bulan</span>
+          <span className="font-mn text-[15px] font-bold">🗓️ Cakupan Hari Terisi per Bulan</span>
           <span className="text-xs text-ink-tertiary">hari tercatat vs total hari kalender bulan tsb.</span>
         </div>
         <div className="flex flex-col gap-3">

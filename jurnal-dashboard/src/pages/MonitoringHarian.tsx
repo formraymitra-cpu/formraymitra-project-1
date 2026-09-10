@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useDataset } from "../useDataset";
 import StatusBadge from "../components/StatusBadge";
-import { Download, Search, Camera } from "../components/icons";
+import { Download, Search } from "../components/icons";
 import { formatTanggalPendek } from "../lib/format";
 import type { Task } from "../types";
 
@@ -66,7 +66,7 @@ export default function MonitoringHarian() {
     <div className="flex flex-col gap-5 px-6 py-8 sm:px-10 sm:pb-14">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="font-mn text-2xl font-extrabold tracking-tight sm:text-[26px]">Monitoring Harian</h1>
+          <h1 className="font-mn text-2xl font-extrabold tracking-tight sm:text-[26px]">📝 Monitoring Harian</h1>
           <p className="mt-1.5 text-sm text-ink-secondary">{d.totalTugas} tugas tercatat di {d.totalHariTercatat} hari</p>
         </div>
         <button
@@ -101,7 +101,7 @@ export default function MonitoringHarian() {
         <div className="overflow-x-auto">
           <div className="min-w-[1000px]">
             <div className="grid grid-cols-[100px_36px_1.6fr_100px_120px_1.5fr_70px] items-center gap-3 border-b border-border-strong px-5 py-3">
-              {["Tanggal", "No", "Tugas", "Status", "Jadwal", "Keterangan", "Foto"].map((h) => (
+              {["🗓️ Tanggal", "No", "🧩 Tugas", "Status", "⏰ Jadwal", "Keterangan", "📸 Foto"].map((h) => (
                 <span key={h} className="text-[10.5px] font-bold uppercase tracking-wide text-ink-tertiary">
                   {h}
                 </span>
@@ -125,14 +125,7 @@ export default function MonitoringHarian() {
                 <span className="truncate text-[12px] text-ink-secondary">{t.jadwal ?? "—"}</span>
                 <span className="truncate text-xs text-ink-tertiary">{t.keterangan ?? "—"}</span>
                 <span className="flex items-center gap-1 text-xs text-ink-tertiary">
-                  {t.jumlahFoto > 0 ? (
-                    <>
-                      <Camera />
-                      {t.jumlahFoto}
-                    </>
-                  ) : (
-                    "—"
-                  )}
+                  {t.jumlahFoto > 0 ? `📸 ${t.jumlahFoto}` : "—"}
                 </span>
               </div>
             ))}

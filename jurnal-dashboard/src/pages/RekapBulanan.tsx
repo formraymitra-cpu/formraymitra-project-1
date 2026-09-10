@@ -43,7 +43,7 @@ export default function RekapBulanan() {
     <div className="flex flex-col gap-5 px-6 py-8 sm:px-10 sm:pb-14">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="font-mn text-2xl font-extrabold tracking-tight sm:text-[26px]">Rekap Bulanan</h1>
+          <h1 className="font-mn text-2xl font-extrabold tracking-tight sm:text-[26px]">📆 Rekap Bulanan</h1>
           <p className="mt-1.5 text-sm text-ink-secondary">Ringkasan tugas &amp; jam kerja per bulan</p>
         </div>
         <button
@@ -59,7 +59,7 @@ export default function RekapBulanan() {
         <div className="overflow-x-auto">
           <div className="min-w-[880px]">
             <div className="grid grid-cols-[1.2fr_110px_100px_100px_100px_100px_140px_100px] items-center gap-3 border-b border-border-strong px-5 py-3">
-              {["Bulan", "Hari Tercatat", "Total Tugas", "Selesai", "Belum", "% Selesai", "Rata-rata Jam Kerja", "Foto"].map((h) => (
+              {["🗓️ Bulan", "Hari Tercatat", "📋 Total Tugas", "✅ Selesai", "⏳ Belum", "% Selesai", "⏰ Rata-rata Jam Kerja", "📸 Foto"].map((h) => (
                 <span key={h} className="text-[10.5px] font-bold uppercase tracking-wide text-ink-tertiary">
                   {h}
                 </span>
