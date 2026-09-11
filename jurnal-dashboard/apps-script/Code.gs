@@ -11,10 +11,14 @@
  * Setiap sheet bulan harus mengikuti format hasil merge.py:
  *   baris 1  : judul (merged)
  *   baris 3  : header TANGGAL | HARI | JAM MASUK | JAM PULANG | NO |
- *              DAILY WORK PLAN | CEKLIST | TIME SCHEDULE | KETERANGAN |
- *              JUMLAH FOTO
+ *              DAILY WORK PLAN | CEKLIST | TIME SCHEDULE | KETERANGAN
  *   baris 4+ : data, berhenti di baris pertama yang TANGGAL-nya kosong
- * Sheet dengan nama "<BULAN> FOTO" (galeri screenshot) dilewati.
+ * Sheet dengan nama "<BULAN> FOTO" (galeri screenshot) dilewati saat
+ * membaca tugas, tapi dipindai terpisah untuk menghitung JUMLAH FOTO per
+ * tanggal langsung dari teks header galerinya (lihat buildFotoCountMap) —
+ * jadi kolom "JUMLAH FOTO" di sheet data harian TIDAK dipakai lagi, tambah
+ * foto baru ke sheet galeri otomatis kehitung tanpa isi apa pun secara
+ * manual di sheet data.
  */
 
 var MONTH_LABEL_ID = {
@@ -51,13 +55,45 @@ function cleanStr(v) {
   return s ? s : null;
 }
 
+/**
+ * Pindai semua sheet galeri "<BULAN> FOTO" dan hitung jumlah foto per tanggal
+ * langsung dari teks header-nya ("DD/MM/YYYY (Hari) - N foto" di kolom A).
+ * Dipakai sebagai sumber JUMLAH FOTO yang selalu sinkron dengan isi galeri —
+ * TIDAK mengandalkan kolom "JUMLAH FOTO" di sheet data harian, supaya kalau
+ * kamu tambah/hapus foto di sheet galeri, dashboard otomatis ikut berubah
+ * tanpa perlu mengisi ulang kolom itu secara manual.
+ */
+function buildFotoCountMap(ss) {
+  var map = {};
+  ss.getSheets().forEach(function (sheet) {
+    var name = sheet.getName().trim().toUpperCase();
+    if (name.slice(-5) !== " FOTO") return;
+    var lastRow = sheet.getLastRow();
+    if (lastRow < 1) return;
+    var colA = sheet.getRange(1, 1, lastRow, 1).getValues();
+    colA.forEach(function (row) {
+      var v = row[0];
+      if (typeof v !== "string") return;
+      var m = v.match(/^(\d{1,2}\/\d{1,2}\/\d{4})\b.*?(\d+)\s*foto/i);
+      if (m) map[m[1]] = parseInt(m[2], 10);
+    });
+  });
+  return map;
+}
+
+function fotoCountUntuk(fotoCountMap, tglIso) {
+  var d = new Date(tglIso + "T00:00:00");
+  var key = Utilities.formatDate(d, Session.getScriptTimeZone() || "Asia/Jakarta", "dd/MM/yyyy");
+  return fotoCountMap[key] || 0;
+}
+
 /** Baca satu sheet bulan (header di baris 3, data mulai baris 4). */
-function parseMonthSheet(sheet) {
+function parseMonthSheet(sheet, fotoCountMap) {
   var tasks = [];
   var r = 4;
   var lastRow = sheet.getLastRow();
   while (r <= lastRow + 1) {
-    var row = sheet.getRange(r, 1, 1, 10).getValues()[0];
+    var row = sheet.getRange(r, 1, 1, 9).getValues()[0];
     var tgl = row[0];
     var tglIso = isoDate(tgl);
     if (!tglIso) break;
@@ -71,7 +107,7 @@ function parseMonthSheet(sheet) {
       selesai: row[6] === true,
       jadwal: cleanStr(row[7]),
       keterangan: cleanStr(row[8]),
-      jumlahFoto: row[9] ? Number(row[9]) : 0,
+      jumlahFoto: fotoCountUntuk(fotoCountMap, tglIso),
     });
     r += 1;
   }
@@ -161,13 +197,14 @@ function buildMonths(days) {
 function buildDataset() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheets = ss.getSheets();
+  var fotoCountMap = buildFotoCountMap(ss);
 
   var allTasks = [];
   sheets.forEach(function (sheet) {
     var name = sheet.getName().trim().toUpperCase();
     if (name.slice(-5) === " FOTO") return;
     if (!MONTH_NAMES_UPPER[name]) return;
-    allTasks = allTasks.concat(parseMonthSheet(sheet));
+    allTasks = allTasks.concat(parseMonthSheet(sheet, fotoCountMap));
   });
 
   var realTasks = allTasks.filter(function (t) {

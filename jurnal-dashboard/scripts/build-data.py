@@ -2,13 +2,18 @@
 """
 Mengubah "JURNAL HARIAN DINI SAFFANAH 2026.xlsx" (hasil gabungan, satu sheet
 per bulan: TANGGAL|HARI|JAM MASUK|JAM PULANG|NO|DAILY WORK PLAN|CEKLIST|
-TIME SCHEDULE|KETERANGAN|JUMLAH FOTO, header di baris 3, data mulai baris 4)
-menjadi satu dataset JSON yang dikonsumsi dashboard (src/data/jurnal-data.json).
+TIME SCHEDULE|KETERANGAN, header di baris 3, data mulai baris 4) menjadi satu
+dataset JSON yang dikonsumsi dashboard (src/data/jurnal-data.json).
+
+Jumlah foto per tanggal dihitung otomatis dari header sheet galeri
+"<BULAN> FOTO" ("DD/MM/YYYY (Hari) - N foto"), bukan dari kolom manual di
+sheet data — jadi selalu sinkron dengan isi galeri yang sebenarnya.
 
 Jalankan ulang setiap kali ada bulan baru digabungkan:
     python3 scripts/build-data.py <path-ke-xlsx>
 """
 import json
+import re
 import sys
 from datetime import datetime, date
 
@@ -32,7 +37,30 @@ def parse_hhmm(s):
         return None
 
 
-def parse_month_sheet(ws):
+def build_foto_count_map(wb):
+    """Hitung jumlah foto per tanggal langsung dari header sheet galeri
+    "<BULAN> FOTO" ("DD/MM/YYYY (Hari) - N foto" di kolom A) — bukan dari
+    kolom JUMLAH FOTO manual di sheet data, supaya selalu sinkron dengan isi
+    galeri yang sebenarnya."""
+    count_by_date = {}
+    pattern = re.compile(r"^(\d{1,2}/\d{1,2}/\d{4})\b.*?(\d+)\s*foto", re.IGNORECASE)
+    for sn in wb.sheetnames:
+        if not sn.strip().upper().endswith(" FOTO"):
+            continue
+        ws = wb[sn]
+        for row in ws.iter_rows(min_col=1, max_col=1, values_only=True):
+            v = row[0]
+            if not isinstance(v, str):
+                continue
+            m = pattern.match(v)
+            if m:
+                d, mth, y = m.group(1).split("/")
+                iso = f"{y}-{int(mth):02d}-{int(d):02d}"
+                count_by_date[iso] = int(m.group(2))
+    return count_by_date
+
+
+def parse_month_sheet(ws, foto_count_map):
     tasks = []
     r = 4
     while True:
@@ -46,6 +74,7 @@ def parse_month_sheet(ws):
         else:
             r += 1
             continue
+        tgl_iso = tgl_date.isoformat()
         hari = ws.cell(r, 2).value
         jam_masuk = ws.cell(r, 3).value
         jam_pulang = ws.cell(r, 4).value
@@ -54,9 +83,8 @@ def parse_month_sheet(ws):
         ceklist = ws.cell(r, 7).value
         jadwal = ws.cell(r, 8).value
         keterangan = ws.cell(r, 9).value
-        jumlah_foto = ws.cell(r, 10).value
         tasks.append({
-            "tanggal": tgl_date.isoformat(),
+            "tanggal": tgl_iso,
             "hari": hari,
             "jamMasuk": jam_masuk,
             "jamPulang": jam_pulang,
@@ -65,7 +93,7 @@ def parse_month_sheet(ws):
             "selesai": ceklist is True,
             "jadwal": jadwal,
             "keterangan": keterangan,
-            "jumlahFoto": int(jumlah_foto) if jumlah_foto else 0,
+            "jumlahFoto": foto_count_map.get(tgl_iso, 0),
         })
         r += 1
     return tasks
@@ -131,13 +159,14 @@ def build_months(days):
 def main():
     src = sys.argv[1] if len(sys.argv) > 1 else "JURNAL HARIAN DINI SAFFANAH 2026.xlsx"
     wb = openpyxl.load_workbook(src, data_only=True)
+    foto_count_map = build_foto_count_map(wb)
 
     all_tasks = []
     for sn in wb.sheetnames:
         base = sn.strip().upper()
         if base.endswith(" FOTO") or base not in MONTH_NAMES_UPPER:
             continue
-        all_tasks.extend(parse_month_sheet(wb[sn]))
+        all_tasks.extend(parse_month_sheet(wb[sn], foto_count_map))
 
     real_tasks = [t for t in all_tasks if t["tugas"] and str(t["tugas"]).strip().upper() != PLACEHOLDER_TASK]
     days = build_days(all_tasks)
