@@ -23,6 +23,31 @@ atau hari baru ditambahkan ke spreadsheet.
 5. Setelah deploy selesai, kamu dapat **Web app URL** (format `https://script.google.com/macros/s/XXXXX/exec`). Itu link dashboard live-nya — buka kapan saja, datanya selalu versi terbaru dari spreadsheet.
 6. **Reload/tutup-buka lagi spreadsheet-nya.** Akan muncul menu baru **"📊 Dashboard"** di sebelah menu Bantuan, dengan item **"Buka Dashboard"** — klik itu untuk langsung buka dashboard di tab baru tanpa perlu simpan/cari link `.../exec` lagi. Pertama kali dipakai mungkin diminta otorisasi tambahan, izinkan saja.
 
+## Menghubungkan submenu Invoice
+
+Submenu **Invoice** (tagihan & kelengkapan dokumen per lokasi) baca dari
+spreadsheet **terpisah** "MONITORING INVOICE DINI" — bukan spreadsheet
+jurnal harian. Supaya submenu ini aktif:
+
+1. Buka spreadsheet "MONITORING INVOICE DINI" di Google Sheets.
+2. Copy ID-nya dari URL — bagian antara `/d/` dan `/edit`, contoh:
+   `https://docs.google.com/spreadsheets/d/`**`ID_DI_SINI`**`/edit`
+3. Di editor Apps Script (yang terhubung ke spreadsheet jurnal harian), buka `Code.gs`, cari baris:
+   ```js
+   var INVOICE_SPREADSHEET_ID = "";
+   ```
+   isi di antara tanda kutip dengan ID yang tadi di-copy.
+4. **Deploy → Manage deployments → Edit (pensil) → Deploy** supaya perubahan ini ikut live.
+5. Buka dashboard lagi — submenu Invoice sekarang menampilkan data asli, bukan pesan "belum terhubung".
+
+Selama `INVOICE_SPREADSHEET_ID` masih kosong, submenu Invoice tetap muncul
+di dashboard tapi menampilkan pesan bahwa belum terhubung — dashboard yang
+lain (Overview, Rekap Bulanan, dst) tidak terpengaruh sama sekali.
+
+Sheet bulan kelengkapan dokumen di spreadsheet invoice (mis. "JULI 2026")
+otomatis terbaca asal namanya `<BULAN> <TAHUN>` (contoh: `OKTOBER 2026`) —
+tambah bulan baru di sana juga tidak perlu ubah kode.
+
 ## Menambah bulan baru
 
 Karena `Code.gs` membaca semua sheet yang namanya cocok dengan nama bulan

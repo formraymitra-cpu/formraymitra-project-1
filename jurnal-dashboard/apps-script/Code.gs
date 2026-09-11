@@ -27,11 +27,21 @@ var MONTH_LABEL_ID = {
 };
 
 var MONTH_NAMES_UPPER = {};
+var MONTH_NUM_UPPER = {};
 Object.keys(MONTH_LABEL_ID).forEach(function (k) {
   MONTH_NAMES_UPPER[MONTH_LABEL_ID[k].toUpperCase()] = true;
+  MONTH_NUM_UPPER[MONTH_LABEL_ID[k].toUpperCase()] = parseInt(k, 10);
 });
 
 var PLACEHOLDER_TASK = "(TIDAK ADA DATA)";
+
+/**
+ * ID spreadsheet "MONITORING INVOICE DINI" (submenu Invoice di dashboard).
+ * Buka spreadsheet invoice-nya di Google Sheets, copy ID dari URL-nya
+ * (bagian antara /d/ dan /edit), lalu isi di sini. Kalau dikosongkan,
+ * submenu Invoice tetap muncul tapi menampilkan pesan "belum terhubung".
+ */
+var INVOICE_SPREADSHEET_ID = "";
 
 function parseHHMM(s) {
   if (!s || typeof s !== "string" || s.indexOf(":") === -1) return null;
@@ -193,6 +203,181 @@ function buildMonths(days) {
   });
 }
 
+/**
+ * Baca sheet "MONITORING TAGIHAN" dari spreadsheet invoice: satu lokasi bisa
+ * punya beberapa baris tagihan bulanan (baris pertama berisi NO/LOKASI/NO SP,
+ * baris lanjutan cuma BULAN TAGIHAN dst). Baris teks bernomor ("1. ...") di
+ * bagian bawah sheet ditangkap sebagai catatan terpisah.
+ */
+function parseTagihanSheet(sheet) {
+  var tagihan = [];
+  var notes = [];
+  if (!sheet) return { tagihan: tagihan, notes: notes };
+
+  var lastRow = sheet.getLastRow();
+  var current = null;
+  var blankStreak = 0;
+  for (var r = 5; r <= lastRow; r++) {
+    var row = sheet.getRange(r, 1, 1, 9).getValues()[0];
+    var no = row[0], lokasi = row[1], noSp = row[2], tglSp = row[3];
+    var termin = row[4], bulan = row[5], nominal = row[6], ket = row[7], status = row[8];
+
+    var isNote = typeof noSp === "string" && /^\d+\./.test(noSp) && !lokasi && !bulan;
+    if (isNote) {
+      notes.push(noSp);
+      blankStreak = 0;
+      continue;
+    }
+
+    var isBlank = !no && !lokasi && !noSp && !bulan && !nominal;
+    if (isBlank) {
+      blankStreak += 1;
+      if (blankStreak > 30) break;
+      continue;
+    }
+    blankStreak = 0;
+
+    if (lokasi) {
+      current = {
+        no: no || null,
+        lokasi: cleanStr(lokasi),
+        noSp: cleanStr(noSp),
+        tanggalSp: isoDate(tglSp),
+        jumlahTermin: termin || null,
+        perBulan: [],
+      };
+      tagihan.push(current);
+      if (bulan) current.perBulan.push(tagihanBulanEntry(bulan, nominal, ket, status));
+    } else if (bulan && current) {
+      current.perBulan.push(tagihanBulanEntry(bulan, nominal, ket, status));
+    }
+  }
+
+  tagihan.forEach(function (t) {
+    var total = 0, selesai = 0;
+    t.perBulan.forEach(function (b) {
+      if (b.nominal) total += b.nominal;
+      if (b.status && b.status.toUpperCase() === "SELESAI") selesai += 1;
+    });
+    t.totalNominal = total;
+    t.totalBulan = t.perBulan.length;
+    t.selesai = selesai;
+    t.status = t.totalBulan === 0 ? "belum" : selesai === t.totalBulan ? "selesai" : selesai > 0 ? "proses" : "belum";
+  });
+
+  return { tagihan: tagihan, notes: notes };
+}
+
+function tagihanBulanEntry(bulan, nominal, ket, status) {
+  return { bulan: cleanStr(bulan), nominal: nominal || null, keterangan: cleanStr(ket), status: cleanStr(status) };
+}
+
+/**
+ * Baca satu sheet bulan kelengkapan dokumen invoice (mis. "JULI 2026"):
+ * header di baris 4 (kolom D..R = 15 jenis dokumen), data lokasi mulai
+ * baris 5 sampai baris pertama yang LOKASI-nya kosong.
+ */
+function parseDokumenSheet(sheet, code, label) {
+  var header = sheet.getRange(4, 1, 1, 19).getValues()[0];
+  var jenisDokumen = header.slice(3, 18).filter(function (h) { return h; });
+
+  var lokasiList = [];
+  var lastRow = sheet.getLastRow();
+  for (var r = 5; r <= lastRow; r++) {
+    var row = sheet.getRange(r, 1, 1, 19).getValues()[0];
+    var lokasi = row[1];
+    if (!lokasi) break;
+    var dokumen = {};
+    var lengkap = 0;
+    for (var i = 0; i < jenisDokumen.length; i++) {
+      var val = row[3 + i] === true;
+      dokumen[jenisDokumen[i]] = val;
+      if (val) lengkap += 1;
+    }
+    lokasiList.push({
+      lokasi: cleanStr(lokasi),
+      dokumen: dokumen,
+      tanggalKirim: isoDate(row[18]),
+      totalDokumen: jenisDokumen.length,
+      dokumenLengkap: lengkap,
+      pctLengkap: jenisDokumen.length ? Math.round((lengkap / jenisDokumen.length) * 10000) / 10000 : null,
+    });
+  }
+
+  var pctList = lokasiList.map(function (l) { return l.pctLengkap; }).filter(function (v) { return v !== null; });
+  return {
+    code: code,
+    label: label,
+    jenisDokumen: jenisDokumen,
+    lokasi: lokasiList,
+    pctRataRata: pctList.length ? Math.round((pctList.reduce(function (s, v) { return s + v; }, 0) / pctList.length) * 10000) / 10000 : null,
+  };
+}
+
+function emptyInvoiceDataset() {
+  return {
+    generatedAt: new Date().toISOString(),
+    sourceFile: null,
+    tersedia: false,
+    tagihan: [],
+    totalLokasiTagihan: 0,
+    totalNominalKeseluruhan: 0,
+    totalNominalBelumSelesai: 0,
+    dokumenBulanan: [],
+    catatan: [],
+  };
+}
+
+/**
+ * Bangun dataset submenu Invoice dari spreadsheet TERPISAH "MONITORING
+ * INVOICE DINI" (diidentifikasi lewat INVOICE_SPREADSHEET_ID di atas —
+ * bukan spreadsheet jurnal harian yang menjadi rumah script ini).
+ */
+function buildInvoiceDataset() {
+  if (!INVOICE_SPREADSHEET_ID) return emptyInvoiceDataset();
+
+  var ss;
+  try {
+    ss = SpreadsheetApp.openById(INVOICE_SPREADSHEET_ID);
+  } catch (e) {
+    return emptyInvoiceDataset();
+  }
+
+  var tagihanResult = parseTagihanSheet(ss.getSheetByName("MONITORING TAGIHAN"));
+
+  var dokumenBulanan = [];
+  ss.getSheets().forEach(function (sheet) {
+    var m = sheet.getName().trim().match(/^([A-Za-z]+)\s+(\d{4})$/);
+    if (!m) return;
+    var monthNum = MONTH_NUM_UPPER[m[1].toUpperCase()];
+    if (!monthNum) return;
+    var mm = monthNum < 10 ? "0" + monthNum : String(monthNum);
+    dokumenBulanan.push(parseDokumenSheet(sheet, m[2] + "-" + mm, MONTH_LABEL_ID[monthNum] + " " + m[2]));
+  });
+  dokumenBulanan.sort(function (a, b) { return a.code < b.code ? -1 : a.code > b.code ? 1 : 0; });
+
+  var totalNominal = 0;
+  var totalBelum = 0;
+  tagihanResult.tagihan.forEach(function (t) {
+    totalNominal += t.totalNominal;
+    t.perBulan.forEach(function (b) {
+      if (b.nominal && (!b.status || b.status.toUpperCase() !== "SELESAI")) totalBelum += b.nominal;
+    });
+  });
+
+  return {
+    generatedAt: new Date().toISOString(),
+    sourceFile: ss.getName(),
+    tersedia: true,
+    tagihan: tagihanResult.tagihan,
+    totalLokasiTagihan: tagihanResult.tagihan.length,
+    totalNominalKeseluruhan: totalNominal,
+    totalNominalBelumSelesai: totalBelum,
+    dokumenBulanan: dokumenBulanan,
+    catatan: tagihanResult.notes,
+  };
+}
+
 /** Bangun dataset lengkap dari semua sheet bulan yang ada di spreadsheet aktif. */
 function buildDataset() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -235,6 +420,7 @@ function buildDataset() {
       mulai: tanggalList.length ? tanggalList[0] : null,
       akhir: tanggalList.length ? tanggalList[tanggalList.length - 1] : null,
     },
+    invoice: buildInvoiceDataset(),
   };
 }
 

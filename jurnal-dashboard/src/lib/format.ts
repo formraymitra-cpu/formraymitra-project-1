@@ -17,3 +17,8 @@ export function formatPct(pct: number | null) {
   if (pct === null || pct === undefined) return "—";
   return `${Math.round(pct * 100)}%`;
 }
+
+export function formatRupiah(n: number | null) {
+  if (n === null || n === undefined) return "—";
+  return `Rp${Math.round(n).toLocaleString("id-ID")}`;
+}
