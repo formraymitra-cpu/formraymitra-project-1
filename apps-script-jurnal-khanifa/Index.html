@@ -49,7 +49,7 @@
     font-family:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
     padding:0 24px 56px;
   }
-  .wrap{ max-width:1440px; margin:0 auto; }
+  .wrap{ max-width:1900px; margin:0 auto; }
   .num, .tabular{ font-family:"IBM Plex Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
   h1,h2,h3{ font-family:"Libre Franklin", system-ui, sans-serif; text-wrap:balance; margin:0; }
 
@@ -59,10 +59,6 @@
     padding:16px 0; border-bottom:1px solid var(--line); margin-bottom:22px;
   }
   .topbar-left{ display:flex; align-items:center; gap:11px; }
-  .mascot-avatar{
-    width:40px; height:40px; border-radius:50%; background:var(--brand-bg);
-    display:flex; align-items:center; justify-content:center; font-size:20px; flex:none;
-  }
   .topbar-title{ display:flex; flex-direction:column; line-height:1.25; }
   .topbar-name{ font-family:"Libre Franklin",sans-serif; font-weight:700; font-size:14.5px; }
   .topbar-sub{ font-size:12px; color:var(--ink-muted); }
@@ -88,18 +84,13 @@
   .tab-panel h1{ font-size:clamp(22px,2.6vw,30px); font-weight:800; letter-spacing:-.01em; }
   .tab-panel > p.sub{ margin:7px 0 0; color:var(--ink-2); font-size:14px; max-width:64ch; line-height:1.55; }
 
-  /* ---------- hero greeting card ---------- */
-  .hero-card{
-    margin-top:20px; background:var(--surface); border:1px solid var(--line); border-radius:12px;
-    padding:18px 22px; display:flex; align-items:center; gap:16px;
+  /* ---------- summary highlight bar ---------- */
+  .summary-bar{
+    margin-top:20px; background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--brand);
+    border-radius:10px; padding:16px 22px; font-size:14.5px; line-height:1.6; color:var(--ink);
   }
-  .hero-card .hero-avatar{
-    width:52px; height:52px; border-radius:50%; background:var(--brand-bg);
-    display:flex; align-items:center; justify-content:center; font-size:26px; flex:none;
-  }
-  .hero-card .hero-text{ font-size:14.5px; line-height:1.6; color:var(--ink); }
-  .hero-card .hero-text b{ font-weight:700; }
-  .hero-card .hero-text .accent{ color:var(--good); font-weight:700; }
+  .summary-bar b{ font-weight:700; }
+  .summary-bar .accent{ color:var(--good); font-weight:700; }
 
   /* ---------- KPI strip ---------- */
   .kpis{
@@ -256,8 +247,6 @@
 
   footer{ margin-top:26px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-muted); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; }
 
-  .stack{ display:flex; flex-direction:column; gap:16px; margin-top:16px; }
-
   @media (max-width:920px){
     .kpis{ grid-template-columns:repeat(2,1fr); }
     .row2{ grid-template-columns:1fr; }
@@ -272,10 +261,9 @@
 
   <header class="topbar">
     <div class="topbar-left">
-      <span class="mascot-avatar" id="mascot-avatar">🐝</span>
       <div class="topbar-title">
-        <span class="topbar-name" id="mascot-name">Lebah Cermat</span>
-        <span class="topbar-sub">Monitoring Kerja Harian Khanifa</span>
+        <span class="topbar-name">Rekap Kerja Khanifa</span>
+        <span class="topbar-sub">Monitoring Kerja Harian</span>
       </div>
     </div>
     <nav class="tabs" id="tabs">
@@ -292,10 +280,7 @@
       <h1>Ringkasan Eksekutif</h1>
       <p class="sub" id="ov-sub">Rekap jurnal harian</p>
 
-      <div class="hero-card">
-        <span class="hero-avatar">🐝</span>
-        <div class="hero-text" id="hero-text">Memuat ringkasan&hellip;</div>
-      </div>
+      <div class="summary-bar" id="summary-bar">Memuat ringkasan&hellip;</div>
 
       <section class="kpis" id="kpis"></section>
 
@@ -314,7 +299,7 @@
     <section class="tab-panel" data-panel="bulanan">
       <h1>Rekap Bulanan</h1>
       <p class="sub">Distribusi jenis tugas &amp; perbandingan beban kerja antar bulan</p>
-      <section class="row2 uneven stack">
+      <section class="row2 uneven">
         <div class="panel">
           <div class="panel-head"><div><h2>Distribusi Jenis Tugas</h2><p class="note" id="donut-note">klasifikasi dari judul pekerjaan</p></div></div>
           <div class="donut-wrap">
@@ -440,15 +425,14 @@
   document.getElementById('footer-source').textContent =
     'Sumber: ' + summary.total_days + ' entri jurnal pada sheet ' + summary.months.map(function(m){return m.name;}).join(', ');
 
-  /* ---------------- hero greeting ---------------- */
+  /* ---------------- summary highlight ---------------- */
   var doneRate = summary.status_tracked ? Math.round(summary.status_done / summary.status_tracked * 100) : 0;
   var heroStatus = summary.status_tracked
     ? '<span class="accent">' + doneRate + '%</span> dari tugas berstatus tercatat selesai'
     : 'status penyelesaian belum tercatat di sebagian besar hari';
-  document.getElementById('hero-text').innerHTML =
-    'Halo, aku <b id="hero-name">Lebah Cermat</b>! 🐝 aku sudah menemani Khanifa <b>' + summary.total_days + ' hari kerja</b>, ' +
-    'mencatat <b>' + fmt(summary.total_tasks) + ' tugas</b> administrasi BPJS Kesehatan &amp; Ketenagakerjaan (' + heroStatus + '), ' +
-    'dan memproses total <b>' + fmt(summary.total_lokasi) + ' lokasi</b> peserta.';
+  document.getElementById('summary-bar').innerHTML =
+    'Khanifa telah bekerja <b>' + summary.total_days + ' hari</b>, mencatat <b>' + fmt(summary.total_tasks) + ' tugas</b> ' +
+    'administrasi BPJS Kesehatan &amp; Ketenagakerjaan (' + heroStatus + '), dan memproses total <b>' + fmt(summary.total_lokasi) + ' lokasi</b> peserta.';
 
   /* ---------------- KPI strip ---------------- */
   function splitLine(getVal){
@@ -492,12 +476,16 @@
   }
 
   /* ---------------- overview: Tugas per Bulan (bar) ---------------- */
-  (function drawMonthBar(){
+  function drawMonthBar(){
     var svg = document.getElementById('bar-month');
-    var barW = 34, gap = 22;
     var padL = 40, padR = 16, padT = 14, padB = 26;
     var plotH = 170;
-    var width = padL + padR + Math.max(summary.months.length,1) * (barW + gap);
+    var n = Math.max(summary.months.length, 1);
+    var avail = Math.max(svg.parentElement.clientWidth, 260) - padL - padR;
+    var slot = avail / n;
+    var barW = Math.max(24, Math.min(64, slot * 0.55));
+    var gap = slot - barW;
+    var width = padL + padR + n * (barW + gap);
     var height = padT + plotH + padB;
     svg.setAttribute('width', width); svg.setAttribute('height', height);
     svg.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
@@ -526,14 +514,16 @@
       val.setAttribute('font-weight','600'); val.textContent = m.tasks;
       svg.appendChild(val);
     });
-  })();
+  }
 
   /* ---------------- overview: Rata-rata Lokasi/Hari (line) ---------------- */
-  (function drawMonthLine(){
+  function drawMonthLine(){
     var svg = document.getElementById('line-month');
-    var stepX = 78;
     var padL = 44, padR = 30, padT = 22, padB = 26;
     var plotH = 170;
+    var n = Math.max(summary.months.length, 1);
+    var avail = Math.max(svg.parentElement.clientWidth, 260) - padL - padR;
+    var stepX = summary.months.length > 1 ? avail / (summary.months.length - 1) : avail;
     var width = padL + padR + Math.max(summary.months.length-1,0) * stepX;
     var height = padT + plotH + padB;
     svg.setAttribute('width', width); svg.setAttribute('height', height);
@@ -570,7 +560,20 @@
       lbl.textContent = titleCase(p.m.name).slice(0,3);
       svg.appendChild(lbl);
     });
-  })();
+  }
+
+  drawMonthBar();
+  drawMonthLine();
+  setTimeout(function(){ drawMonthBar(); drawMonthLine(); }, 300); // re-measure after web fonts settle
+
+  var overviewResizeTimer;
+  window.addEventListener('resize', function(){
+    clearTimeout(overviewResizeTimer);
+    overviewResizeTimer = setTimeout(function(){
+      drawMonthBar();
+      drawMonthLine();
+    }, 150);
+  });
 
   /* ---------------- jurnal tab: daily bar chart ---------------- */
   var svg = document.getElementById('bar');
