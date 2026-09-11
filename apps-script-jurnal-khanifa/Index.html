@@ -20,6 +20,8 @@
     --line-strong:#cfc8b4;
     --good:#0ca30c;
     --good-bg:#e4f4e1;
+    --brand:#eda100;
+    --brand-bg:#fdf0d6;
     color-scheme: light;
   }
   @media (prefers-color-scheme: dark){
@@ -28,6 +30,7 @@
       --ink:#f5f3ec; --ink-2:#c3beac; --ink-muted:#8f8a79;
       --line:#312e26; --line-strong:#433f33;
       --good:#28c228; --good-bg:#193519;
+      --brand:#c98500; --brand-bg:#2e2410;
       color-scheme: dark;
     }
   }
@@ -36,6 +39,7 @@
     --ink:#f5f3ec; --ink-2:#c3beac; --ink-muted:#8f8a79;
     --line:#312e26; --line-strong:#433f33;
     --good:#28c228; --good-bg:#193519;
+    --brand:#c98500; --brand-bg:#2e2410;
     color-scheme: dark;
   }
 
@@ -43,44 +47,85 @@
   body{
     margin:0; background:var(--page); color:var(--ink);
     font-family:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-    padding:0 20px 64px;
+    padding:0 24px 56px;
   }
-  .wrap{ max-width:1180px; margin:0 auto; }
+  .wrap{ max-width:1440px; margin:0 auto; }
   .num, .tabular{ font-family:"IBM Plex Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
   h1,h2,h3{ font-family:"Libre Franklin", system-ui, sans-serif; text-wrap:balance; margin:0; }
 
-  .masthead{
-    padding:32px 0 22px; border-bottom:1px solid var(--line);
-    display:flex; flex-wrap:wrap; gap:18px 28px; align-items:flex-end; justify-content:space-between;
+  /* ---------- top bar ---------- */
+  .topbar{
+    display:flex; align-items:center; gap:22px; flex-wrap:wrap;
+    padding:16px 0; border-bottom:1px solid var(--line); margin-bottom:22px;
   }
-  .masthead .eyebrow{
-    font-family:"IBM Plex Mono", monospace; font-size:12px; letter-spacing:.09em;
-    text-transform:uppercase; color:var(--ink-muted); margin:0 0 10px;
+  .topbar-left{ display:flex; align-items:center; gap:11px; }
+  .mascot-avatar{
+    width:40px; height:40px; border-radius:50%; background:var(--brand-bg);
+    display:flex; align-items:center; justify-content:center; font-size:20px; flex:none;
   }
-  .masthead h1{ font-size:clamp(24px,3.4vw,34px); font-weight:800; letter-spacing:-.01em; }
-  .masthead p.sub{ margin:8px 0 0; color:var(--ink-2); font-size:14.5px; max-width:54ch; line-height:1.55; }
+  .topbar-title{ display:flex; flex-direction:column; line-height:1.25; }
+  .topbar-name{ font-family:"Libre Franklin",sans-serif; font-weight:700; font-size:14.5px; }
+  .topbar-sub{ font-size:12px; color:var(--ink-muted); }
+  .tabs{ display:flex; gap:4px; margin-left:4px; flex-wrap:wrap; }
+  .tab-btn{
+    font:inherit; font-family:"IBM Plex Sans",sans-serif; font-size:13.5px; font-weight:600;
+    border:0; background:transparent; color:var(--ink-2); padding:8px 14px; border-radius:8px; cursor:pointer;
+  }
+  .tab-btn:hover{ background:var(--surface-2); }
+  .tab-btn.active{ background:var(--brand-bg); color:var(--ink); }
+  .tab-btn:focus-visible{ outline:2px solid var(--ink); outline-offset:1px; }
+  .topbar .period-badge{ margin-left:auto; }
+
   .period-badge{
     font-family:"IBM Plex Mono", monospace; font-size:13px; color:var(--ink-2);
     border:1px solid var(--line-strong); border-radius:100px; padding:7px 14px; white-space:nowrap;
   }
   .period-badge b{ color:var(--ink); font-weight:600; }
 
-  .kpis{
-    margin-top:24px; display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
-    background:var(--line); border:1px solid var(--line); border-radius:12px; overflow:hidden;
+  /* ---------- tab panels ---------- */
+  .tab-panel{ display:none; }
+  .tab-panel.active{ display:block; }
+  .tab-panel h1{ font-size:clamp(22px,2.6vw,30px); font-weight:800; letter-spacing:-.01em; }
+  .tab-panel > p.sub{ margin:7px 0 0; color:var(--ink-2); font-size:14px; max-width:64ch; line-height:1.55; }
+
+  /* ---------- hero greeting card ---------- */
+  .hero-card{
+    margin-top:20px; background:var(--surface); border:1px solid var(--line); border-radius:12px;
+    padding:18px 22px; display:flex; align-items:center; gap:16px;
   }
-  .kpi{ background:var(--surface); padding:18px 20px; display:flex; flex-direction:column; gap:6px; min-width:0; }
-  .kpi .label{ font-size:12px; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-muted); font-weight:600; }
+  .hero-card .hero-avatar{
+    width:52px; height:52px; border-radius:50%; background:var(--brand-bg);
+    display:flex; align-items:center; justify-content:center; font-size:26px; flex:none;
+  }
+  .hero-card .hero-text{ font-size:14.5px; line-height:1.6; color:var(--ink); }
+  .hero-card .hero-text b{ font-weight:700; }
+  .hero-card .hero-text .accent{ color:var(--good); font-weight:700; }
+
+  /* ---------- KPI strip ---------- */
+  .kpis{
+    margin-top:16px; display:grid; grid-template-columns:repeat(4,1fr); gap:14px;
+  }
+  .kpi{
+    background:var(--surface); border:1px solid var(--line); border-radius:12px;
+    padding:16px 18px; display:flex; flex-direction:column; gap:8px; min-width:0; position:relative;
+  }
+  .kpi-icon{
+    position:absolute; top:14px; right:14px; width:30px; height:30px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-size:14px;
+  }
+  .kpi .label{ font-size:11.5px; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-muted); font-weight:600; padding-right:34px; }
   .kpi .value{ font-size:26px; font-weight:600; letter-spacing:-.01em; }
   .kpi .split{ font-size:12px; color:var(--ink-2); line-height:1.6; }
   .kpi .split .dot{ display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:5px; position:relative; top:-1px; }
 
+  /* ---------- section shell ---------- */
   .panel{
     background:var(--surface); border:1px solid var(--line); border-radius:12px;
-    margin-top:20px; padding:20px 22px 22px;
+    padding:20px 22px 22px;
   }
+  .chart-row{ margin-top:16px; }
   .panel-head{ display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; margin-bottom:16px; }
-  .panel-head h2{ font-size:16.5px; font-weight:700; }
+  .panel-head h2{ font-size:16px; font-weight:700; }
   .panel-head .note{ font-size:12.5px; color:var(--ink-muted); margin-top:3px; }
 
   .segmented{ display:inline-flex; background:var(--surface-2); border-radius:8px; padding:3px; gap:2px; flex-wrap:wrap; }
@@ -131,12 +176,15 @@
   .chart-legend{ display:flex; gap:16px; font-size:12.5px; color:var(--ink-2); margin-top:10px; flex-wrap:wrap; }
   .chart-legend .item{ display:flex; align-items:center; gap:6px; }
   .chart-legend .swatch{ width:10px; height:10px; border-radius:2px; }
-  #bar{ display:block; }
+  svg.chart-svg{ display:block; }
   .bar-rect{ cursor:pointer; }
   .bar-rect:hover{ filter:brightness(1.08); }
   .axis-line{ stroke:var(--line-strong); stroke-width:1; }
   .grid-line{ stroke:var(--line); stroke-width:1; }
   .tick-label{ fill:var(--ink-muted); font-size:10px; font-family:"IBM Plex Mono",monospace; }
+  .line-path{ fill:none; stroke-width:2; }
+  .line-dot{ stroke:var(--surface); stroke-width:2; }
+  .line-value{ font-size:10.5px; font-family:"IBM Plex Mono",monospace; font-weight:600; }
 
   .tooltip{
     position:fixed; pointer-events:none; z-index:40;
@@ -148,7 +196,8 @@
   .tooltip .t-date{ font-family:"IBM Plex Mono",monospace; font-weight:600; margin-bottom:3px; }
   .tooltip .t-task{ color:var(--page); opacity:.82; }
 
-  .row2{ display:grid; grid-template-columns:1.05fr 1fr; gap:16px; margin-top:16px; }
+  .row2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .row2.uneven{ grid-template-columns:1.05fr 1fr; }
 
   .donut-wrap{ display:flex; align-items:center; gap:22px; flex-wrap:wrap; }
   .legend-list{ display:flex; flex-direction:column; gap:11px; flex:1; min-width:180px; }
@@ -207,82 +256,128 @@
 
   footer{ margin-top:26px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-muted); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; }
 
-  @media (max-width:760px){
+  .stack{ display:flex; flex-direction:column; gap:16px; margin-top:16px; }
+
+  @media (max-width:920px){
     .kpis{ grid-template-columns:repeat(2,1fr); }
     .row2{ grid-template-columns:1fr; }
+  }
+  @media (max-width:640px){
+    .topbar .period-badge{ margin-left:0; order:3; width:100%; }
   }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <header class="masthead">
-    <div>
-      <p class="eyebrow">Jurnal Kerja Harian &middot; EDABU / SIPP</p>
-      <h1>Rekap Kerja Khanifa</h1>
-      <p class="sub">Administrasi kepesertaan &amp; tagihan BPJS Kesehatan dan BPJS Ketenagakerjaan — rekap harian, crosscheck tagihan, dan pemrosesan lokasi peserta.</p>
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="mascot-avatar" id="mascot-avatar">🐝</span>
+      <div class="topbar-title">
+        <span class="topbar-name" id="mascot-name">Lebah Cermat</span>
+        <span class="topbar-sub">Monitoring Kerja Harian Khanifa</span>
+      </div>
     </div>
+    <nav class="tabs" id="tabs">
+      <button class="tab-btn active" data-tab="overview">Overview</button>
+      <button class="tab-btn" data-tab="bulanan">Rekap Bulanan</button>
+      <button class="tab-btn" data-tab="jurnal">Jurnal Harian</button>
+    </nav>
     <div class="period-badge" id="period-badge">Periode <b>&hellip;</b></div>
   </header>
 
-  <section class="kpis" id="kpis"></section>
+  <main>
 
-  <section class="panel" id="chart-panel">
-    <div class="panel-head">
-      <div>
-        <h2>Volume Kerja Harian</h2>
-        <p class="note">Per hari kerja tercatat, diurutkan kronologis</p>
-      </div>
-      <div class="controls-row">
-        <div class="segmented" id="metric-toggle">
-          <button data-metric="tasks" class="active">Jumlah Tugas</button>
-          <button data-metric="lokasi">Lokasi Ditangani</button>
-        </div>
-        <div class="select-wrap">
-          <select id="month-select" class="month-select" aria-label="Filter bulan"></select>
-        </div>
-      </div>
-    </div>
-    <div class="chart-scroll">
-      <svg id="bar" xmlns="http://www.w3.org/2000/svg"></svg>
-    </div>
-    <div class="chart-legend" id="chart-legend"></div>
-  </section>
+    <section class="tab-panel active" data-panel="overview">
+      <h1>Ringkasan Eksekutif</h1>
+      <p class="sub" id="ov-sub">Rekap jurnal harian</p>
 
-  <section class="row2">
-    <div class="panel">
-      <div class="panel-head"><div><h2>Distribusi Jenis Tugas</h2><p class="note" id="donut-note">klasifikasi dari judul pekerjaan</p></div></div>
-      <div class="donut-wrap">
-        <svg id="donut" width="150" height="150" viewBox="0 0 150 150"></svg>
-        <div class="legend-list" id="donut-legend"></div>
+      <div class="hero-card">
+        <span class="hero-avatar">🐝</span>
+        <div class="hero-text" id="hero-text">Memuat ringkasan&hellip;</div>
       </div>
-    </div>
-    <div class="panel">
-      <div class="panel-head"><div><h2>Perbandingan Bulan</h2><p class="note">Rata-rata beban kerja per hari</p></div></div>
-      <table class="cmp-table" id="cmp-table"></table>
-      <div class="insight" id="cmp-insight"></div>
-    </div>
-  </section>
 
-  <section class="panel">
-    <div class="panel-head">
-      <div><h2>Jurnal Harian</h2><p class="note">Klik baris untuk melihat rincian tugas</p></div>
-      <div class="controls-row">
-        <span class="log-count" id="log-count"></span>
-        <div class="search-wrap">
-          <input type="search" id="log-search" class="log-search" placeholder="Cari tugas / tanggal…" aria-label="Cari jurnal">
+      <section class="kpis" id="kpis"></section>
+
+      <section class="row2 chart-row">
+        <div class="panel">
+          <div class="panel-head"><div><h2>Tugas per Bulan</h2><p class="note">Total tugas tercatat tiap bulan</p></div></div>
+          <div class="chart-scroll"><svg id="bar-month" class="chart-svg" xmlns="http://www.w3.org/2000/svg"></svg></div>
         </div>
-      </div>
-    </div>
-    <div class="table-scroll">
-      <table class="log-table">
-        <thead>
-          <tr><th>Tanggal</th><th>Jam</th><th class="num-h">Tugas</th><th class="num-h">Lokasi</th><th>Status</th></tr>
-        </thead>
-        <tbody id="log-body"></tbody>
-      </table>
-    </div>
-  </section>
+        <div class="panel">
+          <div class="panel-head"><div><h2>Rata-rata Lokasi / Hari</h2><p class="note">Tren beban lokasi per bulan</p></div></div>
+          <div class="chart-scroll"><svg id="line-month" class="chart-svg" xmlns="http://www.w3.org/2000/svg"></svg></div>
+        </div>
+      </section>
+    </section>
+
+    <section class="tab-panel" data-panel="bulanan">
+      <h1>Rekap Bulanan</h1>
+      <p class="sub">Distribusi jenis tugas &amp; perbandingan beban kerja antar bulan</p>
+      <section class="row2 uneven stack">
+        <div class="panel">
+          <div class="panel-head"><div><h2>Distribusi Jenis Tugas</h2><p class="note" id="donut-note">klasifikasi dari judul pekerjaan</p></div></div>
+          <div class="donut-wrap">
+            <svg id="donut" width="150" height="150" viewBox="0 0 150 150"></svg>
+            <div class="legend-list" id="donut-legend"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div><h2>Perbandingan Bulan</h2><p class="note">Rata-rata beban kerja per hari</p></div></div>
+          <table class="cmp-table" id="cmp-table"></table>
+          <div class="insight" id="cmp-insight"></div>
+        </div>
+      </section>
+    </section>
+
+    <section class="tab-panel" data-panel="jurnal">
+      <h1>Jurnal Harian</h1>
+      <p class="sub">Rincian tugas per hari kerja &mdash; bisa difilter per bulan &amp; dicari</p>
+
+      <section class="panel" id="chart-panel" style="margin-top:16px">
+        <div class="panel-head">
+          <div>
+            <h2>Volume Kerja Harian</h2>
+            <p class="note">Per hari kerja tercatat, diurutkan kronologis</p>
+          </div>
+          <div class="controls-row">
+            <div class="segmented" id="metric-toggle">
+              <button data-metric="tasks" class="active">Jumlah Tugas</button>
+              <button data-metric="lokasi">Lokasi Ditangani</button>
+            </div>
+            <div class="select-wrap">
+              <select id="month-select" class="month-select" aria-label="Filter bulan"></select>
+            </div>
+          </div>
+        </div>
+        <div class="chart-scroll">
+          <svg id="bar" class="chart-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+        <div class="chart-legend" id="chart-legend"></div>
+      </section>
+
+      <section class="panel" style="margin-top:16px">
+        <div class="panel-head">
+          <div><h2>Jurnal Harian</h2><p class="note">Klik baris untuk melihat rincian tugas</p></div>
+          <div class="controls-row">
+            <span class="log-count" id="log-count"></span>
+            <div class="search-wrap">
+              <input type="search" id="log-search" class="log-search" placeholder="Cari tugas / tanggal…" aria-label="Cari jurnal">
+            </div>
+          </div>
+        </div>
+        <div class="table-scroll">
+          <table class="log-table">
+            <thead>
+              <tr><th>Tanggal</th><th>Jam</th><th class="num-h">Tugas</th><th class="num-h">Lokasi</th><th>Status</th></tr>
+            </thead>
+            <tbody id="log-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+  </main>
 
   <footer>
     <span id="footer-source">Sumber: sheet jurnal harian pada spreadsheet ini</span>
@@ -328,29 +423,52 @@
   var catColor = function(c){ return c === 'KESEHATAN' ? PALETTE[0] : c === 'KETENAGAKERJAAN' ? PALETTE[1] : PALETTE[2]; };
   var catLabel = function(c){ return c === 'KESEHATAN' ? 'Kesehatan' : c === 'KETENAGAKERJAAN' ? 'Ketenagakerjaan' : 'Lainnya'; };
 
-  /* ---------------- header period badge ---------------- */
+  /* ---------------- tabs ---------------- */
+  document.getElementById('tabs').addEventListener('click', function(e){
+    var btn = e.target.closest('.tab-btn'); if (!btn) return;
+    document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+    document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+    btn.classList.add('active');
+    document.querySelector('.tab-panel[data-panel="' + btn.dataset.tab + '"]').classList.add('active');
+  });
+
+  /* ---------------- header period badge + overview subtitle ---------------- */
   var monthLabels = summary.months.map(function(m){ return titleCase(m.name); });
-  document.getElementById('period-badge').innerHTML = 'Periode <b>' + monthLabels.join(' – ') + ' 2026</b>';
+  var periodText = monthLabels.length > 1 ? (monthLabels[0] + ' – ' + monthLabels[monthLabels.length-1]) : monthLabels[0];
+  document.getElementById('period-badge').innerHTML = 'Periode <b>' + periodText + '</b>';
+  document.getElementById('ov-sub').textContent = 'Rekap jurnal harian · ' + summary.total_days + ' hari kerja tercatat pada ' + periodText;
   document.getElementById('footer-source').textContent =
     'Sumber: ' + summary.total_days + ' entri jurnal pada sheet ' + summary.months.map(function(m){return m.name;}).join(', ');
 
+  /* ---------------- hero greeting ---------------- */
+  var doneRate = summary.status_tracked ? Math.round(summary.status_done / summary.status_tracked * 100) : 0;
+  var heroStatus = summary.status_tracked
+    ? '<span class="accent">' + doneRate + '%</span> dari tugas berstatus tercatat selesai'
+    : 'status penyelesaian belum tercatat di sebagian besar hari';
+  document.getElementById('hero-text').innerHTML =
+    'Halo, aku <b id="hero-name">Lebah Cermat</b>! 🐝 aku sudah menemani Khanifa <b>' + summary.total_days + ' hari kerja</b>, ' +
+    'mencatat <b>' + fmt(summary.total_tasks) + ' tugas</b> administrasi BPJS Kesehatan &amp; Ketenagakerjaan (' + heroStatus + '), ' +
+    'dan memproses total <b>' + fmt(summary.total_lokasi) + ' lokasi</b> peserta.';
+
   /* ---------------- KPI strip ---------------- */
-  function splitLine(getVal, unit){
+  function splitLine(getVal){
     return summary.months.map(function(m){
       return '<span class="dot" style="background:' + monthColor(m.name) + '"></span>' + getVal(m) + ' ' + titleCase(m.name);
     }).join(' &middot; ');
   }
-  var doneRate = summary.status_tracked ? Math.round(summary.status_done / summary.status_tracked * 100) : 0;
-  document.getElementById('kpis').innerHTML =
-    '<div class="kpi"><div class="label">Hari Kerja Tercatat</div><div class="value num">' + summary.total_days +
-      '</div><div class="split">' + splitLine(function(m){return m.days;}) + '</div></div>' +
-    '<div class="kpi"><div class="label">Total Tugas Harian</div><div class="value num">' + fmt(summary.total_tasks) +
-      '</div><div class="split">' + splitLine(function(m){return m.tasks;}) + '</div></div>' +
-    '<div class="kpi"><div class="label">Lokasi Ditangani</div><div class="value num">' + fmt(summary.total_lokasi) +
-      '</div><div class="split">' + splitLine(function(m){return fmt(m.lokasi);}) + '</div></div>' +
-    '<div class="kpi"><div class="label">Status Tercatat Selesai</div><div class="value num">' + summary.status_done + '/' + summary.status_tracked +
-      ' <span style="font-size:14px;color:' + cvar('--ink-muted') + ';font-weight:500">(' + doneRate + '%)</span></div>' +
-      '<div class="split">' + summary.status_untracked + ' tugas lain tanpa kolom status di jurnal asli</div></div>';
+  var kpiDefs = [
+    { icon:'📅', bg:PALETTE[0]+'22', fg:PALETTE[0], label:'Hari Kerja Tercatat', value: summary.total_days, split: splitLine(function(m){return m.days;}) },
+    { icon:'✅', bg:PALETTE[2]+'22', fg:PALETTE[2], label:'Total Tugas Harian', value: fmt(summary.total_tasks), split: splitLine(function(m){return m.tasks;}) },
+    { icon:'📍', bg:PALETTE[1]+'22', fg:PALETTE[1], label:'Lokasi Ditangani', value: fmt(summary.total_lokasi), split: splitLine(function(m){return fmt(m.lokasi);}) },
+    { icon:'🗒️', bg:'var(--good-bg)', fg:'var(--good)',
+      label:'Status Tercatat Selesai',
+      value: summary.status_done + '/' + summary.status_tracked + ' <span style="font-size:13px;color:' + cvar('--ink-muted') + ';font-weight:500">(' + doneRate + '%)</span>',
+      split: summary.status_untracked + ' tugas lain tanpa kolom status di jurnal asli' }
+  ];
+  document.getElementById('kpis').innerHTML = kpiDefs.map(function(k){
+    return '<div class="kpi"><span class="kpi-icon" style="background:' + k.bg + ';color:' + k.fg + '">' + k.icon + '</span>' +
+      '<div class="label">' + k.label + '</div><div class="value num">' + k.value + '</div><div class="split">' + k.split + '</div></div>';
+  }).join('');
 
   document.getElementById('donut-note').textContent = summary.total_tasks + ' tugas · klasifikasi dari judul pekerjaan';
 
@@ -366,9 +484,96 @@
     return '<span class="item"><span class="swatch" style="background:' + monthColor(m.name) + '"></span>' + titleCase(m.name) + '</span>';
   }).join('');
 
-  /* ---------------- bar chart ---------------- */
-  var svg = document.getElementById('bar');
   var svgNS = 'http://www.w3.org/2000/svg';
+  function svgEl(tag, attrs){
+    var el = document.createElementNS(svgNS, tag);
+    for (var k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+
+  /* ---------------- overview: Tugas per Bulan (bar) ---------------- */
+  (function drawMonthBar(){
+    var svg = document.getElementById('bar-month');
+    var barW = 34, gap = 22;
+    var padL = 40, padR = 16, padT = 14, padB = 26;
+    var plotH = 170;
+    var width = padL + padR + Math.max(summary.months.length,1) * (barW + gap);
+    var height = padT + plotH + padB;
+    svg.setAttribute('width', width); svg.setAttribute('height', height);
+    svg.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
+    svg.innerHTML = '';
+
+    var maxV = Math.max.apply(null, [1].concat(summary.months.map(function(m){ return m.tasks; })));
+    var niceMax = Math.ceil(maxV / 4) * 4 || 4;
+
+    for (var i = 0; i <= 4; i++){
+      var v = Math.round(niceMax / 4 * i);
+      var y = padT + plotH - (v/niceMax)*plotH;
+      svg.appendChild(svgEl('line', {x1:padL, x2:width-padR, y1:y, y2:y, class: i===0?'axis-line':'grid-line'}));
+      var t = svgEl('text', {x:padL-8, y:y+3, 'text-anchor':'end', class:'tick-label'}); t.textContent = fmt(v);
+      svg.appendChild(t);
+    }
+
+    summary.months.forEach(function(m, i){
+      var x = padL + i*(barW+gap);
+      var h = (m.tasks/niceMax)*plotH;
+      var y = padT + plotH - h;
+      svg.appendChild(svgEl('rect', {x:x, y:y, width:barW, height:Math.max(h,2), rx:5, ry:5, fill:monthColor(m.name)}));
+      var lbl = svgEl('text', {x:x+barW/2, y:height-9, 'text-anchor':'middle', class:'tick-label'});
+      lbl.textContent = titleCase(m.name).slice(0,3);
+      svg.appendChild(lbl);
+      var val = svgEl('text', {x:x+barW/2, y:y-6, 'text-anchor':'middle', class:'tick-label', fill:cvar('--ink')});
+      val.setAttribute('font-weight','600'); val.textContent = m.tasks;
+      svg.appendChild(val);
+    });
+  })();
+
+  /* ---------------- overview: Rata-rata Lokasi/Hari (line) ---------------- */
+  (function drawMonthLine(){
+    var svg = document.getElementById('line-month');
+    var stepX = 78;
+    var padL = 44, padR = 30, padT = 22, padB = 26;
+    var plotH = 170;
+    var width = padL + padR + Math.max(summary.months.length-1,0) * stepX;
+    var height = padT + plotH + padB;
+    svg.setAttribute('width', width); svg.setAttribute('height', height);
+    svg.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
+    svg.innerHTML = '';
+
+    var avgs = summary.months.map(function(m){ return m.days ? m.lokasi/m.days : 0; });
+    var maxV = Math.max.apply(null, [1].concat(avgs));
+    var niceMax = Math.ceil(maxV/4)*4 || 4;
+
+    for (var i = 0; i <= 4; i++){
+      var v = Math.round(niceMax/4*i);
+      var y = padT + plotH - (v/niceMax)*plotH;
+      svg.appendChild(svgEl('line', {x1:padL, x2:width-padR, y1:y, y2:y, class:i===0?'axis-line':'grid-line'}));
+      var t = svgEl('text', {x:padL-8, y:y+3, 'text-anchor':'end', class:'tick-label'}); t.textContent = fmt(v);
+      svg.appendChild(t);
+    }
+
+    var pts = summary.months.map(function(m, i){
+      var x = padL + i*stepX;
+      var y = padT + plotH - (avgs[i]/niceMax)*plotH;
+      return {x:x, y:y, m:m, v:Math.round(avgs[i])};
+    });
+
+    var d = pts.map(function(p,i){ return (i===0?'M':'L') + p.x + ' ' + p.y; }).join(' ');
+    svg.appendChild(svgEl('path', {d:d, class:'line-path', stroke:cvar('--ink-2')}));
+
+    pts.forEach(function(p, i){
+      svg.appendChild(svgEl('circle', {cx:p.x, cy:p.y, r:5, fill:monthColor(p.m.name), class:'line-dot'}));
+      var val = svgEl('text', {x:p.x, y:p.y-11, 'text-anchor':'middle', class:'line-value', fill:cvar('--ink')});
+      val.textContent = fmt(p.v);
+      svg.appendChild(val);
+      var lbl = svgEl('text', {x:p.x, y:height-9, 'text-anchor':'middle', class:'tick-label'});
+      lbl.textContent = titleCase(p.m.name).slice(0,3);
+      svg.appendChild(lbl);
+    });
+  })();
+
+  /* ---------------- jurnal tab: daily bar chart ---------------- */
+  var svg = document.getElementById('bar');
   var tooltip = document.getElementById('tooltip');
   var state = { metric: 'tasks', month: 'ALL', search: '' };
 
@@ -409,14 +614,8 @@
     for (var i = 0; i <= ticks; i++){
       var v = Math.round(niceMax / ticks * i);
       var y = padT + yScale(v);
-      var line = document.createElementNS(svgNS,'line');
-      line.setAttribute('x1', padL); line.setAttribute('x2', width - padR);
-      line.setAttribute('y1', y); line.setAttribute('y2', y);
-      line.setAttribute('class', i===0 ? 'axis-line' : 'grid-line');
-      svg.appendChild(line);
-      var t = document.createElementNS(svgNS,'text');
-      t.setAttribute('x', padL - 8); t.setAttribute('y', y + 3);
-      t.setAttribute('text-anchor','end'); t.setAttribute('class','tick-label');
+      svg.appendChild(svgEl('line', {x1:padL, x2:width-padR, y1:y, y2:y, class: i===0 ? 'axis-line' : 'grid-line'}));
+      var t = svgEl('text', {x:padL - 8, y:y + 3, 'text-anchor':'end', class:'tick-label'});
       t.textContent = fmt(v);
       svg.appendChild(t);
     }
@@ -426,13 +625,8 @@
       var x = padL + i * (barW + gap);
       var h = (v / niceMax) * plotH;
       var y = padT + plotH - h;
-      var rect = document.createElementNS(svgNS,'rect');
-      rect.setAttribute('x', x); rect.setAttribute('y', y);
-      rect.setAttribute('width', barW); rect.setAttribute('height', Math.max(h, v>0?2:0));
-      rect.setAttribute('rx', 4); rect.setAttribute('ry', 4);
-      rect.setAttribute('fill', monthColor(d.month));
-      rect.setAttribute('class','bar-rect');
-      rect.addEventListener('mouseenter', function(e, dd, vv){ return function(e){ showTip(e, dd, vv); }; }(null, d, v));
+      var rect = svgEl('rect', {x:x, y:y, width:barW, height:Math.max(h, v>0?2:0), rx:4, ry:4, fill:monthColor(d.month), class:'bar-rect'});
+      rect.addEventListener('mouseenter', function(dd, vv){ return function(e){ showTip(e, dd, vv); }; }(d, v));
       rect.addEventListener('mousemove', moveTip);
       rect.addEventListener('mouseleave', hideTip);
       rect.addEventListener('click', function(dd){ return function(){ jumpToRow(dd.date); }; }(d));
@@ -440,9 +634,7 @@
 
       var stride = Math.ceil(list.length/24 || 1);
       if (i % stride === 0){
-        var lt = document.createElementNS(svgNS,'text');
-        lt.setAttribute('x', x + barW/2); lt.setAttribute('y', height - 10);
-        lt.setAttribute('text-anchor','middle'); lt.setAttribute('class','tick-label');
+        var lt = svgEl('text', {x:x + barW/2, y:height - 10, 'text-anchor':'middle', class:'tick-label'});
         lt.textContent = d.day;
         svg.appendChild(lt);
       }
@@ -505,37 +697,22 @@
     var circ = 2 * Math.PI * r;
     var offset = 0;
     donut.innerHTML = '';
-    var bg = document.createElementNS(svgNS,'circle');
-    bg.setAttribute('cx',cx); bg.setAttribute('cy',cy); bg.setAttribute('r',r);
-    bg.setAttribute('fill','none'); bg.setAttribute('stroke', cvar('--surface-2')); bg.setAttribute('stroke-width', sw);
-    donut.appendChild(bg);
+    donut.appendChild(svgEl('circle', {cx:cx, cy:cy, r:r, fill:'none', stroke:cvar('--surface-2'), 'stroke-width':sw}));
     cats.forEach(function(c){
       var frac = c.val / total;
       var len = frac * circ;
-      var circle = document.createElementNS(svgNS,'circle');
-      circle.setAttribute('cx',cx); circle.setAttribute('cy',cy); circle.setAttribute('r',r);
-      circle.setAttribute('fill','none');
-      circle.setAttribute('stroke', catColor(c.key));
-      circle.setAttribute('stroke-width', sw);
-      circle.setAttribute('stroke-dasharray', len + ' ' + (circ-len));
-      circle.setAttribute('stroke-dashoffset', -offset);
-      circle.setAttribute('transform', 'rotate(-90 ' + cx + ' ' + cy + ')');
+      var circle = svgEl('circle', {
+        cx:cx, cy:cy, r:r, fill:'none', stroke:catColor(c.key), 'stroke-width':sw,
+        'stroke-dasharray': len + ' ' + (circ-len), 'stroke-dashoffset': -offset,
+        transform: 'rotate(-90 ' + cx + ' ' + cy + ')'
+      });
       donut.appendChild(circle);
       offset += len;
     });
-    var centerVal = document.createElementNS(svgNS,'text');
-    centerVal.setAttribute('x',cx); centerVal.setAttribute('y',cy+2);
-    centerVal.setAttribute('text-anchor','middle');
-    centerVal.setAttribute('font-family','IBM Plex Mono, monospace');
-    centerVal.setAttribute('font-size','20'); centerVal.setAttribute('font-weight','600');
-    centerVal.setAttribute('fill', cvar('--ink'));
+    var centerVal = svgEl('text', {x:cx, y:cy+2, 'text-anchor':'middle', 'font-family':'IBM Plex Mono, monospace', 'font-size':20, 'font-weight':600, fill:cvar('--ink')});
     centerVal.textContent = total;
     donut.appendChild(centerVal);
-    var centerLbl = document.createElementNS(svgNS,'text');
-    centerLbl.setAttribute('x',cx); centerLbl.setAttribute('y',cy+17);
-    centerLbl.setAttribute('text-anchor','middle');
-    centerLbl.setAttribute('font-family','IBM Plex Sans, sans-serif');
-    centerLbl.setAttribute('font-size','9.5'); centerLbl.setAttribute('fill', cvar('--ink-muted'));
+    var centerLbl = svgEl('text', {x:cx, y:cy+17, 'text-anchor':'middle', 'font-family':'IBM Plex Sans, sans-serif', 'font-size':9.5, fill:cvar('--ink-muted')});
     centerLbl.textContent = 'tugas';
     donut.appendChild(centerLbl);
 
@@ -632,6 +809,7 @@
   renderLog();
 
   function jumpToRow(date){
+    document.querySelector('.tab-btn[data-tab="jurnal"]').click();
     if (state.search){ state.search = ''; logSearchEl.value = ''; renderLog(); }
     var row = Array.prototype.find.call(document.querySelectorAll('.log-row'), function(r){ return r.dataset.date === date; });
     if (!row) return;
