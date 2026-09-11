@@ -277,6 +277,49 @@ function getFotoLinkUntukTanggal(tanggalIso) {
 }
 
 /**
+ * Menu kustom "Buka Dashboard" di spreadsheet. Jalan otomatis tiap kali
+ * spreadsheet dibuka (simple trigger bawaan Apps Script).
+ */
+function onOpen() {
+  SpreadsheetApp.getUi()
+    .createMenu("📊 Dashboard")
+    .addItem("Buka Dashboard", "bukaDashboard")
+    .addToUi();
+}
+
+/**
+ * Ambil URL Web App yang sedang di-deploy, lalu buka di tab baru lewat
+ * dialog kecil. ScriptApp.getService().getUrl() otomatis mengikuti URL
+ * deployment aktif — tidak perlu di-hardcode atau diupdate manual tiap
+ * kali deploy ulang.
+ */
+function bukaDashboard() {
+  var url = ScriptApp.getService().getUrl();
+  var ui = SpreadsheetApp.getUi();
+  if (!url) {
+    ui.alert(
+      "Dashboard belum di-deploy",
+      "Deploy dulu lewat menu Deploy > New deployment > Web app di editor Apps Script, baru menu ini bisa dipakai.",
+      ui.ButtonSet.OK
+    );
+    return;
+  }
+  var html = HtmlService.createHtmlOutput(
+    '<div style="font-family:Arial,sans-serif;text-align:center;padding:22px 16px;">' +
+      '<p style="margin:0 0 16px;font-size:13px;color:#444;">Kalau tab baru tidak otomatis terbuka, klik tombol ini:</p>' +
+      '<a href="' + url + '" target="_blank" ' +
+      'style="display:inline-block;padding:11px 22px;background:#4f46e5;color:#fff;' +
+      'text-decoration:none;border-radius:8px;font-weight:bold;font-size:13px;">' +
+      "📊 Buka Dashboard</a>" +
+      "</div>" +
+      "<script>window.open(" + JSON.stringify(url) + ', "_blank");</script>'
+  )
+    .setWidth(360)
+    .setHeight(140);
+  ui.showModalDialog(html, "Dashboard Monitoring Pekerjaan Harian");
+}
+
+/**
  * Sisipkan isi mentah file lain TANPA evaluasi scriptlet (aman untuk bundle JS
  * hasil minify yang mungkin kebetulan mengandung teks "<?" atau "?>").
  */

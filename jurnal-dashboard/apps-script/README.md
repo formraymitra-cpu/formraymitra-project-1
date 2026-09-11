@@ -21,6 +21,7 @@ atau hari baru ditambahkan ke spreadsheet.
    - **Who has access**: pilih sesuai kebutuhan — "Only myself" kalau cuma kamu, atau "Anyone" kalau atasan/pihak lain juga perlu buka tanpa login Google
    - Klik **Deploy**, lalu **Authorize access** (izinkan akses ke spreadsheet — wajar, karena script perlu baca datanya)
 5. Setelah deploy selesai, kamu dapat **Web app URL** (format `https://script.google.com/macros/s/XXXXX/exec`). Itu link dashboard live-nya — buka kapan saja, datanya selalu versi terbaru dari spreadsheet.
+6. **Reload/tutup-buka lagi spreadsheet-nya.** Akan muncul menu baru **"📊 Dashboard"** di sebelah menu Bantuan, dengan item **"Buka Dashboard"** — klik itu untuk langsung buka dashboard di tab baru tanpa perlu simpan/cari link `.../exec` lagi. Pertama kali dipakai mungkin diminta otorisasi tambahan, izinkan saja.
 
 ## Menambah bulan baru
 
@@ -29,8 +30,9 @@ Karena `Code.gs` membaca semua sheet yang namanya cocok dengan nama bulan
 ke spreadsheet (misalnya OKTOBER) otomatis langsung muncul di dashboard —
 tidak perlu ubah kode apa pun. Cukup pastikan sheet baru itu:
 - diberi nama bulan dalam huruf besar (MARET, APRIL, MEI, ...)
-- ikuti format kolom yang sama: `TANGGAL | HARI | JAM MASUK | JAM PULANG | NO | DAILY WORK PLAN | CEKLIST | TIME SCHEDULE | KETERANGAN | JUMLAH FOTO`
+- ikuti format kolom yang sama: `TANGGAL | HARI | JAM MASUK | JAM PULANG | NO | DAILY WORK PLAN | CEKLIST | TIME SCHEDULE | KETERANGAN`
 - header ada di baris 3, data mulai baris 4
+- jumlah foto **tidak perlu diisi manual** — dihitung otomatis dari header di sheet galeri `<BULAN> FOTO` (format `DD/MM/YYYY (Hari) - N foto`)
 
 ## Update tampilan di kemudian hari
 
