@@ -5,7 +5,7 @@
   var DATA = null;
   var currentMonth = null;
 
-  var monthRow = document.getElementById('monthRow');
+  var monthSelect = document.getElementById('monthSelect');
   var kpiRow = document.getElementById('kpiRow');
   var checklistBody = document.getElementById('checklistBody');
   var logScroll = document.getElementById('logScroll');
@@ -53,17 +53,16 @@
 
   function renderMonths() {
     if (!DATA.monthOrder.length) {
-      monthRow.innerHTML = '<span class="empty-row">Tidak ada sheet bulanan yang terdeteksi.</span>';
+      monthSelect.innerHTML = '<option>Tidak ada sheet bulanan</option>';
+      monthSelect.disabled = true;
       return;
     }
-    monthRow.innerHTML = '';
-    DATA.monthOrder.forEach(function (m) {
-      var b = document.createElement('button');
-      b.className = 'month-btn' + (m === currentMonth ? ' active' : '');
-      b.textContent = m;
-      b.onclick = function () { currentMonth = m; renderAll(); };
-      monthRow.appendChild(b);
-    });
+    monthSelect.disabled = false;
+    monthSelect.innerHTML = DATA.monthOrder.map(function (m) {
+      return '<option value="' + escapeHtml(m) + '">' + escapeHtml(m) + '</option>';
+    }).join('');
+    monthSelect.value = currentMonth;
+    monthSelect.onchange = function () { currentMonth = monthSelect.value; renderAll(); };
   }
 
   function renderKPIs() {

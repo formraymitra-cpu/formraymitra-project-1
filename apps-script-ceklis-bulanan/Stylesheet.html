@@ -118,21 +118,23 @@
   .refresh-btn.spinning svg{animation:spin .8s linear infinite;}
   @keyframes spin{ to{ transform:rotate(360deg); } }
 
-  /* ---- month selector ---- */
-  .month-row{
-    display:flex; gap:6px; overflow-x:auto; padding-bottom:2px;
-    scrollbar-width: thin;
+  /* ---- month filter (dropdown, bukan deretan pill) ---- */
+  .month-filter{ display:flex; align-items:center; gap:8px; }
+  .month-filter label{
+    font-family:var(--font-mono); font-size:10.5px; font-weight:600; letter-spacing:0.06em;
+    color:var(--muted); text-transform:uppercase;
   }
-  .month-btn{
-    font-family:var(--font-mono); font-size:12.5px; font-weight:500;
-    border:1px solid var(--border); background:var(--surface); color:var(--ink-2);
-    padding:7px 13px; border-radius:8px; cursor:pointer; white-space:nowrap;
-    transition: background .12s, color .12s, border-color .12s;
+  .select-wrap{ position:relative; display:inline-flex; align-items:center; }
+  .select-wrap svg{ position:absolute; right:10px; color:var(--muted); pointer-events:none; }
+  .month-filter select{
+    font-family:var(--font-mono); font-size:12.5px; font-weight:600; color:var(--ink);
+    background:var(--surface); border:1px solid var(--border); border-radius:8px;
+    padding:7px 30px 7px 12px; cursor:pointer;
+    appearance:none; -webkit-appearance:none; -moz-appearance:none;
+    max-width:44vw;
   }
-  .month-btn:hover{border-color:var(--accent);}
-  .month-btn.active{ background:var(--ink); color:var(--page); border-color:var(--ink); }
-  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .month-btn.active{ background:var(--accent); border-color:var(--accent); color:#08110a; } }
-  :root[data-theme="dark"] .month-btn.active{ background:var(--accent); border-color:var(--accent); color:#08110a; }
+  .month-filter select:hover{border-color:var(--accent);}
+  .month-filter select:focus-visible{outline:2px solid var(--accent); outline-offset:1px;}
 
   /* ---- panel base ---- */
   .panel{
