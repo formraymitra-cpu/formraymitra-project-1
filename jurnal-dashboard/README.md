@@ -7,9 +7,9 @@ Dokumentasi (rekap screenshot bukti kerja, bisa difilter per bulan/tanggal —
 klik satu hari untuk membuka galeri foto aslinya di tab baru, langsung ke
 baris tanggal itu pada sheet galeri di spreadsheet; fitur ini hanya aktif saat
 dashboard dibuka sebagai Apps Script Web App, bukan di preview lokal), dan
-Invoice (monitoring tagihan & kelengkapan dokumen invoice per lokasi, baca
-dari spreadsheet terpisah "MONITORING INVOICE DINI" — lihat
-`apps-script/README.md` bagian "Menghubungkan submenu Invoice").
+Invoice (kelengkapan dokumen invoice per lokasi per bulan — dari sheet
+bulanan "<BULAN> <TAHUN>" di spreadsheet terpisah "MONITORING INVOICE DINI"
+— lihat `apps-script/README.md` bagian "Menghubungkan submenu Invoice").
 
 ## Menjalankan (dev lokal)
 

@@ -25,9 +25,10 @@ atau hari baru ditambahkan ke spreadsheet.
 
 ## Menghubungkan submenu Invoice
 
-Submenu **Invoice** (tagihan & kelengkapan dokumen per lokasi) baca dari
-spreadsheet **terpisah** "MONITORING INVOICE DINI" — bukan spreadsheet
-jurnal harian. Supaya submenu ini aktif:
+Submenu **Invoice** (kelengkapan dokumen per lokasi per bulan — dari sheet
+bulanan "<BULAN> <TAHUN>", mis. "JULI 2026") baca dari spreadsheet
+**terpisah** "MONITORING INVOICE DINI" — bukan spreadsheet jurnal harian.
+Supaya submenu ini aktif:
 
 1. Buka spreadsheet "MONITORING INVOICE DINI" di Google Sheets.
 2. Copy ID-nya dari URL — bagian antara `/d/` dan `/edit`, contoh:
