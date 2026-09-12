@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+  <?!= include('Stylesheet'); ?>
+</head>
+<body>
+  <div class="wrap">
+
+    <div class="topbar">
+      <div class="brand">
+        <div class="brand-mark">CL</div>
+        <div>
+          <h1>Monitor Laporan Bulanan</h1>
+          <div class="sub" id="sourceSub">Ceklist client &amp; log jobdesk harian — per sheet bulan</div>
+        </div>
+      </div>
+      <div class="top-actions">
+        <span class="live-pill"><i class="dot"></i>Live</span>
+        <span class="updated" id="lastUpdated">Memuat data…</span>
+        <button class="refresh-btn" id="refreshBtn" title="Refresh sekarang">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.36"/><path d="M21 3v6h-6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="month-row" id="monthRow"></div>
+
+    <div class="analytics-row">
+      <div class="panel trend-panel">
+        <div class="panel-head">
+          <div>
+            <h2>Tren Penyelesaian</h2>
+            <div class="hint" id="trendHint">Persentase client yang sudah "selesai" per bulan</div>
+          </div>
+          <div class="legend">
+            <span><i style="background:var(--accent)"></i>Laporan Bulanan</span>
+            <span><i style="background:var(--accent-2)"></i>Absensi</span>
+          </div>
+        </div>
+        <svg class="trend-svg" id="trendSvg" viewBox="0 0 1180 190" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+
+      <div class="kpis" id="kpiRow"></div>
+    </div>
+
+    <div class="maingrid">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 id="checklistTitle">Ceklist Atas</h2>
+            <div class="hint" id="checklistHint">Laporan bulanan &amp; absensi tiap lokasi</div>
+          </div>
+        </div>
+        <div class="search">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input id="searchInput" type="text" placeholder="Cari nama client…" />
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:34px">No</th>
+                <th>Nama Client</th>
+                <th class="num-col">Laporan Bulanan</th>
+                <th>Tgl Selesai</th>
+                <th class="num-col">Absensi</th>
+                <th>Tgl Kirim</th>
+              </tr>
+            </thead>
+            <tbody id="checklistBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 id="logTitle">Log Jobdesk Harian</h2>
+            <div class="hint" id="logHint">Rekap kerjaan tiap tanggal</div>
+          </div>
+        </div>
+        <div class="log-scroll" id="logScroll"></div>
+      </div>
+    </div>
+
+    <footer>
+      <span id="footerSource">Sumber: spreadsheet aktif</span>
+      <span>Auto-refresh tiap 45 detik · klik ikon refresh untuk update instan.</span>
+    </footer>
+
+  </div>
+
+  <?!= include('JavaScript'); ?>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<script>
+(function () {
+  var AUTO_REFRESH_MS = 45000; // ganti angka ini kalau mau interval auto-refresh beda
+
+  var DATA = null;
+  var currentMonth = null;
+
+  var monthRow = document.getElementById('monthRow');
+  var kpiRow = document.getElementById('kpiRow');
+  var checklistBody = document.getElementById('checklistBody');
+  var logScroll = document.getElementById('logScroll');
+  var searchInput = document.getElementById('searchInput');
+  var trendSvg = document.getElementById('trendSvg');
+  var refreshBtn = document.getElementById('refreshBtn');
+  var lastUpdatedEl = document.getElementById('lastUpdated');
+  var footerSource = document.getElementById('footerSource');
+
+  function pctText(n) {
+    return (Math.round(n * 10) / 10).toString().replace(/\.0$/, '');
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function loadData(force) {
+    refreshBtn.classList.add('spinning');
+    google.script.run
+      .withSuccessHandler(onData)
+      .withFailureHandler(onError)
+      .getDashboardData();
+  }
+
+  function onData(result) {
+    DATA = result;
+    if (!currentMonth || !DATA.months[currentMonth]) {
+      currentMonth = DATA.monthOrder.length ? DATA.monthOrder[DATA.monthOrder.length - 1] : null;
+    }
+    renderAll();
+    refreshBtn.classList.remove('spinning');
+    var d = new Date(DATA.generatedAt);
+    lastUpdatedEl.textContent = 'Diperbarui ' + d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    footerSource.textContent = 'Sumber: ' + DATA.spreadsheetName;
+  }
+
+  function onError(err) {
+    refreshBtn.classList.remove('spinning');
+    lastUpdatedEl.textContent = 'Gagal memuat data — coba refresh lagi.';
+    console.error(err);
+  }
+
+  function renderMonths() {
+    if (!DATA.monthOrder.length) {
+      monthRow.innerHTML = '<span class="empty-row">Tidak ada sheet bulanan yang terdeteksi.</span>';
+      return;
+    }
+    monthRow.innerHTML = '';
+    DATA.monthOrder.forEach(function (m) {
+      var b = document.createElement('button');
+      b.className = 'month-btn' + (m === currentMonth ? ' active' : '');
+      b.textContent = m;
+      b.onclick = function () { currentMonth = m; renderAll(); };
+      monthRow.appendChild(b);
+    });
+  }
+
+  function renderKPIs() {
+    if (!currentMonth) { kpiRow.innerHTML = ''; return; }
+    var d = DATA.months[currentMonth];
+    var belumLap = d.total_client - d.laporan_done;
+    var belumAbs = d.total_client - d.absensi_done;
+    kpiRow.innerHTML =
+      '<div class="kpi">' +
+        '<div class="label">Total Client</div>' +
+        '<div class="value num">' + d.total_client + '</div>' +
+        '<div class="delta">lokasi dimonitor bulan ini</div>' +
+      '</div>' +
+      '<div class="kpi">' +
+        '<div class="label">Aktivitas Harian</div>' +
+        '<div class="value num">' + d.daily_count + '</div>' +
+        '<div class="delta">entri di log jobdesk harian</div>' +
+      '</div>' +
+      '<div class="kpi">' +
+        '<div class="label">Laporan Bulanan Selesai</div>' +
+        '<div class="value num">' + pctText(d.laporan_pct) + '<small>%</small></div>' +
+        '<div class="bar-track"><div class="bar-fill" style="width:' + d.laporan_pct + '%; background:var(--accent)"></div></div>' +
+        '<div class="delta' + (belumLap === 0 ? ' good' : '') + '">' + d.laporan_done + '/' + d.total_client + ' selesai · ' + belumLap + ' belum</div>' +
+      '</div>' +
+      '<div class="kpi">' +
+        '<div class="label">Absensi Terkirim</div>' +
+        '<div class="value num">' + pctText(d.absensi_pct) + '<small>%</small></div>' +
+        '<div class="bar-track"><div class="bar-fill" style="width:' + d.absensi_pct + '%; background:var(--accent-2)"></div></div>' +
+        '<div class="delta' + (belumAbs === 0 ? ' good' : '') + '">' + d.absensi_done + '/' + d.total_client + ' selesai · ' + belumAbs + ' belum</div>' +
+      '</div>';
+  }
+
+  function renderChecklist() {
+    if (!currentMonth) { checklistBody.innerHTML = '<tr><td class="empty-row" colspan="6">Belum ada sheet bulanan terdeteksi.</td></tr>'; return; }
+    var d = DATA.months[currentMonth];
+    document.getElementById('checklistTitle').textContent = 'Ceklist Atas — ' + d.total_client + ' Client';
+    document.getElementById('checklistHint').textContent = 'Laporan bulanan & absensi — ' + currentMonth;
+
+    var q = (searchInput.value || '').trim().toUpperCase();
+    var rows = d.checklist.filter(function (r) { return !q || (r.nama || '').toUpperCase().indexOf(q) !== -1; });
+
+    if (!rows.length) {
+      checklistBody.innerHTML = '<tr><td class="empty-row" colspan="6">Tidak ada client yang cocok dengan pencarian.</td></tr>';
+      return;
+    }
+    checklistBody.innerHTML = rows.map(function (r) {
+      return '<tr>' +
+        '<td class="row-no">' + (r.no != null ? r.no : '') + '</td>' +
+        '<td><div class="client-name">' + escapeHtml(r.nama || '—') + '</div>' +
+          (r.keterangan ? '<div class="client-tag">' + escapeHtml(r.keterangan) + '</div>' : '') +
+        '</td>' +
+        '<td class="num-col">' + (r.laporan ? '<span class="badge on">✓ Selesai</span>' : '<span class="badge off">✕ Belum</span>') + '</td>' +
+        '<td class="date-cell">' + (r.tgl_selesai || '–') + '</td>' +
+        '<td class="num-col">' + (r.absensi ? '<span class="badge on">✓ Selesai</span>' : '<span class="badge off">✕ Belum</span>') + '</td>' +
+        '<td class="date-cell">' + (r.tgl_absensi || '–') + '</td>' +
+      '</tr>';
+    }).join('');
+  }
+
+  function renderLog() {
+    if (!currentMonth) { logScroll.innerHTML = '<div class="empty-row">Belum ada sheet bulanan terdeteksi.</div>'; return; }
+    var d = DATA.months[currentMonth];
+    document.getElementById('logTitle').textContent = 'Log Jobdesk Harian';
+    document.getElementById('logHint').textContent = d.daily_count + ' entri tercatat — ' + currentMonth;
+
+    if (!d.daily.length) {
+      logScroll.innerHTML = '<div class="empty-row">Belum ada entri jobdesk harian untuk bulan ini.</div>';
+      return;
+    }
+    logScroll.innerHTML = d.daily.map(function (entry) {
+      var tasks = (entry.keterangan || '').split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+      var statusClass = entry.status && entry.status.toUpperCase().indexOf('DONE') !== -1 ? 'done' : (entry.status ? 'nyicil' : '');
+      return '<div class="log-item">' +
+        '<div class="log-date-row">' +
+          '<span class="log-date">' + (entry.tanggal || '–') + '</span>' +
+          (entry.status ? '<span class="status-chip ' + statusClass + '">' + escapeHtml(entry.status) + '</span>' : '') +
+        '</div>' +
+        '<ul class="log-tasks">' + tasks.map(function (t) { return '<li>' + escapeHtml(t) + '</li>'; }).join('') + '</ul>' +
+        (entry.catatan ? '<div class="log-note"><b>Catatan:</b> ' + escapeHtml(entry.catatan.replace(/\n/g, ' ')) + '</div>' : '') +
+      '</div>';
+    }).join('');
+  }
+
+  function renderTrend() {
+    var months = DATA.monthOrder;
+    var W = 1180, H = 190, padL = 34, padR = 34, padT = 18, padB = 26;
+    var plotW = W - padL - padR, plotH = H - padT - padB;
+    var n = months.length;
+
+    if (n < 2) {
+      trendSvg.innerHTML = '<text x="' + (W / 2) + '" y="' + (H / 2) + '" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--muted)">Butuh minimal 2 sheet bulanan untuk menampilkan tren.</text>';
+      return;
+    }
+
+    var xs = months.map(function (_, i) { return padL + (plotW * i / (n - 1)); });
+    function yFor(v) { return padT + plotH * (1 - v / 100); }
+
+    var gridLines = [0, 25, 50, 75, 100].map(function (v) {
+      var y = yFor(v);
+      return '<line x1="' + padL + '" y1="' + y + '" x2="' + (W - padR) + '" y2="' + y + '" stroke="var(--border-soft)" stroke-width="1"/>' +
+             '<text x="' + (padL - 8) + '" y="' + (y + 3) + '" text-anchor="end" font-family="var(--font-mono)" font-size="9.5" fill="var(--muted)">' + v + '</text>';
+    }).join('');
+
+    function pathFor(key) {
+      return months.map(function (m, i) { return (i === 0 ? 'M' : 'L') + ' ' + xs[i].toFixed(1) + ' ' + yFor(DATA.months[m][key]).toFixed(1); }).join(' ');
+    }
+    function dotsFor(key, color) {
+      return months.map(function (m, i) {
+        var r = m === currentMonth ? 5 : 3.5;
+        var sw = m === currentMonth ? 2 : 1.5;
+        return '<circle cx="' + xs[i].toFixed(1) + '" cy="' + yFor(DATA.months[m][key]).toFixed(1) + '" r="' + r + '" fill="' + color + '" stroke="var(--surface)" stroke-width="' + sw + '"/>';
+      }).join('');
+    }
+    var labels = months.map(function (m, i) {
+      var active = m === currentMonth;
+      return '<text x="' + xs[i].toFixed(1) + '" y="' + (H - 6) + '" text-anchor="middle" font-family="var(--font-mono)" font-size="10.5" font-weight="' + (active ? 600 : 400) + '" fill="' + (active ? 'var(--ink)' : 'var(--muted)') + '">' + DATA.months[m].short + '</text>';
+    }).join('');
+
+    trendSvg.innerHTML =
+      gridLines +
+      '<path d="' + pathFor('laporan_pct') + '" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '<path d="' + pathFor('absensi_pct') + '" fill="none" stroke="var(--accent-2)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+      dotsFor('laporan_pct', 'var(--accent)') +
+      dotsFor('absensi_pct', 'var(--accent-2)') +
+      labels;
+  }
+
+  function renderAll() {
+    renderMonths();
+    renderKPIs();
+    renderChecklist();
+    renderLog();
+    renderTrend();
+  }
+
+  searchInput.addEventListener('input', renderChecklist);
+  refreshBtn.addEventListener('click', function () { loadData(true); });
+
+  loadData(false);
+  setInterval(function () { loadData(false); }, AUTO_REFRESH_MS);
+})();
+</script>
