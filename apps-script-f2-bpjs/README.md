@@ -45,44 +45,30 @@ fungsi yang sudah ada, jadi aman ditaruh sebagai file terpisah.
 
 ## Cara pasang (sekali saja)
 
+Tinggal 3 file, tidak perlu edit manual satu per satu — tinggal copy-paste
+penuh:
+
 1. Buka spreadsheet **"08. BPJS KETENAGAKERJAAN ..."** di Google Sheets →
    menu **Extensions → Apps Script**.
-2. **Jangan hapus/timpa `Code.gs` yang sudah ada.** Buat file script baru:
-   **File → New → Script**, beri nama **`F2Converter`**, isi dengan seluruh
-   isi file `apps-script-f2-bpjs/F2Converter.gs` di repo ini.
-3. Buat file HTML baru (**File → New → HTML**), beri nama **`F2Sidebar`**
+2. **`Code.gs`** yang sudah ada di sana → select semua isinya, hapus, ganti
+   dengan seluruh isi file **`apps-script-f2-bpjs/Code-gabungan-siap-pakai.gs`**
+   di repo ini. Ini isinya script "📌 MENU OTOMATIS" yang lama, sama persis,
+   cuma `onOpen()`-nya sudah ditambah menu "F2 BPJS" — jadi tidak perlu edit
+   manual lagi.
+3. Buat file script baru: **File → New → Script**, beri nama **`F2Converter`**,
+   isi dengan seluruh isi file `apps-script-f2-bpjs/F2Converter.gs`.
+4. Buat file HTML baru (**File → New → HTML**), beri nama **`F2Sidebar`**
    (harus persis nama ini), isi dengan `apps-script-f2-bpjs/F2Sidebar.html`.
-4. Buka kembali `Code.gs` (yang sudah ada), cari fungsi `onOpen()` di
-   paling atas, lalu tambahkan 4 baris berikut **di dalamnya**, setelah
-   blok `ui.createMenu("📌 MENU OTOMATIS")...addToUi();` yang sudah ada:
-
-   ```js
-   function onOpen() {
-     const ui = SpreadsheetApp.getUi();
-
-     ui.createMenu("📌 MENU OTOMATIS")
-       .addItem("Buat / Refresh Menu", "buatMenu")
-       .addSeparator()
-       .addItem("🧹 No Fill Semua Sheet", "hapusSemuaWarnaFill")
-       .addToUi();
-
-     // >>> tambahan untuk converter F2 <<<
-     ui.createMenu("F2 BPJS")
-       .addItem("Convert Tagihan F2 ke Sheet Ini...", "showF2Sidebar")
-       .addSeparator()
-       .addItem("HAPUS F2", "hapusSemuaF2")
-       .addToUi();
-   }
-   ```
-
-   Jadi `onOpen()` tetap satu fungsi saja, cuma isinya nambah beberapa baris
-   untuk memunculkan menu "F2 BPJS" (dengan 2 item: convert & HAPUS F2) di
-   sebelah menu "📌 MENU OTOMATIS" yang lama.
 5. **Simpan** (ikon disket / Ctrl+S), lalu **tutup tab Apps Script dan reload
    spreadsheet-nya** (F5). Saat dibuka ulang, kedua menu — "📌 MENU OTOMATIS"
-   dan "F2 BPJS" — akan muncul berdampingan di menu bar. Kalau ini pertama
-   kali script baru dijalankan, Google akan minta otorisasi tambahan — wajar,
-   setujui saja.
+   dan "F2 BPJS" — akan muncul berdampingan di menu bar. Google akan minta
+   otorisasi — wajar, setujui saja.
+
+Kalau kamu sudah pernah pasang versi F2 BPJS sebelumnya dan cuma mau update
+ke versi terbaru: cukup timpa ulang isi `F2Converter.gs` (langkah 3) dengan
+versi terbaru, dan pastikan `onOpen()` di `Code.gs` sudah punya baris
+`.addItem("HAPUS F2", "hapusSemuaF2")` seperti di
+`Code-gabungan-siap-pakai.gs` — tidak perlu bikin ulang dari nol.
 
 ## Cara pakai
 
