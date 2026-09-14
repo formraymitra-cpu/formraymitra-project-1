@@ -163,3 +163,19 @@ lengkap dengan nomor urut dan format sel mengikuti baris di atasnya.
   (link Drive / ikon 📎). Kalau lampiran F2 di tab tertentu ternyata ditaruh
   lebih ke bawah dari baris 10, kasih tahu aku posisi persisnya biar
   jangkauan pemindaiannya disesuaikan.
+- **HAPUS F2 tidak mengosongkan sel lampirannya?** Kemungkinan besar sel itu
+  bukan hyperlink teks biasa, misalnya "smart chip" file Drive (hasil ketik
+  `@` lalu pilih file, atau Sheets otomatis mengubah link yang di-paste jadi
+  chip dengan ikon), yang caranya dibaca lewat Apps Script beda dari
+  hyperlink biasa. Jalankan fungsi diagnostik `debugF2AttachmentCell` untuk
+  cek persis apa isi selnya:
+  1. Di editor Apps Script, pilih tab sheet yang bermasalah dulu di
+     spreadsheet (mis. "ATR / BPN KENDAL").
+  2. Di toolbar atas editor Apps Script, ada dropdown pemilih fungsi (biasanya
+     bertuliskan nama fungsi terakhir yang dipilih) — pilih
+     **`debugF2AttachmentCell`**, lalu klik **Run** (▶).
+  3. Setelah selesai, buka **View → Logs** (atau **Executions** → klik
+     eksekusi terakhir → Logs).
+  4. Salin semua baris log yang muncul (terutama baris untuk sel lampiran F2,
+     mis. `H1`/`H2`/`I1`/`I2`), lalu kirim ke aku — dari situ aku bisa lihat
+     persis kenapa sel itu tidak terdeteksi dan perbaiki logikanya.

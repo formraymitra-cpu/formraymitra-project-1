@@ -648,6 +648,63 @@ function hapusSemuaF2() {
   );
 }
 
+/**
+ * DIAGNOSTIK — bukan dipanggil dari menu. Kalau HAPUS F2 tidak berhasil
+ * mengosongkan sel lampiran (mis. isinya "smart chip" Drive, bukan hyperlink
+ * teks biasa), jalankan fungsi ini manual dari editor Apps Script (pilih
+ * "debugF2AttachmentCell" di dropdown fungsi di toolbar, lalu klik Run),
+ * lalu buka View -> Logs (atau Executions) dan salin hasilnya. Itu akan
+ * menunjukkan persis apa isi sel-sel di baris 1-10 tab yang sedang aktif:
+ * value mentah, formula, link di level sel, link di level "run" (sebagian
+ * teks), dan apakah sel itu bagian dari cell merge.
+ */
+function debugF2AttachmentCell() {
+  var sheet = SpreadsheetApp.getActiveSheet();
+  var scanRows = Math.min(sheet.getLastRow(), 10);
+  var lastCol = sheet.getLastColumn();
+  var range = sheet.getRange(1, 1, scanRows, lastCol);
+  var richTextValues = range.getRichTextValues();
+  var formulas = range.getFormulas();
+  var values = range.getValues();
+  var mergedRanges = range.getMergedRanges();
+
+  Logger.log(
+    'Sheet: "' + sheet.getName() + '" | scanRows=' + scanRows + ' lastCol=' + lastCol
+  );
+  Logger.log(
+    'Merged ranges di area ini: ' +
+      (mergedRanges.length
+        ? mergedRanges.map(function (r) { return r.getA1Notation(); }).join(', ')
+        : '(tidak ada)')
+  );
+
+  for (var r = 0; r < scanRows; r++) {
+    for (var c = 0; c < lastCol; c++) {
+      var v = values[r][c];
+      if (v === '' || v === null) continue;
+
+      var a1 = sheet.getRange(r + 1, c + 1).getA1Notation();
+      var rtv = richTextValues[r][c];
+      var cellLinkUrl = rtv ? rtv.getLinkUrl() : null;
+      var runLinkUrls = [];
+      if (rtv) {
+        rtv.getRuns().forEach(function (run) {
+          var u = run.getLinkUrl();
+          if (u) runLinkUrls.push(u);
+        });
+      }
+
+      Logger.log(
+        a1 +
+          ' | value=' + JSON.stringify(v) +
+          ' | formula=' + JSON.stringify(formulas[r][c]) +
+          ' | cellLinkUrl=' + cellLinkUrl +
+          ' | runLinkUrls=' + JSON.stringify(runLinkUrls)
+      );
+    }
+  }
+}
+
 /* ============================================================
  * HTML SIDEBAR "CONVERT TAGIHAN F2" (dipakai oleh showF2Sidebar())
  * String literal di bawah ini di-escape supaya isinya identik dengan
