@@ -5,10 +5,11 @@
  * file .gs atau .html tambahan lagi.
  *
  * PENTING: fitur "Convert dari PDF" butuh Advanced Service "Drive API"
- * (versi v2) diaktifkan dulu di Services (ikon "+" di sidebar kiri editor
- * Apps Script) — lihat README.md untuk langkahnya. Tanpa itu, tombol
- * "Convert dari PDF" akan error; cara tempel teks manual tetap jalan tanpa
- * setup tambahan.
+ * diaktifkan dulu di Services (ikon "+" di sidebar kiri editor Apps
+ * Script) — v2 maupun v3 sama-sama didukung, kode di bawah mendeteksi
+ * otomatis. Lihat README.md untuk langkahnya. Tanpa itu, tombol "Convert
+ * dari PDF" akan error; cara tempel teks manual tetap jalan tanpa setup
+ * tambahan.
  *
  * Menu yang muncul di spreadsheet setelah dipasang:
  *   - "📌 MENU OTOMATIS" -> Buat/Refresh Menu, No Fill Semua Sheet (lama)
@@ -285,9 +286,9 @@ function processF2Pdf(base64Data, fileName, mimeType) {
       ok: false,
       message:
         'Gagal membaca teks dari PDF (' + e.message + '). Pastikan Advanced ' +
-        'Service "Drive API" (versi v2) sudah diaktifkan di Services (lihat ' +
-        'README), lalu coba lagi. Kalau tetap gagal, pakai cara tempel teks ' +
-        'manual di bawah.',
+        'Service "Drive API" sudah diaktifkan di Services (lihat README), ' +
+        'lalu coba lagi. Kalau tetap gagal, pakai cara tempel teks manual ' +
+        'di bawah.',
       warnings: []
     };
   }
@@ -354,8 +355,9 @@ function applyF2TextToSheet(sheet, rawText) {
  * sebagai file sementara, minta Drive convert+OCR ke Google Docs (OCR aman
  * dipakai juga untuk PDF yang sudah berbasis teks, hanya jadi fallback kalau
  * ada bagian berupa gambar), baca teksnya lewat DocumentApp, lalu hapus file
- * sementara itu lagi. Butuh Advanced Service "Drive API" (v2) aktif di
- * project ini -- lihat README untuk cara mengaktifkannya.
+ * sementara itu lagi. Butuh Advanced Service "Drive API" aktif di project
+ * ini (v2 maupun v3 sama-sama didukung, kode di bawah mendeteksi otomatis)
+ * -- lihat README untuk cara mengaktifkannya.
  */
 function extractTextFromPdf(base64Data, fileName, mimeType) {
   var blob = Utilities.newBlob(
@@ -363,18 +365,34 @@ function extractTextFromPdf(base64Data, fileName, mimeType) {
     mimeType || 'application/pdf',
     fileName || 'F2.pdf'
   );
+  var tempName = 'TEMP_F2_CONVERT_' + new Date().getTime();
+  var ocrOptions = { ocr: true, ocrLanguage: 'id' };
 
-  var resource = {
-    title: 'TEMP_F2_CONVERT_' + new Date().getTime(),
-    mimeType: MimeType.GOOGLE_DOCS
-  };
-  var file = Drive.Files.insert(resource, blob, { ocr: true, ocrLanguage: 'id' });
+  var fileId;
+  if (Drive.Files && typeof Drive.Files.create === 'function') {
+    // Advanced Drive Service v3 ("name" untuk judul file, Files.create untuk upload)
+    var fileMetadataV3 = { name: tempName, mimeType: MimeType.GOOGLE_DOCS };
+    fileId = Drive.Files.create(fileMetadataV3, blob, ocrOptions).id;
+  } else if (Drive.Files && typeof Drive.Files.insert === 'function') {
+    // Advanced Drive Service v2 ("title" untuk judul file, Files.insert untuk upload)
+    var resourceV2 = { title: tempName, mimeType: MimeType.GOOGLE_DOCS };
+    fileId = Drive.Files.insert(resourceV2, blob, ocrOptions).id;
+  } else {
+    throw new Error(
+      'Advanced Service "Drive API" belum aktif/tidak terbaca. Aktifkan lewat ' +
+        'Services (ikon "+" di sidebar kiri editor Apps Script).'
+    );
+  }
 
   try {
-    var doc = DocumentApp.openById(file.id);
+    var doc = DocumentApp.openById(fileId);
     return doc.getBody().getText();
   } finally {
-    Drive.Files.remove(file.id);
+    if (Drive.Files && typeof Drive.Files.remove === 'function') {
+      Drive.Files.remove(fileId); // v2, dan sebagian binding v3 tetap pakai nama ini
+    } else if (Drive.Files && typeof Drive.Files['delete'] === 'function') {
+      Drive.Files['delete'](fileId); // v3
+    }
   }
 }
 

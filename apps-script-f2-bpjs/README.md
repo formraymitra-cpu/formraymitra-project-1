@@ -54,9 +54,10 @@ string di dalam kode, jadi tidak perlu bikin file `.html` terpisah lagi).
    - Di sidebar kiri editor Apps Script, klik ikon **"+"** di sebelah
      **Services**.
    - Cari **"Drive API"** di daftar, klik.
-   - Di dropdown **Version**, pilih **`v2`** (bukan v3 — kode di
-     `Code-SATU-FILE.gs` ditulis untuk v2).
-   - Identifier biarkan default `Drive`, klik **Add**.
+   - Versi (v2 atau v3) **bebas** — kode di `Code-SATU-FILE.gs` sudah
+     mendeteksi otomatis versi mana pun yang ke-add, jadi biarkan default
+     saja (identifier tetap `Drive`).
+   - Klik **Add**.
 4. **Simpan** (ikon disket / Ctrl+S), lalu **tutup tab Apps Script dan reload
    spreadsheet-nya** (F5). Saat dibuka ulang, kedua menu — "📌 MENU OTOMATIS"
    dan "F2 BPJS" (dengan item Convert & HAPUS F2) — langsung muncul
@@ -84,9 +85,9 @@ untuk baca-baca kode, tapi harus jaga 3 file sekaligus tiap update):
 3. File HTML baru **`F2Sidebar`** (File → New → HTML, nama harus persis) →
    isi dengan `apps-script-f2-bpjs/F2Sidebar.html`.
 
-Jangan lupa langkah **"Aktifkan Advanced Service Drive API (v2)"** di atas —
-tetap wajib walau pakai opsi 3 file ini, kalau mau fitur Convert dari PDF
-jalan.
+Jangan lupa langkah **"Aktifkan Advanced Service Drive API"** di atas — tetap
+wajib walau pakai opsi 3 file ini, kalau mau fitur Convert dari PDF jalan
+(versi v2/v3 bebas, kodenya mendeteksi otomatis).
 
 Fungsi-fungsi di dalamnya (`showF2Sidebar`, `getActiveSheetName`,
 `processF2Text`, `processF2Pdf`, `applyF2TextToSheet`, `extractTextFromPdf`,
