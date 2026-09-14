@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-11T09:33:48",
+  "generatedAt": "2026-09-14T03:29:49",
   "sourceFile": "JURNAL HARIAN DINI SAFFANAH 2026.xlsx",
   "months": [
     {
@@ -4784,393 +4784,14 @@
     "akhir": "2026-09-09"
   },
   "invoice": {
-    "generatedAt": "2026-09-11T09:33:48",
-    "sourceFile": "d9c974cb-MONITORING_INVOICE_DINI.xlsx",
+    "generatedAt": "2026-09-14T03:29:49",
+    "sourceFile": "69b0a8d4-MONITORING_INVOICE_DINI_1.xlsx",
     "tersedia": true,
-    "tagihan": [
-      {
-        "no": 1.0,
-        "lokasi": "BPS BREBES",
-        "noSp": null,
-        "tanggalSp": null,
-        "jumlahTermin": null,
-        "perBulan": [],
-        "totalNominal": 0,
-        "totalBulan": 0,
-        "selesai": 0,
-        "status": "belum"
-      },
-      {
-        "no": 2.0,
-        "lokasi": "BPS PATI",
-        "noSp": "EP-01KWH1QY81S9ZSY7R53HKEHRY8",
-        "tanggalSp": "2026-07-03",
-        "jumlahTermin": 6.0,
-        "perBulan": [
-          {
-            "bulan": "JULI",
-            "nominal": 2705000.0,
-            "keterangan": "Hanya bayar Jasa Kebersihan",
-            "status": "BELUM SELESAI"
-          },
-          {
-            "bulan": "AGUSTUS",
-            "nominal": 2705000.0,
-            "keterangan": null,
-            "status": "BELUM SELESAI"
-          },
-          {
-            "bulan": "SEPTEMBER",
-            "nominal": 2705000.0,
-            "keterangan": null,
-            "status": "BELUM SELESAI"
-          },
-          {
-            "bulan": "OKTOBER",
-            "nominal": 2705000.0,
-            "keterangan": null,
-            "status": "BELUM SELESAI"
-          },
-          {
-            "bulan": "NOVEMBER",
-            "nominal": 2705000.0,
-            "keterangan": null,
-            "status": "BELUM SELESAI"
-          },
-          {
-            "bulan": "DESEMBER",
-            "nominal": 4436600.0,
-            "keterangan": "Pembayaran Jasa, Pelatihan, Manfee dan PPN",
-            "status": "BELUM SELESAI"
-          }
-        ],
-        "totalNominal": 17961600.0,
-        "totalBulan": 6,
-        "selesai": 0,
-        "status": "belum"
-      },
-      {
-        "no": 3.0,
-        "lokasi": "BPS REMBANG",
-        "noSp": null,
-        "tanggalSp": null,
-        "jumlahTermin": null,
-        "perBulan": [],
-        "totalNominal": 0,
-        "totalBulan": 0,
-        "selesai": 0,
-        "status": "belum"
-      },
-      {
-        "no": 4.0,
-        "lokasi": "BPS WONOGIRI",
-        "noSp": null,
-        "tanggalSp": null,
-        "jumlahTermin": null,
-        "perBulan": [],
-        "totalNominal": 0,
-        "totalBulan": 0,
-        "selesai": 0,
-        "status": "belum"
-      },
-      {
-        "no": 5.0,
-        "lokasi": "BPS SUKOHARJO",
-        "noSp": null,
-        "tanggalSp": null,
-        "jumlahTermin": null,
-        "perBulan": [],
-        "totalNominal": 0,
-        "totalBulan": 0,
-        "selesai": 0,
-        "status": "belum"
-      },
-      {
-        "no": 6.0,
-        "lokasi": "BPS JEPARA",
-        "noSp": null,
-        "tanggalSp": null,
-        "jumlahTermin": null,
-        "perBulan": [],
-        "totalNominal": 0,
-        "totalBulan": 0,
-        "selesai": 0,
-        "status": "belum"
-      },
-      {
-        "no": 7.0,
-        "lokasi": "BPS PEKALONGAN",
-        "noSp": "EP-01KWKGQGBWE0KWF98XMD9367QJ",
-        "tanggalSp": "2026-07-03",
-        "jumlahTermin": 1.0,
-        "perBulan": [
-          {
-            "bulan": "JULI-SEPTEMBER",
-            "nominal": 19253117.0,
-            "keterangan": null,
-            "status": "BELUM SELESAI"
-          }
-        ],
-        "totalNominal": 19253117.0,
-        "totalBulan": 1,
-        "selesai": 0,
-        "status": "belum"
-      },
-      {
-        "no": 8.0,
-        "lokasi": "BPS GROBOGAN",
-        "noSp": "EP-01KVVN0FTXKM33B7ABF93E89GC",
-        "tanggalSp": "2026-06-25",
-        "jumlahTermin": 1.0,
-        "perBulan": [
-          {
-            "bulan": "JULI",
-            "nominal": 3015521.0,
-            "keterangan": null,
-            "status": "BELUM SELESAI"
-          }
-        ],
-        "totalNominal": 3015521.0,
-        "totalBulan": 1,
-        "selesai": 0,
-        "status": "belum"
-      },
-      {
-        "no": 9.0,
-        "lokasi": "BPS BATANG",
-        "noSp": "EP-01KW1HSHRFVR447SXSHMGDHP59",
-        "tanggalSp": "2026-06-30",
-        "jumlahTermin": 1.0,
-        "perBulan": [
-          {
-            "bulan": "JULI - DESEMBAR",
-            "nominal": 38614491.0,
-            "keterangan": null,
-            "status": "BELUM SELESAI"
-          }
-        ],
-        "totalNominal": 38614491.0,
-        "totalBulan": 1,
-        "selesai": 0,
-        "status": "belum"
-      },
-      {
-        "no": 10.0,
-        "lokasi": "BPS KAB PEMALANG",
-        "noSp": null,
-        "tanggalSp": null,
-        "jumlahTermin": null,
-        "perBulan": [],
-        "totalNominal": 0,
-        "totalBulan": 0,
-        "selesai": 0,
-        "status": "belum"
-      },
-      {
-        "no": 11.0,
-        "lokasi": "BPS KUDUS",
-        "noSp": null,
-        "tanggalSp": null,
-        "jumlahTermin": null,
-        "perBulan": [],
-        "totalNominal": 0,
-        "totalBulan": 0,
-        "selesai": 0,
-        "status": "belum"
-      },
-      {
-        "no": 12.0,
-        "lokasi": "BPS BLORA",
-        "noSp": null,
-        "tanggalSp": null,
-        "jumlahTermin": null,
-        "perBulan": [],
-        "totalNominal": 0,
-        "totalBulan": 0,
-        "selesai": 0,
-        "status": "belum"
-      },
-      {
-        "no": 13.0,
-        "lokasi": "BPS TEGAL",
-        "noSp": "EP-01KWGWW9TKVQ634671DEB7G6F9",
-        "tanggalSp": "2026-07-02",
-        "jumlahTermin": 1.0,
-        "perBulan": [
-          {
-            "bulan": "JULI",
-            "nominal": null,
-            "keterangan": null,
-            "status": "BELUM SELESAI"
-          },
-          {
-            "bulan": "AGUSTUS",
-            "nominal": null,
-            "keterangan": null,
-            "status": "BELUM SELESAI"
-          },
-          {
-            "bulan": "SEPTEMBER",
-            "nominal": 31624608.0,
-            "keterangan": null,
-            "status": "BELUM SELESAI"
-          }
-        ],
-        "totalNominal": 31624608.0,
-        "totalBulan": 3,
-        "selesai": 0,
-        "status": "belum"
-      },
-      {
-        "no": 14.0,
-        "lokasi": "BPS KENDAL",
-        "noSp": null,
-        "tanggalSp": null,
-        "jumlahTermin": null,
-        "perBulan": [],
-        "totalNominal": 0,
-        "totalBulan": 0,
-        "selesai": 0,
-        "status": "belum"
-      },
-      {
-        "no": 15.0,
-        "lokasi": "BPS SRAGEN",
-        "noSp": null,
-        "tanggalSp": null,
-        "jumlahTermin": null,
-        "perBulan": [],
-        "totalNominal": 0,
-        "totalBulan": 0,
-        "selesai": 0,
-        "status": "belum"
-      },
-      {
-        "no": 16.0,
-        "lokasi": "BPS DEMAK",
-        "noSp": "EP-01KW8NWMYWE5EFJF0SN3Z63C0P",
-        "tanggalSp": "2026-06-29",
-        "jumlahTermin": 6.0,
-        "perBulan": [
-          {
-            "bulan": "JULI",
-            "nominal": 7489752.0,
-            "keterangan": null,
-            "status": "BELUM SELESAI"
-          },
-          {
-            "bulan": "AGUSTUS",
-            "nominal": 7489752.0,
-            "keterangan": null,
-            "status": "BELUM SELESAI"
-          },
-          {
-            "bulan": "SEPTEMBER",
-            "nominal": 7489752.0,
-            "keterangan": null,
-            "status": "BELUM SELESAI"
-          },
-          {
-            "bulan": "OKTOBER",
-            "nominal": 7489752.0,
-            "keterangan": null,
-            "status": "BELUM SELESAI"
-          },
-          {
-            "bulan": "NOVEMBER",
-            "nominal": 7489752.0,
-            "keterangan": null,
-            "status": "BELUM SELESAI"
-          },
-          {
-            "bulan": "DESEMBER",
-            "nominal": 7489755.0,
-            "keterangan": "Penyesuaian Tagihan Rp3,00",
-            "status": "BELUM SELESAI"
-          }
-        ],
-        "totalNominal": 44938515.0,
-        "totalBulan": 6,
-        "selesai": 0,
-        "status": "belum"
-      },
-      {
-        "no": 17.0,
-        "lokasi": "BPS BOYOLALI",
-        "noSp": null,
-        "tanggalSp": null,
-        "jumlahTermin": null,
-        "perBulan": [],
-        "totalNominal": 0,
-        "totalBulan": 0,
-        "selesai": 0,
-        "status": "belum"
-      },
-      {
-        "no": 18.0,
-        "lokasi": "BPS SALATIGA",
-        "noSp": "EP-01KW9410HCB7HQEVX19CDGN853",
-        "tanggalSp": "2026-06-29",
-        "jumlahTermin": 6.0,
-        "perBulan": [
-          {
-            "bulan": "JULI",
-            "nominal": 7142763.0,
-            "keterangan": null,
-            "status": "BELUM SELESAI"
-          },
-          {
-            "bulan": "AGUSTUS",
-            "nominal": 7142763.0,
-            "keterangan": null,
-            "status": "BELUM SELESAI"
-          },
-          {
-            "bulan": "SEPTEMBER",
-            "nominal": 7142763.0,
-            "keterangan": null,
-            "status": "BELUM SELESAI"
-          },
-          {
-            "bulan": "OKTOBER",
-            "nominal": 7142763.0,
-            "keterangan": null,
-            "status": "BELUM SELESAI"
-          },
-          {
-            "bulan": "NOVEMBER",
-            "nominal": 7142763.0,
-            "keterangan": null,
-            "status": "BELUM SELESAI"
-          },
-          {
-            "bulan": "DESEMBER",
-            "nominal": 7142764.0,
-            "keterangan": "Penyesuaian Tagihan Rp1,00",
-            "status": "BELUM SELESAI"
-          }
-        ],
-        "totalNominal": 42856579.0,
-        "totalBulan": 6,
-        "selesai": 0,
-        "status": "belum"
-      },
-      {
-        "no": 19.0,
-        "lokasi": "KEJARI KAB SEMARANG",
-        "noSp": null,
-        "tanggalSp": null,
-        "jumlahTermin": null,
-        "perBulan": [],
-        "totalNominal": 0,
-        "totalBulan": 0,
-        "selesai": 0,
-        "status": "belum"
-      }
-    ],
-    "totalLokasiTagihan": 19,
-    "totalNominalKeseluruhan": 198264431.0,
-    "totalNominalBelumSelesai": 198264431.0,
+    "tagihan": [],
+    "totalLokasiTagihan": 0,
+    "totalNominalKeseluruhan": 0,
+    "totalNominalBelumSelesai": 0,
+    "totalNominalTagihan": 254298666,
     "dokumenBulanan": [
       {
         "code": "2026-06",
@@ -5189,8 +4810,7 @@
           "TAGIHAN KESEHATAN",
           "BUKTI BAYAR BPJS KESEHATAN",
           "F2",
-          "BUKTI BAYAR BPJS TK",
-          "PRINT"
+          "BUKTI BAYAR BPJS TK"
         ],
         "lokasi": [
           {
@@ -5209,13 +4829,14 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-07-14",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [],
+            "totalNominal": 0
           },
           {
             "lokasi": "BPS PATI",
@@ -5233,13 +4854,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-07-13",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEBERSIHAN",
+                "nominal": 2993600
+              }
+            ],
+            "totalNominal": 2993600
           },
           {
             "lokasi": "BPS REMBANG",
@@ -5257,13 +4884,14 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-07-16",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [],
+            "totalNominal": 0
           },
           {
             "lokasi": "BPS WONOGIRI",
@@ -5281,13 +4909,14 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": null,
-            "totalDokumen": 15,
-            "dokumenLengkap": 11,
-            "pctLengkap": 0.7333
+            "totalDokumen": 14,
+            "dokumenLengkap": 10,
+            "pctLengkap": 0.7143,
+            "tagihan": [],
+            "totalNominal": 0
           },
           {
             "lokasi": "BPS SUKOHARJO",
@@ -5305,13 +4934,23 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-07-17",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 6577423
+              },
+              {
+                "bagianKerja": "KEBERSIHAN",
+                "nominal": 3208171
+              }
+            ],
+            "totalNominal": 9785594
           },
           {
             "lokasi": "BPS JEPARA",
@@ -5329,13 +4968,23 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-07-04",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 10567307
+              },
+              {
+                "bagianKerja": "KEBERSIHAN",
+                "nominal": 3522435
+              }
+            ],
+            "totalNominal": 14089742
           },
           {
             "lokasi": "BPS KOTA PEKALONGAN",
@@ -5353,13 +5002,14 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-07-06",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [],
+            "totalNominal": 0
           },
           {
             "lokasi": "BPS GROBOGAN",
@@ -5377,13 +5027,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-07-04",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 3015521
+              }
+            ],
+            "totalNominal": 3015521
           },
           {
             "lokasi": "BPS BATANG",
@@ -5401,13 +5057,14 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-07-04",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [],
+            "totalNominal": 0
           },
           {
             "lokasi": "BPS KAB PEMALANG",
@@ -5425,13 +5082,14 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-07-06",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [],
+            "totalNominal": 0
           },
           {
             "lokasi": "BPS KUDUS",
@@ -5449,13 +5107,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-07-10",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 3522816
+              }
+            ],
+            "totalNominal": 3522816
           },
           {
             "lokasi": "BPS BLORA",
@@ -5473,13 +5137,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-07-06",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 6125275
+              }
+            ],
+            "totalNominal": 6125275
           },
           {
             "lokasi": "BPS TEGAL",
@@ -5497,13 +5167,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-07-08",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 10541536
+              }
+            ],
+            "totalNominal": 10541536
           },
           {
             "lokasi": "BPS KENDAL",
@@ -5521,13 +5197,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-07-04",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 9990075
+              }
+            ],
+            "totalNominal": 9990075
           },
           {
             "lokasi": "BPS SRAGEN",
@@ -5545,13 +5227,23 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-07-09",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 3440902
+              },
+              {
+                "bagianKerja": "KEBERSIHAN",
+                "nominal": 3300944
+              }
+            ],
+            "totalNominal": 6741846
           },
           {
             "lokasi": "BPS DEMAK",
@@ -5569,13 +5261,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-07-07",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEBERSIHAN",
+                "nominal": 7489752
+              }
+            ],
+            "totalNominal": 7489752
           },
           {
             "lokasi": "BPS BOYOLALI",
@@ -5593,13 +5291,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-07-07",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 6657727
+              }
+            ],
+            "totalNominal": 6657727
           },
           {
             "lokasi": "BPS SALATIGA",
@@ -5617,13 +5321,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-07-04",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 7142763
+              }
+            ],
+            "totalNominal": 7142763
           },
           {
             "lokasi": "KEJARI KAB SEMARANG",
@@ -5641,16 +5351,18 @@
               "TAGIHAN KESEHATAN": false,
               "BUKTI BAYAR BPJS KESEHATAN": false,
               "F2": false,
-              "BUKTI BAYAR BPJS TK": false,
-              "PRINT": false
+              "BUKTI BAYAR BPJS TK": false
             },
             "tanggalKirim": null,
-            "totalDokumen": 15,
+            "totalDokumen": 14,
             "dokumenLengkap": 0,
-            "pctLengkap": 0.0
+            "pctLengkap": 0.0,
+            "tagihan": [],
+            "totalNominal": 0
           }
         ],
-        "pctRataRata": 0.9333
+        "pctRataRata": 0.9323,
+        "totalNominal": 88096247
       },
       {
         "code": "2026-07",
@@ -5669,8 +5381,7 @@
           "TAGIHAN KESEHATAN",
           "BUKTI BAYAR BPJS KESEHATAN",
           "F2",
-          "BUKTI BAYAR BPJS TK",
-          "PRINT"
+          "BUKTI BAYAR BPJS TK"
         ],
         "lokasi": [
           {
@@ -5689,13 +5400,14 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": false
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": null,
-            "totalDokumen": 15,
+            "totalDokumen": 14,
             "dokumenLengkap": 7,
-            "pctLengkap": 0.4667
+            "pctLengkap": 0.5,
+            "tagihan": [],
+            "totalNominal": 0
           },
           {
             "lokasi": "BPS PATI",
@@ -5713,13 +5425,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-08-12",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEBERSIHAN",
+                "nominal": 2993600
+              }
+            ],
+            "totalNominal": 2993600
           },
           {
             "lokasi": "BPS REMBANG",
@@ -5737,13 +5455,14 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": false
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": null,
-            "totalDokumen": 15,
+            "totalDokumen": 14,
             "dokumenLengkap": 7,
-            "pctLengkap": 0.4667
+            "pctLengkap": 0.5,
+            "tagihan": [],
+            "totalNominal": 0
           },
           {
             "lokasi": "BPS WONOGIRI",
@@ -5761,13 +5480,14 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": null,
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [],
+            "totalNominal": 0
           },
           {
             "lokasi": "BPS SUKOHARJO",
@@ -5785,13 +5505,23 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": false
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": null,
-            "totalDokumen": 15,
+            "totalDokumen": 14,
             "dokumenLengkap": 7,
-            "pctLengkap": 0.4667
+            "pctLengkap": 0.5,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 6577423
+              },
+              {
+                "bagianKerja": "KEBERSIHAN",
+                "nominal": 3208171
+              }
+            ],
+            "totalNominal": 9785594
           },
           {
             "lokasi": "BPS JEPARA",
@@ -5809,13 +5539,23 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": null,
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 10567307
+              },
+              {
+                "bagianKerja": "KEBERSIHAN",
+                "nominal": 3522435
+              }
+            ],
+            "totalNominal": 14089742
           },
           {
             "lokasi": "BPS KOTA PEKALONGAN",
@@ -5833,13 +5573,14 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": false
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": null,
-            "totalDokumen": 15,
+            "totalDokumen": 14,
             "dokumenLengkap": 7,
-            "pctLengkap": 0.4667
+            "pctLengkap": 0.5,
+            "tagihan": [],
+            "totalNominal": 0
           },
           {
             "lokasi": "BPS GROBOGAN",
@@ -5857,13 +5598,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": false
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-08-12",
-            "totalDokumen": 15,
+            "totalDokumen": 14,
             "dokumenLengkap": 7,
-            "pctLengkap": 0.4667
+            "pctLengkap": 0.5,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 3015521
+              }
+            ],
+            "totalNominal": 3015521
           },
           {
             "lokasi": "BPS BATANG",
@@ -5881,13 +5628,14 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": false
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": null,
-            "totalDokumen": 15,
+            "totalDokumen": 14,
             "dokumenLengkap": 7,
-            "pctLengkap": 0.4667
+            "pctLengkap": 0.5,
+            "tagihan": [],
+            "totalNominal": 0
           },
           {
             "lokasi": "BPS KAB PEMALANG",
@@ -5905,13 +5653,14 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": false
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": null,
-            "totalDokumen": 15,
+            "totalDokumen": 14,
             "dokumenLengkap": 7,
-            "pctLengkap": 0.4667
+            "pctLengkap": 0.5,
+            "tagihan": [],
+            "totalNominal": 0
           },
           {
             "lokasi": "BPS KUDUS",
@@ -5929,13 +5678,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-08-11",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 3522816
+              }
+            ],
+            "totalNominal": 3522816
           },
           {
             "lokasi": "BPS BLORA",
@@ -5953,13 +5708,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": null,
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 6125275
+              }
+            ],
+            "totalNominal": 6125275
           },
           {
             "lokasi": "BPS TEGAL",
@@ -5977,13 +5738,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": null,
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 10541536
+              }
+            ],
+            "totalNominal": 10541536
           },
           {
             "lokasi": "BPS KENDAL",
@@ -6001,13 +5768,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": false
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": null,
-            "totalDokumen": 15,
+            "totalDokumen": 14,
             "dokumenLengkap": 7,
-            "pctLengkap": 0.4667
+            "pctLengkap": 0.5,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 9990075
+              }
+            ],
+            "totalNominal": 9990075
           },
           {
             "lokasi": "BPS SRAGEN",
@@ -6025,13 +5798,23 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": false
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": null,
-            "totalDokumen": 15,
+            "totalDokumen": 14,
             "dokumenLengkap": 7,
-            "pctLengkap": 0.4667
+            "pctLengkap": 0.5,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 3440902
+              },
+              {
+                "bagianKerja": "KEBERSIHAN",
+                "nominal": 3300944
+              }
+            ],
+            "totalNominal": 6741846
           },
           {
             "lokasi": "BPS DEMAK",
@@ -6049,13 +5832,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-08-11",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEBERSIHAN",
+                "nominal": 7489752
+              }
+            ],
+            "totalNominal": 7489752
           },
           {
             "lokasi": "BPS BOYOLALI",
@@ -6073,13 +5862,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-08-07",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 6657727
+              }
+            ],
+            "totalNominal": 6657727
           },
           {
             "lokasi": "BPS SALATIGA",
@@ -6097,13 +5892,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-08-07",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 7142763
+              }
+            ],
+            "totalNominal": 7142763
           },
           {
             "lokasi": "KEJARI KAB SEMARANG",
@@ -6121,16 +5922,18 @@
               "TAGIHAN KESEHATAN": false,
               "BUKTI BAYAR BPJS KESEHATAN": false,
               "F2": false,
-              "BUKTI BAYAR BPJS TK": false,
-              "PRINT": false
+              "BUKTI BAYAR BPJS TK": false
             },
             "tanggalKirim": null,
-            "totalDokumen": 15,
+            "totalDokumen": 14,
             "dokumenLengkap": 0,
-            "pctLengkap": 0.0
+            "pctLengkap": 0.0,
+            "tagihan": [],
+            "totalNominal": 0
           }
         ],
-        "pctRataRata": 0.6948
+        "pctRataRata": 0.7105,
+        "totalNominal": 88096247
       },
       {
         "code": "2026-08",
@@ -6149,8 +5952,7 @@
           "TAGIHAN KESEHATAN",
           "BUKTI BAYAR BPJS KESEHATAN",
           "F2",
-          "BUKTI BAYAR BPJS TK",
-          "PRINT"
+          "BUKTI BAYAR BPJS TK"
         ],
         "lokasi": [
           {
@@ -6169,13 +5971,14 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": false
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": null,
-            "totalDokumen": 15,
+            "totalDokumen": 14,
             "dokumenLengkap": 7,
-            "pctLengkap": 0.4667
+            "pctLengkap": 0.5,
+            "tagihan": [],
+            "totalNominal": 0
           },
           {
             "lokasi": "BPS PATI",
@@ -6193,13 +5996,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-09-11",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEBERSIHAN",
+                "nominal": 2993600
+              }
+            ],
+            "totalNominal": 2993600
           },
           {
             "lokasi": "BPS REMBANG",
@@ -6217,13 +6026,14 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": false
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": null,
-            "totalDokumen": 15,
+            "totalDokumen": 14,
             "dokumenLengkap": 7,
-            "pctLengkap": 0.4667
+            "pctLengkap": 0.5,
+            "tagihan": [],
+            "totalNominal": 0
           },
           {
             "lokasi": "BPS WONOGIRI",
@@ -6241,13 +6051,14 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": false
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": null,
-            "totalDokumen": 15,
+            "totalDokumen": 14,
             "dokumenLengkap": 7,
-            "pctLengkap": 0.4667
+            "pctLengkap": 0.5,
+            "tagihan": [],
+            "totalNominal": 0
           },
           {
             "lokasi": "BPS SUKOHARJO",
@@ -6265,13 +6076,23 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-09-09",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 6577423
+              },
+              {
+                "bagianKerja": "KEBERSIHAN",
+                "nominal": 3208171
+              }
+            ],
+            "totalNominal": 9785594
           },
           {
             "lokasi": "BPS JEPARA",
@@ -6289,13 +6110,23 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-09-03",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 10567307
+              },
+              {
+                "bagianKerja": "KEBERSIHAN",
+                "nominal": 3522435
+              }
+            ],
+            "totalNominal": 14089742
           },
           {
             "lokasi": "BPS KOTA PEKALONGAN",
@@ -6313,13 +6144,14 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": false
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": null,
-            "totalDokumen": 15,
+            "totalDokumen": 14,
             "dokumenLengkap": 7,
-            "pctLengkap": 0.4667
+            "pctLengkap": 0.5,
+            "tagihan": [],
+            "totalNominal": 0
           },
           {
             "lokasi": "BPS GROBOGAN",
@@ -6337,13 +6169,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-09-10",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 3015521
+              }
+            ],
+            "totalNominal": 3015521
           },
           {
             "lokasi": "BPS BATANG",
@@ -6361,13 +6199,14 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": false
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": null,
-            "totalDokumen": 15,
+            "totalDokumen": 14,
             "dokumenLengkap": 7,
-            "pctLengkap": 0.4667
+            "pctLengkap": 0.5,
+            "tagihan": [],
+            "totalNominal": 0
           },
           {
             "lokasi": "BPS KAB PEMALANG",
@@ -6385,13 +6224,14 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": false
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": null,
-            "totalDokumen": 15,
+            "totalDokumen": 14,
             "dokumenLengkap": 7,
-            "pctLengkap": 0.4667
+            "pctLengkap": 0.5,
+            "tagihan": [],
+            "totalNominal": 0
           },
           {
             "lokasi": "BPS KUDUS",
@@ -6409,13 +6249,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-09-04",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 3522816
+              }
+            ],
+            "totalNominal": 3522816
           },
           {
             "lokasi": "BPS BLORA",
@@ -6433,13 +6279,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-09-04",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 6125275
+              }
+            ],
+            "totalNominal": 6125275
           },
           {
             "lokasi": "BPS TEGAL",
@@ -6457,13 +6309,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-09-04",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 10541536
+              }
+            ],
+            "totalNominal": 10541536
           },
           {
             "lokasi": "BPS KENDAL",
@@ -6481,13 +6339,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": null,
-            "totalDokumen": 15,
-            "dokumenLengkap": 8,
-            "pctLengkap": 0.5333
+            "totalDokumen": 14,
+            "dokumenLengkap": 7,
+            "pctLengkap": 0.5,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": null
+              }
+            ],
+            "totalNominal": 0
           },
           {
             "lokasi": "BPS SRAGEN",
@@ -6505,13 +6369,23 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-06-07",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 3440902
+              },
+              {
+                "bagianKerja": "KEBERSIHAN",
+                "nominal": 3300944
+              }
+            ],
+            "totalNominal": 6741846
           },
           {
             "lokasi": "BPS DEMAK",
@@ -6529,13 +6403,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-09-04",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEBERSIHAN",
+                "nominal": 7489752
+              }
+            ],
+            "totalNominal": 7489752
           },
           {
             "lokasi": "BPS BOYOLALI",
@@ -6553,13 +6433,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-09-07",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 6657727
+              }
+            ],
+            "totalNominal": 6657727
           },
           {
             "lokasi": "BPS SALATIGA",
@@ -6577,13 +6463,19 @@
               "TAGIHAN KESEHATAN": true,
               "BUKTI BAYAR BPJS KESEHATAN": true,
               "F2": true,
-              "BUKTI BAYAR BPJS TK": true,
-              "PRINT": true
+              "BUKTI BAYAR BPJS TK": true
             },
             "tanggalKirim": "2026-09-03",
-            "totalDokumen": 15,
-            "dokumenLengkap": 15,
-            "pctLengkap": 1.0
+            "totalDokumen": 14,
+            "dokumenLengkap": 14,
+            "pctLengkap": 1.0,
+            "tagihan": [
+              {
+                "bagianKerja": "KEAMANAN",
+                "nominal": 7142763
+              }
+            ],
+            "totalNominal": 7142763
           },
           {
             "lokasi": "KEJARI KAB SEMARANG",
@@ -6601,26 +6493,20 @@
               "TAGIHAN KESEHATAN": false,
               "BUKTI BAYAR BPJS KESEHATAN": false,
               "F2": false,
-              "BUKTI BAYAR BPJS TK": false,
-              "PRINT": false
+              "BUKTI BAYAR BPJS TK": false
             },
             "tanggalKirim": null,
-            "totalDokumen": 15,
+            "totalDokumen": 14,
             "dokumenLengkap": 0,
-            "pctLengkap": 0.0
+            "pctLengkap": 0.0,
+            "tagihan": [],
+            "totalNominal": 0
           }
         ],
-        "pctRataRata": 0.7544
+        "pctRataRata": 0.7632,
+        "totalNominal": 78106172
       }
     ],
-    "catatan": [
-      "1. Tagihan BPS DEMAK Juli-Desember RAB dan Inaproc ada selisih",
-      "2. Surat Pesanan BPS Grobogan update per bulan nomor dan tanggalnya ?",
-      "3. Tagihan BPS PATI Juli-Desember RAB dan Inaproc ada selisih. Tagihan bulan 1-5 tanpa layanan tambahan ?",
-      "4. Tagihan BPS SALATIGA di RAB Desember masih selisih",
-      "5. BPS TEGAL jumlah termin 1 tapi ada note dibayarkan sebanyak 3 termin. Invoice dikirim tiap bulan juga ? trs acuan nominal per bulannya darimana ?",
-      "6. RAB BPS TEGAL Juli-September blm ada Koh",
-      "7. BPS BATANG 1 termin Juli-Desember, Invoice sebulan sekali? masih ada selisih juga di RAB dan SP"
-    ]
+    "catatan": []
   }
 }

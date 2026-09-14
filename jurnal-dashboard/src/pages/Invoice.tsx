@@ -4,7 +4,7 @@ import EmojiBadge from "../components/EmojiBadge";
 import FilterChip from "../components/FilterChip";
 import { Search } from "../components/icons";
 import { COLORS } from "../lib/colors";
-import { formatPct, formatTanggal } from "../lib/format";
+import { formatPct, formatRupiah, formatTanggal } from "../lib/format";
 
 function pctColor(pct: number | null) {
   if (pct === null) return COLORS.inkTertiary;
@@ -41,17 +41,34 @@ export default function Invoice() {
       .sort((a, b) => (a.pct ?? 0) - (b.pct ?? 0));
   }, [selected]);
 
+  const nominalPerBagian = useMemo(() => {
+    if (!selected) return [];
+    const map = new Map<string, number>();
+    selected.lokasi.forEach((l) => {
+      l.tagihan.forEach((t) => {
+        if (!t.bagianKerja) return;
+        map.set(t.bagianKerja, (map.get(t.bagianKerja) ?? 0) + (t.nominal ?? 0));
+      });
+    });
+    return Array.from(map.entries())
+      .map(([bagian, nominal]) => ({ bagian, nominal }))
+      .sort((a, b) => b.nominal - a.nominal);
+  }, [selected]);
+  const maxNominalBagian = Math.max(1, ...nominalPerBagian.map((n) => n.nominal));
+
   const pctRataKeseluruhan = useMemo(() => {
     const list = inv.dokumenBulanan.map((m) => m.pctRataRata).filter((v): v is number => v !== null);
     return list.length ? list.reduce((s, v) => s + v, 0) / list.length : null;
   }, [inv.dokumenBulanan]);
+
+  const maxNominalBulan = Math.max(1, ...inv.dokumenBulanan.map((m) => m.totalNominal));
 
   if (!inv.tersedia) {
     return (
       <div className="flex flex-col gap-5 px-6 py-8 sm:px-10 sm:pb-14">
         <div>
           <h1 className="font-mn text-2xl font-extrabold tracking-tight sm:text-[26px]">🧾 Invoice</h1>
-          <p className="mt-1.5 text-sm text-ink-secondary">Kelengkapan dokumen invoice per lokasi per bulan</p>
+          <p className="mt-1.5 text-sm text-ink-secondary">Kelengkapan dokumen &amp; tagihan invoice per lokasi per bulan</p>
         </div>
         <div className="flex flex-col items-center gap-3 rounded-2xl border border-border bg-surface p-10 text-center">
           <span className="text-4xl">🔌</span>
@@ -70,10 +87,10 @@ export default function Invoice() {
     <div className="flex flex-col gap-6 px-6 py-8 sm:px-10 sm:pb-14">
       <div>
         <h1 className="font-mn text-2xl font-extrabold tracking-tight sm:text-[26px]">🧾 Invoice</h1>
-        <p className="mt-1.5 text-sm text-ink-secondary">Kelengkapan dokumen invoice per lokasi per bulan</p>
+        <p className="mt-1.5 text-sm text-ink-secondary">Kelengkapan dokumen &amp; tagihan invoice per lokasi per bulan</p>
       </div>
 
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-5">
         <div className="rounded-2xl border border-border bg-surface p-5">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wide text-ink-secondary">Bulan Dipantau</span>
@@ -90,7 +107,7 @@ export default function Invoice() {
         </div>
         <div className="rounded-2xl border border-border bg-surface p-5">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wide text-ink-secondary">Rata-rata Keseluruhan</span>
+            <span className="text-xs font-semibold uppercase tracking-wide text-ink-secondary">Rata-rata Kelengkapan</span>
             <EmojiBadge emoji="📊" tint="good" />
           </div>
           <div className="mt-2.5 font-mn text-[34px] font-extrabold tracking-tight">{formatPct(pctRataKeseluruhan)}</div>
@@ -104,30 +121,61 @@ export default function Invoice() {
             {formatPct(inv.dokumenBulanan[inv.dokumenBulanan.length - 1]?.pctRataRata ?? null)}
           </div>
         </div>
+        <div className="rounded-2xl border border-border bg-surface p-5">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold uppercase tracking-wide text-ink-secondary">Nominal Bulan Terbaru</span>
+            <EmojiBadge emoji="💰" tint="good" />
+          </div>
+          <div className="mt-2.5 font-mn text-[22px] font-extrabold tracking-tight">
+            {formatRupiah(inv.dokumenBulanan[inv.dokumenBulanan.length - 1]?.totalNominal ?? null)}
+          </div>
+        </div>
       </div>
 
-      <div className="rounded-2xl border border-border bg-surface p-5">
-        <div className="mb-3.5 flex items-center justify-between">
-          <span className="font-mn text-[15px] font-bold">📄 Kelengkapan Dokumen per Bulan</span>
-        </div>
-        <div className="flex items-end gap-4 overflow-x-auto pb-2" style={{ minHeight: 200 }}>
-          {inv.dokumenBulanan.map((m) => {
-            const pct = m.pctRataRata ?? 0;
-            const h = Math.max(4, pct * 160);
-            return (
-              <div key={m.code} className="flex min-w-[64px] flex-col items-center gap-2">
-                <span className="text-[11px] font-bold text-ink-secondary">{formatPct(m.pctRataRata)}</span>
-                <div className="flex h-[160px] w-9 items-end rounded-md bg-surface-alt">
-                  <div className="w-full rounded-md" style={{ height: h, background: pctColor(m.pctRataRata) }} />
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+        <div className="rounded-2xl border border-border bg-surface p-5">
+          <div className="mb-3.5 flex items-center justify-between">
+            <span className="font-mn text-[15px] font-bold">📄 Kelengkapan Dokumen per Bulan</span>
+          </div>
+          <div className="flex items-end gap-4 overflow-x-auto pb-2" style={{ minHeight: 200 }}>
+            {inv.dokumenBulanan.map((m) => {
+              const pct = m.pctRataRata ?? 0;
+              const h = Math.max(4, pct * 160);
+              return (
+                <div key={m.code} className="flex min-w-[64px] flex-col items-center gap-2">
+                  <span className="text-[11px] font-bold text-ink-secondary">{formatPct(m.pctRataRata)}</span>
+                  <div className="flex h-[160px] w-9 items-end rounded-md bg-surface-alt">
+                    <div className="w-full rounded-md" style={{ height: h, background: pctColor(m.pctRataRata) }} />
+                  </div>
+                  <span className="text-[11px] font-semibold text-ink-tertiary">{m.label}</span>
                 </div>
-                <span className="text-[11px] font-semibold text-ink-tertiary">{m.label}</span>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-border bg-surface p-5">
+          <div className="mb-3.5 flex items-center justify-between">
+            <span className="font-mn text-[15px] font-bold">💰 Nominal Tagihan per Bulan</span>
+          </div>
+          <div className="flex items-end gap-4 overflow-x-auto pb-2" style={{ minHeight: 200 }}>
+            {inv.dokumenBulanan.map((m) => {
+              const h = Math.max(4, (m.totalNominal / maxNominalBulan) * 160);
+              return (
+                <div key={m.code} className="flex min-w-[84px] flex-col items-center gap-2">
+                  <span className="text-[11px] font-bold text-ink-secondary">{formatRupiah(m.totalNominal)}</span>
+                  <div className="flex h-[160px] w-9 items-end rounded-md bg-surface-alt">
+                    <div className="w-full rounded-md" style={{ height: h, background: COLORS.accent }} />
+                  </div>
+                  <span className="text-[11px] font-semibold text-ink-tertiary">{m.label}</span>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-5 xl:grid-cols-[1fr_1.3fr]">
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
         <div className="rounded-2xl border border-border bg-surface p-5">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <span className="font-mn text-[15px] font-bold">🧩 Jenis Dokumen Paling Sering Kurang</span>
@@ -154,47 +202,78 @@ export default function Invoice() {
         </div>
 
         <div className="rounded-2xl border border-border bg-surface p-5">
-          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <span className="font-mn text-[15px] font-bold">📄 Kelengkapan Dokumen per Lokasi</span>
-            <div className="flex min-w-[200px] items-center gap-2 rounded-lg border border-border bg-surface px-3.5 py-2.5">
-              <Search className="text-ink-tertiary" />
-              <input
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-                placeholder="Cari lokasi..."
-                className="w-full border-none bg-transparent text-[13px] outline-none placeholder:text-ink-tertiary"
-              />
-            </div>
+          <div className="mb-4 flex items-center justify-between">
+            <span className="font-mn text-[15px] font-bold">🧑‍🔧 Nominal per Bagian Kerja</span>
+            <span className="text-xs text-ink-tertiary">{bulan}</span>
           </div>
-          <div className="overflow-hidden rounded-xl border border-border">
-            <div className="overflow-x-auto">
-              <div className="min-w-[480px]">
-                <div className="grid grid-cols-[1.4fr_110px_100px_140px] items-center gap-3 border-b border-border-strong bg-surface-alt px-4 py-2.5">
-                  {["Lokasi", "Lengkap", "%", "Tanggal Kirim"].map((h) => (
-                    <span key={h} className="text-[10.5px] font-bold uppercase tracking-wide text-ink-tertiary">
-                      {h}
-                    </span>
-                  ))}
-                </div>
-                {lokasiTersaring.length === 0 && (
-                  <div className="px-4 py-10 text-center text-sm text-ink-tertiary">Tidak ada lokasi yang cocok.</div>
-                )}
-                {lokasiTersaring.map((l) => (
-                  <div
-                    key={l.lokasi}
-                    className="grid grid-cols-[1.4fr_110px_100px_140px] items-center gap-3 border-b border-border px-4 py-2.5 last:border-b-0"
-                  >
-                    <span className="truncate text-[13px] font-semibold">{l.lokasi}</span>
-                    <span className="text-[13px] text-ink-secondary">
-                      {l.dokumenLengkap}/{l.totalDokumen}
-                    </span>
-                    <span className="text-[13px] font-bold" style={{ color: pctColor(l.pctLengkap) }}>
-                      {formatPct(l.pctLengkap)}
-                    </span>
-                    <span className="text-[13px] text-ink-tertiary">{l.tanggalKirim ? formatTanggal(l.tanggalKirim) : "—"}</span>
+          {nominalPerBagian.length === 0 ? (
+            <p className="py-6 text-center text-sm text-ink-tertiary">Belum ada data bagian kerja/nominal untuk bulan ini.</p>
+          ) : (
+            <div className="flex flex-col gap-3">
+              {nominalPerBagian.map((b) => (
+                <div key={b.bagian} className="flex flex-col gap-1.5">
+                  <div className="flex items-center justify-between text-[12.5px] font-semibold">
+                    <span className="truncate">{b.bagian}</span>
+                    <span className="flex-shrink-0 text-ink-tertiary">{formatRupiah(b.nominal)}</span>
                   </div>
+                  <div className="h-2 overflow-hidden rounded-full bg-surface-alt">
+                    <div
+                      className="h-full rounded-full"
+                      style={{ width: `${(b.nominal / maxNominalBagian) * 100}%`, background: COLORS.accent }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-border bg-surface p-5">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <span className="font-mn text-[15px] font-bold">📄 Kelengkapan Dokumen &amp; Tagihan per Lokasi</span>
+          <div className="flex min-w-[200px] items-center gap-2 rounded-lg border border-border bg-surface px-3.5 py-2.5">
+            <Search className="text-ink-tertiary" />
+            <input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Cari lokasi..."
+              className="w-full border-none bg-transparent text-[13px] outline-none placeholder:text-ink-tertiary"
+            />
+          </div>
+        </div>
+        <div className="overflow-hidden rounded-xl border border-border">
+          <div className="overflow-x-auto">
+            <div className="min-w-[780px]">
+              <div className="grid grid-cols-[1.2fr_90px_80px_1.2fr_140px_120px] items-center gap-3 border-b border-border-strong bg-surface-alt px-4 py-2.5">
+                {["Lokasi", "Lengkap", "%", "Bagian Kerja", "Nominal", "Tanggal Kirim"].map((h) => (
+                  <span key={h} className="text-[10.5px] font-bold uppercase tracking-wide text-ink-tertiary">
+                    {h}
+                  </span>
                 ))}
               </div>
+              {lokasiTersaring.length === 0 && (
+                <div className="px-4 py-10 text-center text-sm text-ink-tertiary">Tidak ada lokasi yang cocok.</div>
+              )}
+              {lokasiTersaring.map((l) => (
+                <div
+                  key={l.lokasi}
+                  className="grid grid-cols-[1.2fr_90px_80px_1.2fr_140px_120px] items-center gap-3 border-b border-border px-4 py-2.5 last:border-b-0"
+                >
+                  <span className="truncate text-[13px] font-semibold">{l.lokasi}</span>
+                  <span className="text-[13px] text-ink-secondary">
+                    {l.dokumenLengkap}/{l.totalDokumen}
+                  </span>
+                  <span className="text-[13px] font-bold" style={{ color: pctColor(l.pctLengkap) }}>
+                    {formatPct(l.pctLengkap)}
+                  </span>
+                  <span className="truncate text-[12.5px] text-ink-secondary">
+                    {l.tagihan.length ? l.tagihan.map((t) => t.bagianKerja).filter(Boolean).join(", ") : "—"}
+                  </span>
+                  <span className="text-[13px] font-semibold">{l.totalNominal ? formatRupiah(l.totalNominal) : "—"}</span>
+                  <span className="text-[13px] text-ink-tertiary">{l.tanggalKirim ? formatTanggal(l.tanggalKirim) : "—"}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>

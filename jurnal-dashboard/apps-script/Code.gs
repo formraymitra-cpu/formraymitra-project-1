@@ -273,18 +273,70 @@ function tagihanBulanEntry(bulan, nominal, ket, status) {
 }
 
 /**
+ * Cari index (0-based) kolom header yang cocok persis (case-insensitive)
+ * dengan `name`. Dipakai supaya posisi kolom TANGGAL KIRIM/BAGIAN KERJA/
+ * NOMINAL TAGIHAN tidak perlu di-hardcode — tetap kebaca walau user
+ * menyisipkan kolom baru di antaranya.
+ */
+function findCol(header, name) {
+  var nameUp = name.trim().toUpperCase();
+  for (var i = 0; i < header.length; i++) {
+    if (typeof header[i] === "string" && header[i].trim().toUpperCase() === nameUp) return i;
+  }
+  return null;
+}
+
+function splitLines(v) {
+  if (v === null || v === undefined || v === "") return [];
+  if (typeof v === "number") return [v];
+  return String(v).split("\n").map(function (s) { return s.trim(); }).filter(function (s) { return s; });
+}
+
+function parseRupiah(s) {
+  var digits = s.replace(/[^\d]/g, "");
+  return digits ? parseInt(digits, 10) : null;
+}
+
+/**
+ * BAGIAN KERJA & NOMINAL TAGIHAN bisa berisi beberapa baris (dipisah newline)
+ * kalau satu lokasi punya beberapa bagian kerja sekaligus — tiap baris
+ * dipasangkan berurutan. NOMINAL TAGIHAN bisa berupa angka polos atau teks
+ * "Rp. 6.577.423".
+ */
+function parseBagianNominal(bagianVal, nominalVal) {
+  var bagianList = splitLines(bagianVal);
+  var nominalList = splitLines(nominalVal).map(function (n) {
+    return typeof n === "number" ? Math.round(n) : parseRupiah(String(n));
+  });
+  var pairs = [];
+  var n = Math.max(bagianList.length, nominalList.length);
+  for (var i = 0; i < n; i++) {
+    pairs.push({
+      bagianKerja: i < bagianList.length ? String(bagianList[i]) : null,
+      nominal: i < nominalList.length ? nominalList[i] : null,
+    });
+  }
+  return pairs;
+}
+
+/**
  * Baca satu sheet bulan kelengkapan dokumen invoice (mis. "JULI 2026"):
- * header di baris 4 (kolom D..R = 15 jenis dokumen), data lokasi mulai
- * baris 5 sampai baris pertama yang LOKASI-nya kosong.
+ * header di baris 4. Jenis dokumen = semua kolom antara LOKASI dan
+ * TANGGAL KIRIM (jumlahnya fleksibel, dicari lewat nama header, bukan
+ * posisi tetap — supaya tahan kalau user menambah/mengurangi kolom
+ * checklist). BAGIAN KERJA & NOMINAL TAGIHAN juga dicari lewat nama header.
  */
 function parseDokumenSheet(sheet, code, label) {
-  var header = sheet.getRange(4, 1, 1, 19).getValues()[0];
-  var jenisDokumen = header.slice(3, 18).filter(function (h) { return h; });
+  var header = sheet.getRange(4, 1, 1, 40).getValues()[0];
+  var tglKirimIdx = findCol(header, "TANGGAL KIRIM");
+  var bagianIdx = findCol(header, "BAGIAN KERJA");
+  var nominalIdx = findCol(header, "NOMINAL TAGIHAN");
+  var jenisDokumen = (tglKirimIdx !== null ? header.slice(3, tglKirimIdx) : header.slice(3, 18)).filter(function (h) { return h; });
 
   var lokasiList = [];
   var lastRow = sheet.getLastRow();
   for (var r = 5; r <= lastRow; r++) {
-    var row = sheet.getRange(r, 1, 1, 19).getValues()[0];
+    var row = sheet.getRange(r, 1, 1, 40).getValues()[0];
     var lokasi = row[1];
     if (!lokasi) break;
     var dokumen = {};
@@ -294,13 +346,20 @@ function parseDokumenSheet(sheet, code, label) {
       dokumen[jenisDokumen[i]] = val;
       if (val) lengkap += 1;
     }
+    var tagihan = parseBagianNominal(
+      bagianIdx !== null ? row[bagianIdx] : null,
+      nominalIdx !== null ? row[nominalIdx] : null
+    );
+    var totalNominalLokasi = tagihan.reduce(function (s, p) { return s + (p.nominal || 0); }, 0);
     lokasiList.push({
       lokasi: cleanStr(lokasi),
       dokumen: dokumen,
-      tanggalKirim: isoDate(row[18]),
+      tanggalKirim: tglKirimIdx !== null ? isoDate(row[tglKirimIdx]) : null,
       totalDokumen: jenisDokumen.length,
       dokumenLengkap: lengkap,
       pctLengkap: jenisDokumen.length ? Math.round((lengkap / jenisDokumen.length) * 10000) / 10000 : null,
+      tagihan: tagihan,
+      totalNominal: totalNominalLokasi,
     });
   }
 
@@ -311,6 +370,7 @@ function parseDokumenSheet(sheet, code, label) {
     jenisDokumen: jenisDokumen,
     lokasi: lokasiList,
     pctRataRata: pctList.length ? Math.round((pctList.reduce(function (s, v) { return s + v; }, 0) / pctList.length) * 10000) / 10000 : null,
+    totalNominal: lokasiList.reduce(function (s, l) { return s + l.totalNominal; }, 0),
   };
 }
 
@@ -323,6 +383,7 @@ function emptyInvoiceDataset() {
     totalLokasiTagihan: 0,
     totalNominalKeseluruhan: 0,
     totalNominalBelumSelesai: 0,
+    totalNominalTagihan: 0,
     dokumenBulanan: [],
     catatan: [],
   };
@@ -373,6 +434,7 @@ function buildInvoiceDataset() {
     totalLokasiTagihan: tagihanResult.tagihan.length,
     totalNominalKeseluruhan: totalNominal,
     totalNominalBelumSelesai: totalBelum,
+    totalNominalTagihan: dokumenBulanan.reduce(function (s, m) { return s + m.totalNominal; }, 0),
     dokumenBulanan: dokumenBulanan,
     catatan: tagihanResult.notes,
   };

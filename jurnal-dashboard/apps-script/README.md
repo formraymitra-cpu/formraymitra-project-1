@@ -25,10 +25,10 @@ atau hari baru ditambahkan ke spreadsheet.
 
 ## Menghubungkan submenu Invoice
 
-Submenu **Invoice** (kelengkapan dokumen per lokasi per bulan — dari sheet
-bulanan "<BULAN> <TAHUN>", mis. "JULI 2026") baca dari spreadsheet
-**terpisah** "MONITORING INVOICE DINI" — bukan spreadsheet jurnal harian.
-Supaya submenu ini aktif:
+Submenu **Invoice** (kelengkapan dokumen + nominal tagihan per lokasi per
+bulan — dari sheet bulanan "<BULAN> <TAHUN>", mis. "JULI 2026") baca dari
+spreadsheet **terpisah** "MONITORING INVOICE DINI" — bukan spreadsheet
+jurnal harian. Supaya submenu ini aktif:
 
 1. Buka spreadsheet "MONITORING INVOICE DINI" di Google Sheets.
 2. Copy ID-nya dari URL — bagian antara `/d/` dan `/edit`, contoh:
@@ -48,6 +48,13 @@ lain (Overview, Rekap Bulanan, dst) tidak terpengaruh sama sekali.
 Sheet bulan kelengkapan dokumen di spreadsheet invoice (mis. "JULI 2026")
 otomatis terbaca asal namanya `<BULAN> <TAHUN>` (contoh: `OKTOBER 2026`) —
 tambah bulan baru di sana juga tidak perlu ubah kode.
+
+Kolom **BAGIAN KERJA** dan **NOMINAL TAGIHAN** di sheet bulan itu juga
+otomatis kebaca (dicari lewat nama header, jadi posisinya boleh digeser).
+Kalau satu lokasi punya beberapa bagian kerja sekaligus, isi tiap kolom
+dengan baris terpisah (Alt+Enter di Google Sheets) — baris ke-1 di BAGIAN
+KERJA dipasangkan dengan baris ke-1 di NOMINAL TAGIHAN, dst. NOMINAL TAGIHAN
+boleh angka polos atau teks seperti "Rp. 6.577.423".
 
 ## Menambah bulan baru
 

@@ -54,6 +54,11 @@ export interface TagihanLokasi {
   status: "selesai" | "proses" | "belum";
 }
 
+export interface BagianNominal {
+  bagianKerja: string | null;
+  nominal: number | null;
+}
+
 export interface DokumenLokasiBulan {
   lokasi: string;
   dokumen: Record<string, boolean>;
@@ -61,6 +66,8 @@ export interface DokumenLokasiBulan {
   totalDokumen: number;
   dokumenLengkap: number;
   pctLengkap: number | null;
+  tagihan: BagianNominal[];
+  totalNominal: number;
 }
 
 export interface DokumenBulan {
@@ -69,6 +76,7 @@ export interface DokumenBulan {
   jenisDokumen: string[];
   lokasi: DokumenLokasiBulan[];
   pctRataRata: number | null;
+  totalNominal: number;
 }
 
 export interface InvoiceDataset {
@@ -79,6 +87,7 @@ export interface InvoiceDataset {
   totalLokasiTagihan: number;
   totalNominalKeseluruhan: number;
   totalNominalBelumSelesai: number;
+  totalNominalTagihan: number;
   dokumenBulanan: DokumenBulan[];
   catatan: string[];
 }

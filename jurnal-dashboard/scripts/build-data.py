@@ -246,9 +246,57 @@ def parse_tagihan_sheet(ws):
     return tagihan, notes
 
 
+def find_col(header, name):
+    """Cari index (0-based) kolom header yang cocok persis (case-insensitive)
+    dengan `name`. Dipakai supaya posisi kolom TANGGAL KIRIM/BAGIAN KERJA/
+    NOMINAL TAGIHAN tidak perlu di-hardcode — tetap kebaca walau user
+    menyisipkan kolom baru di antaranya."""
+    name_up = name.strip().upper()
+    for i, v in enumerate(header):
+        if isinstance(v, str) and v.strip().upper() == name_up:
+            return i
+    return None
+
+
+def split_lines(v):
+    if v is None or v == "":
+        return []
+    if isinstance(v, (int, float)):
+        return [v]
+    return [s.strip() for s in str(v).split("\n") if s.strip()]
+
+
+def parse_rupiah(s):
+    digits = re.sub(r"[^\d]", "", s)
+    return int(digits) if digits else None
+
+
+def parse_bagian_nominal(bagian_val, nominal_val):
+    """BAGIAN KERJA & NOMINAL TAGIHAN bisa berisi beberapa baris (dipisah
+    newline) kalau satu lokasi punya beberapa bagian kerja sekaligus — tiap
+    baris dipasangkan berurutan (baris ke-1 BAGIAN KERJA <-> baris ke-1
+    NOMINAL TAGIHAN, dst). NOMINAL TAGIHAN bisa berupa angka polos atau teks
+    "Rp. 6.577.423"."""
+    bagian_list = split_lines(bagian_val)
+    nominal_list = []
+    for n in split_lines(nominal_val):
+        nominal_list.append(int(round(n)) if isinstance(n, (int, float)) else parse_rupiah(str(n)))
+    pairs = []
+    for i in range(max(len(bagian_list), len(nominal_list))):
+        pairs.append({
+            "bagianKerja": str(bagian_list[i]) if i < len(bagian_list) else None,
+            "nominal": nominal_list[i] if i < len(nominal_list) else None,
+        })
+    return pairs
+
+
 def parse_dokumen_sheet(ws, code, label):
-    header = [ws.cell(4, c).value for c in range(1, 20)]
-    jenis_dokumen = [h for h in header[3:18] if h]
+    header = [ws.cell(4, c).value for c in range(1, 40)]
+    tgl_kirim_idx = find_col(header, "TANGGAL KIRIM")
+    bagian_idx = find_col(header, "BAGIAN KERJA")
+    nominal_idx = find_col(header, "NOMINAL TAGIHAN")
+    jenis_dokumen = [h for h in header[3:tgl_kirim_idx] if h] if tgl_kirim_idx is not None else [h for h in header[3:18] if h]
+
     lokasi_list = []
     r = 5
     last_row = ws.max_row
@@ -263,13 +311,19 @@ def parse_dokumen_sheet(ws, code, label):
             dokumen[jenis] = val
             if val:
                 lengkap += 1
+        tagihan = parse_bagian_nominal(
+            ws.cell(r, bagian_idx + 1).value if bagian_idx is not None else None,
+            ws.cell(r, nominal_idx + 1).value if nominal_idx is not None else None,
+        )
         lokasi_list.append({
             "lokasi": str(lokasi).strip(),
             "dokumen": dokumen,
-            "tanggalKirim": iso(ws.cell(r, 19).value),
+            "tanggalKirim": iso(ws.cell(r, tgl_kirim_idx + 1).value) if tgl_kirim_idx is not None else None,
             "totalDokumen": len(jenis_dokumen),
             "dokumenLengkap": lengkap,
             "pctLengkap": round(lengkap / len(jenis_dokumen), 4) if jenis_dokumen else None,
+            "tagihan": tagihan,
+            "totalNominal": sum(p["nominal"] for p in tagihan if p["nominal"]),
         })
         r += 1
 
@@ -280,6 +334,7 @@ def parse_dokumen_sheet(ws, code, label):
         "jenisDokumen": jenis_dokumen,
         "lokasi": lokasi_list,
         "pctRataRata": round(sum(pct_list) / len(pct_list), 4) if pct_list else None,
+        "totalNominal": sum(l["totalNominal"] for l in lokasi_list),
     }
 
 
@@ -292,6 +347,7 @@ def build_invoice_dataset(invoice_src):
         "totalLokasiTagihan": 0,
         "totalNominalKeseluruhan": 0,
         "totalNominalBelumSelesai": 0,
+        "totalNominalTagihan": 0,
         "dokumenBulanan": [],
         "catatan": [],
     }
@@ -327,6 +383,7 @@ def build_invoice_dataset(invoice_src):
         "totalLokasiTagihan": len(tagihan),
         "totalNominalKeseluruhan": total_nominal,
         "totalNominalBelumSelesai": total_belum,
+        "totalNominalTagihan": sum(m["totalNominal"] for m in dokumen_bulanan),
         "dokumenBulanan": dokumen_bulanan,
         "catatan": notes,
     }
