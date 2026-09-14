@@ -27,48 +27,60 @@ Ada dua fitur:
 Kolom D1 dan A3 (dipakai sistem "⬅ MENU" / "KEMBALI KE MENU" milik script
 lama) tidak disentuh sama sekali oleh kedua fitur di atas.
 
-## Kenapa tidak cukup copy-paste langsung
+## Kenapa `onOpen()` tidak boleh didobel
 
 Script lama dan converter F2 sama-sama butuh fungsi `onOpen()` untuk
 menampilkan menu masing-masing saat spreadsheet dibuka. Tapi dalam satu
 project Apps Script, **hanya boleh ada satu `onOpen()`** — kalau ada dua,
 Apps Script cuma menjalankan salah satunya (biasanya yang terakhir dibaca),
-dan menu yang satunya lagi hilang tanpa pesan error. Jadi `onOpen()` yang
-sudah ada harus **digabung** (diedit), bukan ditambah dobel.
+dan menu yang satunya lagi hilang tanpa pesan error. Karena itu semuanya
+digabung jadi satu `onOpen()` yang memunculkan kedua menu sekaligus (lihat
+file `Code-SATU-FILE.gs` di bawah).
 
-Fungsi lain di converter F2 (`showF2Sidebar`, `getActiveSheetName`,
-`processF2Text`, `parseF2Text`, `findHeaderMap`, `getDataRows`,
-`applyRecordsToSheet`, `round2`, `hapusSemuaF2`,
-`findAndClearF2AttachmentLinks`, dan konstanta
-`F2_AMOUNT_RE`/`F2_DATE_RE`/`F2_NIK_RE`) namanya tidak bentrok dengan
-fungsi yang sudah ada, jadi aman ditaruh sebagai file terpisah.
+## Cara pasang (sekali saja) — cukup 1 file
 
-## Cara pasang (sekali saja)
-
-Tinggal 3 file, tidak perlu edit manual satu per satu — tinggal copy-paste
-penuh:
+Semua sudah digabung jadi **satu file `.gs` saja** — script "📌 MENU
+OTOMATIS" yang lama, converter F2, HAPUS F2, dan HTML sidebar-nya (dijadikan
+string di dalam kode, jadi tidak perlu bikin file `.html` terpisah lagi).
 
 1. Buka spreadsheet **"08. BPJS KETENAGAKERJAAN ..."** di Google Sheets →
    menu **Extensions → Apps Script**.
-2. **`Code.gs`** yang sudah ada di sana → select semua isinya, hapus, ganti
-   dengan seluruh isi file **`apps-script-f2-bpjs/Code-gabungan-siap-pakai.gs`**
-   di repo ini. Ini isinya script "📌 MENU OTOMATIS" yang lama, sama persis,
-   cuma `onOpen()`-nya sudah ditambah menu "F2 BPJS" — jadi tidak perlu edit
-   manual lagi.
-3. Buat file script baru: **File → New → Script**, beri nama **`F2Converter`**,
-   isi dengan seluruh isi file `apps-script-f2-bpjs/F2Converter.gs`.
-4. Buat file HTML baru (**File → New → HTML**), beri nama **`F2Sidebar`**
-   (harus persis nama ini), isi dengan `apps-script-f2-bpjs/F2Sidebar.html`.
-5. **Simpan** (ikon disket / Ctrl+S), lalu **tutup tab Apps Script dan reload
+2. Klik file **`Code.gs`** yang sudah ada di sana → select semua isinya
+   (Ctrl+A) → hapus → tempel seluruh isi file
+   **`apps-script-f2-bpjs/Code-SATU-FILE.gs`** dari repo ini.
+3. **Simpan** (ikon disket / Ctrl+S), lalu **tutup tab Apps Script dan reload
    spreadsheet-nya** (F5). Saat dibuka ulang, kedua menu — "📌 MENU OTOMATIS"
-   dan "F2 BPJS" — akan muncul berdampingan di menu bar. Google akan minta
-   otorisasi — wajar, setujui saja.
+   dan "F2 BPJS" (dengan item Convert & HAPUS F2) — langsung muncul
+   berdampingan di menu bar. Google akan minta otorisasi — wajar, setujui
+   saja.
 
-Kalau kamu sudah pernah pasang versi F2 BPJS sebelumnya dan cuma mau update
-ke versi terbaru: cukup timpa ulang isi `F2Converter.gs` (langkah 3) dengan
-versi terbaru, dan pastikan `onOpen()` di `Code.gs` sudah punya baris
-`.addItem("HAPUS F2", "hapusSemuaF2")` seperti di
-`Code-gabungan-siap-pakai.gs` — tidak perlu bikin ulang dari nol.
+Itu saja — tidak perlu bikin file `.gs` atau `.html` tambahan apa pun lagi.
+Kalau nanti ada update lagi dari aku, tinggal timpa ulang isi `Code.gs`
+dengan versi terbaru `Code-SATU-FILE.gs`, tidak perlu bongkar beberapa file.
+
+<details>
+<summary>Opsi lama: 3 file terpisah (kalau lebih suka modular)</summary>
+
+Kalau kamu lebih suka file converter F2 terpisah dari `Code.gs` (lebih rapi
+untuk baca-baca kode, tapi harus jaga 3 file sekaligus tiap update):
+
+1. `Code.gs` (yang sudah ada) → timpa dengan
+   `apps-script-f2-bpjs/Code-gabungan-siap-pakai.gs` (isinya sama seperti
+   yang lama, cuma `onOpen()` ditambah menu "F2 BPJS").
+2. File script baru **`F2Converter`** (File → New → Script) → isi dengan
+   `apps-script-f2-bpjs/F2Converter.gs`.
+3. File HTML baru **`F2Sidebar`** (File → New → HTML, nama harus persis) →
+   isi dengan `apps-script-f2-bpjs/F2Sidebar.html`.
+
+Fungsi-fungsi di dalamnya (`showF2Sidebar`, `getActiveSheetName`,
+`processF2Text`, `parseF2Text`, `findHeaderMap`, `getDataRows`,
+`applyRecordsToSheet`, `round2`, `hapusSemuaF2`,
+`findAndClearF2AttachmentLinks`, konstanta
+`F2_AMOUNT_RE`/`F2_DATE_RE`/`F2_NIK_RE`) namanya tidak bentrok dengan
+`buatMenu`/`urutkanSheetAbjad`/`tambahTombolKembali`/`hapusSemuaWarnaFill`
+yang lama, jadi aman kalau mau dipisah begini.
+
+</details>
 
 ## Cara pakai
 
