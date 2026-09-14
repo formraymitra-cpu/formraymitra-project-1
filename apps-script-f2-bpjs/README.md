@@ -9,13 +9,23 @@ Spreadsheet itu **sudah punya Apps Script sendiri** (menu "📌 MENU OTOMATIS" �
 Panduan di bawah ini ditulis supaya converter F2 **berdampingan**, bukan
 menimpa, script yang sudah ada itu.
 
-Yang dikerjakan script: kamu tempel teks tabel "RINCIAN IURAN TENAGA KERJA"
-dari Formulir 2a PU (tagihan F2), lalu script otomatis membaca nomor
-referensi, nama, dan semua nominal iuran (JKK, JKM, JHT, JP, JKP — porsi
-perusahaan & karyawan), lalu mengisi/mengupdate baris yang sesuai di tabel
-rekap tab yang sedang aktif. Baris yang belum ada di rekap otomatis
-ditambahkan sebelum baris total. Kolom D1 dan A3 (dipakai sistem "⬅ MENU" /
-"KEMBALI KE MENU" milik script lama) tidak disentuh sama sekali.
+Ada dua fitur:
+
+- **Convert Tagihan F2** — kamu tempel teks tabel "RINCIAN IURAN TENAGA
+  KERJA" dari Formulir 2a PU (tagihan F2), lalu script otomatis membaca
+  nomor referensi, nama, dan semua nominal iuran (JKK, JKM, JHT, JP, JKP —
+  porsi perusahaan & karyawan), lalu mengisi/mengupdate baris yang sesuai
+  di tabel rekap tab yang sedang aktif. Baris yang belum ada di rekap
+  otomatis ditambahkan sebelum baris total.
+- **HAPUS F2** — mengosongkan sel link lampiran PDF F2 bulan sebelumnya
+  (sel ber-ikon 📎, mis. "📎 ATR BPN PALANGKARAYA...") di **semua tab
+  sekaligus**, supaya siap ditempel link lampiran bulan berjalan. File PDF
+  aslinya di Google Drive **tidak ikut dihapus** — hanya link di selnya
+  yang dikosongkan. Tabel data rekap sama sekali tidak disentuh oleh fitur
+  ini.
+
+Kolom D1 dan A3 (dipakai sistem "⬅ MENU" / "KEMBALI KE MENU" milik script
+lama) tidak disentuh sama sekali oleh kedua fitur di atas.
 
 ## Kenapa tidak cukup copy-paste langsung
 
@@ -27,10 +37,11 @@ dan menu yang satunya lagi hilang tanpa pesan error. Jadi `onOpen()` yang
 sudah ada harus **digabung** (diedit), bukan ditambah dobel.
 
 Fungsi lain di converter F2 (`showF2Sidebar`, `getActiveSheetName`,
-`processF2Text`, `parseF2Text`, `findHeaderMap`, `applyRecordsToSheet`,
-`round2`, dan konstanta `F2_AMOUNT_RE`/`F2_DATE_RE`/`F2_NIK_RE`) namanya
-tidak bentrok dengan fungsi yang sudah ada, jadi aman ditaruh sebagai file
-terpisah.
+`processF2Text`, `parseF2Text`, `findHeaderMap`, `getDataRows`,
+`applyRecordsToSheet`, `round2`, `hapusSemuaF2`,
+`findAndClearF2AttachmentLinks`, dan konstanta
+`F2_AMOUNT_RE`/`F2_DATE_RE`/`F2_NIK_RE`) namanya tidak bentrok dengan
+fungsi yang sudah ada, jadi aman ditaruh sebagai file terpisah.
 
 ## Cara pasang (sekali saja)
 
@@ -58,12 +69,15 @@ terpisah.
      // >>> tambahan untuk converter F2 <<<
      ui.createMenu("F2 BPJS")
        .addItem("Convert Tagihan F2 ke Sheet Ini...", "showF2Sidebar")
+       .addSeparator()
+       .addItem("HAPUS F2", "hapusSemuaF2")
        .addToUi();
    }
    ```
 
-   Jadi `onOpen()` tetap satu fungsi saja, cuma isinya nambah 4 baris untuk
-   memunculkan menu "F2 BPJS" di sebelah menu "📌 MENU OTOMATIS" yang lama.
+   Jadi `onOpen()` tetap satu fungsi saja, cuma isinya nambah beberapa baris
+   untuk memunculkan menu "F2 BPJS" (dengan 2 item: convert & HAPUS F2) di
+   sebelah menu "📌 MENU OTOMATIS" yang lama.
 5. **Simpan** (ikon disket / Ctrl+S), lalu **tutup tab Apps Script dan reload
    spreadsheet-nya** (F5). Saat dibuka ulang, kedua menu — "📌 MENU OTOMATIS"
    dan "F2 BPJS" — akan muncul berdampingan di menu bar. Kalau ini pertama
@@ -85,6 +99,19 @@ terpisah.
 6. Ulangi langkah 1-5 untuk tab-tab lain — cukup pindah tab lalu buka lagi
    menunya (atau buka sidebar sekali dan biarkan terbuka, lalu ganti tab aktif
    sebelum klik Proses; sidebar selalu bekerja di tab yang sedang aktif).
+
+### HAPUS F2
+
+Menu **F2 BPJS → HAPUS F2** — sekali klik langsung memproses **semua tab**
+(tidak perlu buka satu-satu). Akan muncul dialog konfirmasi dulu (Ya/Tidak)
+karena ini mengubah banyak sel sekaligus. Setelah itu:
+
+- Sel yang berisi link ke file Google Drive (baik hyperlink biasa maupun
+  formula `=HYPERLINK(...)`), atau sel yang teksnya diawali ikon 📎, di
+  baris 1-10 tiap tab akan dikosongkan.
+- File PDF-nya sendiri **tidak dihapus/ditrash** dari Google Drive.
+- Muncul ringkasan: berapa link dikosongkan, di berapa tab.
+- Sheet "MENU" dilewati otomatis.
 
 ## Pemetaan kolom (bagaimana angka F2 masuk ke rekap)
 
@@ -134,3 +161,7 @@ lengkap dengan nomor urut dan format sel mengikuti baris di atasnya.
 - Kalau nanti "Buat / Refresh Menu" (script lama) dijalankan, itu hanya
   membangun ulang sheet "MENU" dan link D1/A3 — tidak mempengaruhi data yang
   sudah diisi converter F2.
+- **HAPUS F2** hanya memindai baris 1-10 tiap tab untuk cari sel lampiran
+  (link Drive / ikon 📎). Kalau lampiran F2 di tab tertentu ternyata ditaruh
+  lebih ke bawah dari baris 10, kasih tahu aku posisi persisnya biar
+  jangkauan pemindaiannya disesuaikan.

@@ -12,13 +12,19 @@
  * spreadsheet itu. Setiap tab dibaca/ditulis berdasarkan sheet yang sedang
  * aktif saat menu dijalankan.
  *
- * Cara pakai:
+ * Cara pakai (Convert Tagihan F2):
  *  1. Buka tab rekap yang mau diisi (mis. "ATR BPN PALANGKARAYA").
  *  2. Menu "F2 BPJS" -> "Convert Tagihan F2 ke Sheet Ini...".
  *  3. Salin (select + copy) tabel "RINCIAN IURAN TENAGA KERJA" dari Formulir 2a PU,
  *     tempel ke kotak teks di sidebar, klik "Proses".
  *  4. Baris yang nomor referensinya (atau namanya) sudah ada di rekap akan di-UPDATE,
  *     baris yang belum ada akan DITAMBAHKAN otomatis sebelum baris total.
+ *
+ * Cara pakai (HAPUS F2):
+ *  Menu "F2 BPJS" -> "HAPUS F2" mengosongkan link lampiran PDF F2 bulan
+ *  sebelumnya (sel ber-ikon 📎) di SEMUA tab sekaligus, supaya siap ditempel
+ *  link lampiran bulan berjalan. File PDF aslinya di Google Drive tidak
+ *  dihapus, dan data tabel rekap sama sekali tidak disentuh.
  */
 
 var F2_AMOUNT_RE = /\d{1,3}(?:,\d{3})*\.\d{2}/g;
@@ -223,8 +229,13 @@ function findHeaderMap(sheet) {
 
 /* --------------------------- WRITE TO SHEET --------------------------- */
 
-function applyRecordsToSheet(sheet, map, records) {
-  var lastCol = sheet.getLastColumn();
+/**
+ * Deteksi blok baris data tenaga kerja di bawah header rekap: dari
+ * map.row+1 sampai baris pertama yang kolom NAMA-nya kosong. Kalau baris
+ * kosong itu punya nilai di kolom TOTAL (baris SUM "Jumlah Seluruhnya"),
+ * baris itu ditandai sebagai footerRow.
+ */
+function getDataRows(sheet, map) {
   var lastRow = sheet.getLastRow();
   var startDataRow = map.row + 1;
 
@@ -247,6 +258,16 @@ function applyRecordsToSheet(sheet, map, records) {
   if (footerRow === null) {
     footerRow = dataRows.length ? dataRows[dataRows.length - 1].row + 1 : startDataRow;
   }
+
+  return { startDataRow: startDataRow, dataRows: dataRows, footerRow: footerRow };
+}
+
+function applyRecordsToSheet(sheet, map, records) {
+  var lastCol = sheet.getLastColumn();
+  var info = getDataRows(sheet, map);
+  var startDataRow = info.startDataRow;
+  var dataRows = info.dataRows;
+  var footerRow = info.footerRow;
 
   var updated = 0;
   var added = 0;
@@ -317,4 +338,100 @@ function applyRecordsToSheet(sheet, map, records) {
 
 function round2(n) {
   return Math.round(n * 100) / 100;
+}
+
+/* ------------------------------ HAPUS F2 ------------------------------ */
+
+/**
+ * Cari sel lampiran F2 di bagian atas sheet (baris 1-10): sel yang berisi
+ * link ke file Google Drive (lewat rich-text link atau formula
+ * =HYPERLINK(...)), atau sel yang teksnya diawali ikon 📎 (pola lampiran F2
+ * di template ini, mis. "📎 ATR BPN PALANGKARAYA..." di bawah label
+ * "KLIK F2 /RINCIAN DISINI"). Mengembalikan jumlah sel yang dikosongkan.
+ *
+ * Hanya mengosongkan ISI SEL (teks + link-nya) supaya siap ditempel link
+ * lampiran bulan berjalan. File PDF aslinya di Google Drive TIDAK disentuh
+ * / TIDAK dihapus.
+ */
+function findAndClearF2AttachmentLinks(sheet) {
+  var scanRows = Math.min(sheet.getLastRow(), 10);
+  var lastCol = sheet.getLastColumn();
+  if (scanRows < 1 || lastCol < 1) return 0;
+
+  var range = sheet.getRange(1, 1, scanRows, lastCol);
+  var richTextValues = range.getRichTextValues();
+  var formulas = range.getFormulas();
+  var values = range.getValues();
+  var driveLinkRe = /drive\.google\.com|docs\.google\.com/i;
+  var cleared = 0;
+
+  for (var r = 0; r < scanRows; r++) {
+    for (var c = 0; c < lastCol; c++) {
+      var isAttachmentLink = false;
+
+      var rtv = richTextValues[r][c];
+      var linkUrl = rtv ? rtv.getLinkUrl() : null;
+      if (linkUrl && driveLinkRe.test(linkUrl)) isAttachmentLink = true;
+
+      var formula = formulas[r][c] || '';
+      if (!isAttachmentLink && /HYPERLINK\s*\(/i.test(formula) && driveLinkRe.test(formula)) {
+        isAttachmentLink = true;
+      }
+
+      var textVal = (values[r][c] || '').toString().trim();
+      if (!isAttachmentLink && textVal.indexOf('📎') === 0) {
+        // teks diawali ikon 📎 (paperclip)
+        isAttachmentLink = true;
+      }
+
+      if (isAttachmentLink) {
+        sheet.getRange(r + 1, c + 1).clearContent();
+        cleared++;
+      }
+    }
+  }
+  return cleared;
+}
+
+/**
+ * Kosongkan link lampiran PDF F2 bulan sebelumnya di SEMUA tab rekap
+ * (dipanggil dari menu "F2 BPJS" -> "HAPUS F2"). Dipakai di awal bulan baru
+ * supaya link lampiran lama tidak ketuker, sebelum ditempel link/lampiran F2
+ * bulan berjalan.
+ *
+ * File PDF aslinya di Google Drive TIDAK dihapus/ditrash — hanya link di
+ * selnya yang dikosongkan. Data tenaga kerja di tabel rekap (baris NAMA,
+ * nominal, dst) TIDAK disentuh sama sekali oleh fungsi ini.
+ * Sheet "MENU" (dari script "MENU OTOMATIS") dilewati.
+ */
+function hapusSemuaF2() {
+  var ui = SpreadsheetApp.getUi();
+  var jawab = ui.alert(
+    'Konfirmasi HAPUS F2',
+    'Yakin ingin mengosongkan link lampiran PDF F2 bulan sebelumnya (sel ber-ikon 📎) ' +
+      'di SEMUA tab? File PDF aslinya TETAP ada di Google Drive, cuma link di selnya ' +
+      'yang dikosongkan. Data tabel rekap tidak disentuh.',
+    ui.ButtonSet.YES_NO
+  );
+  if (jawab !== ui.Button.YES) return;
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheets = ss.getSheets();
+  var totalCleared = 0;
+  var sheetsAffected = 0;
+
+  sheets.forEach(function (sheet) {
+    if (sheet.getName() === 'MENU') return;
+    var cleared = findAndClearF2AttachmentLinks(sheet);
+    if (cleared > 0) {
+      totalCleared += cleared;
+      sheetsAffected++;
+    }
+  });
+
+  ui.alert(
+    'HAPUS F2 selesai',
+    'Selesai: ' + totalCleared + ' link lampiran F2 dikosongkan di ' + sheetsAffected + ' tab.',
+    ui.ButtonSet.OK
+  );
 }
