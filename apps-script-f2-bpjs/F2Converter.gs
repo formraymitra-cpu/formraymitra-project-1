@@ -43,19 +43,61 @@ function getActiveSheetName() {
 }
 
 /**
- * Entry point dipanggil dari sidebar (google.script.run.processF2Text(text)).
- * Selalu bekerja di sheet yang aktif ketika sidebar dibuka.
+ * Entry point dipanggil dari sidebar (google.script.run.processF2Text(text))
+ * untuk cara tempel teks manual. Selalu bekerja di sheet yang aktif ketika
+ * sidebar dibuka.
  */
 function processF2Text(rawText) {
   var sheet = SpreadsheetApp.getActiveSheet();
+  return applyF2TextToSheet(sheet, rawText);
+}
+
+/**
+ * Entry point dipanggil dari sidebar (google.script.run.processF2Pdf(...))
+ * untuk cara upload file PDF F2 langsung. base64Data = isi file (tanpa
+ * prefix "data:...;base64,", sudah dipotong di sisi client).
+ */
+function processF2Pdf(base64Data, fileName, mimeType) {
+  var sheet = SpreadsheetApp.getActiveSheet();
+  var text;
+  try {
+    text = extractTextFromPdf(base64Data, fileName, mimeType);
+  } catch (e) {
+    return {
+      ok: false,
+      message:
+        'Gagal membaca teks dari PDF (' + e.message + '). Pastikan Advanced ' +
+        'Service "Drive API" (versi v2) sudah diaktifkan di Services (lihat ' +
+        'README), lalu coba lagi. Kalau tetap gagal, pakai cara tempel teks ' +
+        'manual di bawah.',
+      warnings: []
+    };
+  }
+
+  var result = applyF2TextToSheet(sheet, text);
+  if (!result.ok && (!result.warnings || result.warnings.length === 0)) {
+    // tambahkan potongan teks hasil ekstraksi supaya gampang didiagnosis
+    // kalau ternyata parser tidak menemukan baris tenaga kerja sama sekali
+    result.message +=
+      ' (Cuplikan teks hasil baca PDF: "' + text.substring(0, 200).replace(/\s+/g, ' ').trim() + '...")';
+  }
+  return result;
+}
+
+/**
+ * Logika bersama: parse teks F2 (dari mana pun asalnya) lalu terapkan ke
+ * sheet yang aktif. Dipakai oleh processF2Text (paste manual) dan
+ * processF2Pdf (upload file).
+ */
+function applyF2TextToSheet(sheet, rawText) {
   var parsed = parseF2Text(rawText);
 
   if (parsed.records.length === 0) {
     return {
       ok: false,
       message:
-        'Tidak ada baris tenaga kerja yang terbaca dari teks yang ditempel. ' +
-        'Pastikan menyalin tabel "RINCIAN IURAN TENAGA KERJA" apa adanya (termasuk NIK 16 digit tiap baris).',
+        'Tidak ada baris tenaga kerja yang terbaca. ' +
+        'Pastikan sumbernya tabel "RINCIAN IURAN TENAGA KERJA" dari Formulir 2a PU (termasuk NIK 16 digit tiap baris).',
       warnings: parsed.warnings
     };
   }
@@ -87,6 +129,35 @@ function processF2Text(rawText) {
   result.ok = true;
   result.sheetName = sheet.getName();
   return result;
+}
+
+/**
+ * Ekstrak teks dari file PDF lewat trik konversi Drive API: upload PDF
+ * sebagai file sementara, minta Drive convert+OCR ke Google Docs (OCR aman
+ * dipakai juga untuk PDF yang sudah berbasis teks, hanya jadi fallback kalau
+ * ada bagian berupa gambar), baca teksnya lewat DocumentApp, lalu hapus file
+ * sementara itu lagi. Butuh Advanced Service "Drive API" (v2) aktif di
+ * project ini -- lihat README untuk cara mengaktifkannya.
+ */
+function extractTextFromPdf(base64Data, fileName, mimeType) {
+  var blob = Utilities.newBlob(
+    Utilities.base64Decode(base64Data),
+    mimeType || 'application/pdf',
+    fileName || 'F2.pdf'
+  );
+
+  var resource = {
+    title: 'TEMP_F2_CONVERT_' + new Date().getTime(),
+    mimeType: MimeType.GOOGLE_DOCS
+  };
+  var file = Drive.Files.insert(resource, blob, { ocr: true, ocrLanguage: 'id' });
+
+  try {
+    var doc = DocumentApp.openById(file.id);
+    return doc.getBody().getText();
+  } finally {
+    Drive.Files.remove(file.id);
+  }
 }
 
 /* ----------------------------- PARSER ----------------------------- */

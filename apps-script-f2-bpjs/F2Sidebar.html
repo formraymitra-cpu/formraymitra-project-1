@@ -19,16 +19,22 @@
         margin: 0 0 10px;
         line-height: 1.4;
       }
+      input[type="file"] {
+        width: 100%;
+        box-sizing: border-box;
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
       textarea {
         width: 100%;
-        height: 260px;
+        height: 180px;
         box-sizing: border-box;
         font-family: monospace;
         font-size: 11px;
         padding: 6px;
       }
       button {
-        margin-top: 10px;
+        margin-top: 4px;
         background: #1a73e8;
         color: #fff;
         border: none;
@@ -41,7 +47,7 @@
         background: #9aa0a6;
         cursor: default;
       }
-      #status {
+      .status {
         margin-top: 12px;
         white-space: pre-wrap;
         line-height: 1.5;
@@ -52,21 +58,48 @@
       .sheetname {
         font-weight: bold;
       }
+      hr {
+        margin: 18px 0;
+        border: none;
+        border-top: 1px solid #dadce0;
+      }
+      details summary {
+        cursor: pointer;
+        color: #1a73e8;
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
     </style>
   </head>
   <body>
     <h4>Convert Tagihan F2</h4>
     <p class="hint">
-      Target sheet: <span class="sheetname" id="sheetName">...</span><br />
-      Salin (select lalu copy) tabel "RINCIAN IURAN TENAGA KERJA" dari Formulir
-      2a PU BPJS Ketenagakerjaan, tempel di bawah, lalu klik Proses. Baris yang
-      nomor referensi/namanya sudah ada di rekap akan diperbarui, yang belum
-      ada akan ditambahkan otomatis.
+      Target sheet: <span class="sheetname" id="sheetName">...</span>
     </p>
-    <textarea id="raw" placeholder="Tempel teks tabel F2 di sini..."></textarea>
+
+    <p class="hint">
+      Pilih file PDF Formulir 2a PU (tagihan F2), lalu klik Convert. Baris
+      yang nomor referensi/namanya sudah ada di rekap akan diperbarui, yang
+      belum ada akan ditambahkan otomatis.
+    </p>
+    <input type="file" id="pdfFile" accept="application/pdf" />
     <br />
-    <button id="go">Proses</button>
-    <div id="status"></div>
+    <button id="goPdf">Convert dari PDF</button>
+    <div class="status" id="statusPdf"></div>
+
+    <hr />
+
+    <details>
+      <summary>Cara alternatif: tempel teks manual (kalau convert PDF gagal)</summary>
+      <p class="hint">
+        Salin (select lalu copy) tabel "RINCIAN IURAN TENAGA KERJA" dari
+        Formulir 2a PU, tempel di bawah, lalu klik Proses.
+      </p>
+      <textarea id="raw" placeholder="Tempel teks tabel F2 di sini..."></textarea>
+      <br />
+      <button id="goText">Proses Teks</button>
+      <div class="status" id="statusText"></div>
+    </details>
 
     <script>
       google.script.run
@@ -75,30 +108,7 @@
         })
         .getActiveSheetName();
 
-      document.getElementById('go').addEventListener('click', function () {
-        var btn = document.getElementById('go');
-        var statusEl = document.getElementById('status');
-        var text = document.getElementById('raw').value;
-        if (!text.trim()) {
-          statusEl.innerHTML = '<span class="err">Tempel dulu teks tagihan F2-nya.</span>';
-          return;
-        }
-        btn.disabled = true;
-        statusEl.textContent = 'Memproses...';
-        google.script.run
-          .withSuccessHandler(function (res) {
-            btn.disabled = false;
-            renderResult(res);
-          })
-          .withFailureHandler(function (err) {
-            btn.disabled = false;
-            statusEl.innerHTML = '<span class="err">Error: ' + err.message + '</span>';
-          })
-          .processF2Text(text);
-      });
-
-      function renderResult(res) {
-        var statusEl = document.getElementById('status');
+      function renderResult(res, statusEl) {
         if (!res.ok) {
           statusEl.innerHTML = '<span class="err">' + res.message + '</span>';
           if (res.warnings && res.warnings.length) {
@@ -119,6 +129,65 @@
         }
         statusEl.innerHTML = lines.join('\n\n');
       }
+
+      // ---- Convert dari file PDF ----
+      document.getElementById('goPdf').addEventListener('click', function () {
+        var btn = this;
+        var statusEl = document.getElementById('statusPdf');
+        var fileInput = document.getElementById('pdfFile');
+        var file = fileInput.files && fileInput.files[0];
+        if (!file) {
+          statusEl.innerHTML = '<span class="err">Pilih file PDF F2 dulu.</span>';
+          return;
+        }
+
+        btn.disabled = true;
+        statusEl.textContent = 'Membaca file...';
+
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          var base64 = e.target.result.split(',')[1];
+          statusEl.textContent = 'Mengonversi PDF & memproses...';
+          google.script.run
+            .withSuccessHandler(function (res) {
+              btn.disabled = false;
+              renderResult(res, statusEl);
+            })
+            .withFailureHandler(function (err) {
+              btn.disabled = false;
+              statusEl.innerHTML = '<span class="err">Error: ' + err.message + '</span>';
+            })
+            .processF2Pdf(base64, file.name, file.type || 'application/pdf');
+        };
+        reader.onerror = function () {
+          btn.disabled = false;
+          statusEl.innerHTML = '<span class="err">Gagal membaca file di browser.</span>';
+        };
+        reader.readAsDataURL(file);
+      });
+
+      // ---- Proses teks manual (fallback) ----
+      document.getElementById('goText').addEventListener('click', function () {
+        var btn = this;
+        var statusEl = document.getElementById('statusText');
+        var text = document.getElementById('raw').value;
+        if (!text.trim()) {
+          statusEl.innerHTML = '<span class="err">Tempel dulu teks tagihan F2-nya.</span>';
+          return;
+        }
+        btn.disabled = true;
+        statusEl.textContent = 'Memproses...';
+        google.script.run
+          .withSuccessHandler(function (res) {
+            btn.disabled = false;
+            renderResult(res, statusEl);
+          })
+          .withFailureHandler(function (err) {
+            btn.disabled = false;
+            statusEl.innerHTML = '<span class="err">Error: ' + err.message + '</span>';
+          })
+          .processF2Text(text);
+      });
     </script>
   </body>
 </html>

@@ -11,12 +11,13 @@ menimpa, script yang sudah ada itu.
 
 Ada dua fitur:
 
-- **Convert Tagihan F2** — kamu tempel teks tabel "RINCIAN IURAN TENAGA
-  KERJA" dari Formulir 2a PU (tagihan F2), lalu script otomatis membaca
-  nomor referensi, nama, dan semua nominal iuran (JKK, JKM, JHT, JP, JKP —
-  porsi perusahaan & karyawan), lalu mengisi/mengupdate baris yang sesuai
-  di tabel rekap tab yang sedang aktif. Baris yang belum ada di rekap
-  otomatis ditambahkan sebelum baris total.
+- **Convert Tagihan F2** — kamu **upload file PDF** Formulir 2a PU (tagihan
+  F2) langsung di sidebar, klik Convert, dan script otomatis membaca nomor
+  referensi, nama, dan semua nominal iuran (JKK, JKM, JHT, JP, JKP — porsi
+  perusahaan & karyawan) dari isi PDF itu, lalu mengisi/mengupdate baris
+  yang sesuai di tabel rekap tab yang sedang aktif. Baris yang belum ada di
+  rekap otomatis ditambahkan sebelum baris total. (Ada juga cara alternatif
+  tempel teks manual, buat jaga-jaga kalau convert PDF-nya gagal baca.)
 - **HAPUS F2** — mengosongkan sel link lampiran PDF F2 bulan sebelumnya
   (sel ber-ikon 📎, mis. "📎 ATR BPN PALANGKARAYA...") di **semua tab
   sekaligus**, supaya siap ditempel link lampiran bulan berjalan. File PDF
@@ -48,15 +49,26 @@ string di dalam kode, jadi tidak perlu bikin file `.html` terpisah lagi).
 2. Klik file **`Code.gs`** yang sudah ada di sana → select semua isinya
    (Ctrl+A) → hapus → tempel seluruh isi file
    **`apps-script-f2-bpjs/Code-SATU-FILE.gs`** dari repo ini.
-3. **Simpan** (ikon disket / Ctrl+S), lalu **tutup tab Apps Script dan reload
+3. **Aktifkan Advanced Service "Drive API"** (wajib untuk fitur Convert dari
+   PDF — tanpa ini tombolnya akan error, tapi menu lain tetap jalan normal):
+   - Di sidebar kiri editor Apps Script, klik ikon **"+"** di sebelah
+     **Services**.
+   - Cari **"Drive API"** di daftar, klik.
+   - Di dropdown **Version**, pilih **`v2`** (bukan v3 — kode di
+     `Code-SATU-FILE.gs` ditulis untuk v2).
+   - Identifier biarkan default `Drive`, klik **Add**.
+4. **Simpan** (ikon disket / Ctrl+S), lalu **tutup tab Apps Script dan reload
    spreadsheet-nya** (F5). Saat dibuka ulang, kedua menu — "📌 MENU OTOMATIS"
    dan "F2 BPJS" (dengan item Convert & HAPUS F2) — langsung muncul
-   berdampingan di menu bar. Google akan minta otorisasi — wajar, setujui
-   saja.
+   berdampingan di menu bar. Google akan minta otorisasi (termasuk akses ke
+   Drive, karena Convert dari PDF perlu upload file sementara ke Drive lalu
+   menghapusnya lagi) — wajar, setujui saja.
 
-Itu saja — tidak perlu bikin file `.gs` atau `.html` tambahan apa pun lagi.
-Kalau nanti ada update lagi dari aku, tinggal timpa ulang isi `Code.gs`
-dengan versi terbaru `Code-SATU-FILE.gs`, tidak perlu bongkar beberapa file.
+Itu saja — tidak perlu bikin file `.gs` atau `.html` tambahan apa pun lagi,
+cukup 1 file kode + 1 kali aktifkan Drive API. Kalau nanti ada update lagi
+dari aku, tinggal timpa ulang isi `Code.gs` dengan versi terbaru
+`Code-SATU-FILE.gs`, tidak perlu bongkar beberapa file atau aktifkan Drive
+API lagi (sekali aktif, tetap aktif).
 
 <details>
 <summary>Opsi lama: 3 file terpisah (kalau lebih suka modular)</summary>
@@ -72,11 +84,16 @@ untuk baca-baca kode, tapi harus jaga 3 file sekaligus tiap update):
 3. File HTML baru **`F2Sidebar`** (File → New → HTML, nama harus persis) →
    isi dengan `apps-script-f2-bpjs/F2Sidebar.html`.
 
+Jangan lupa langkah **"Aktifkan Advanced Service Drive API (v2)"** di atas —
+tetap wajib walau pakai opsi 3 file ini, kalau mau fitur Convert dari PDF
+jalan.
+
 Fungsi-fungsi di dalamnya (`showF2Sidebar`, `getActiveSheetName`,
-`processF2Text`, `parseF2Text`, `findHeaderMap`, `getDataRows`,
-`applyRecordsToSheet`, `round2`, `hapusSemuaF2`,
-`findAndClearF2AttachmentLinks`, konstanta
-`F2_AMOUNT_RE`/`F2_DATE_RE`/`F2_NIK_RE`) namanya tidak bentrok dengan
+`processF2Text`, `processF2Pdf`, `applyF2TextToSheet`, `extractTextFromPdf`,
+`parseF2Text`, `findHeaderMap`, `getDataRows`, `applyRecordsToSheet`,
+`round2`, `hapusSemuaF2`, `findAndClearF2AttachmentLinks`,
+`debugF2AttachmentCell`, konstanta `F2_AMOUNT_RE`/`F2_DATE_RE`/`F2_NIK_RE`)
+namanya tidak bentrok dengan
 `buatMenu`/`urutkanSheetAbjad`/`tambahTombolKembali`/`hapusSemuaWarnaFill`
 yang lama, jadi aman kalau mau dipisah begini.
 
@@ -87,16 +104,24 @@ yang lama, jadi aman kalau mau dipisah begini.
 1. Buka tab rekap yang mau diisi, mis. **"ATR BPN PALANGKARAYA"**.
 2. Menu **F2 BPJS → Convert Tagihan F2 ke Sheet Ini...** — sidebar terbuka di
    kanan, judulnya menunjukkan tab target.
-3. Di file/halaman tagihan F2 (Formulir 2a PU), **select tabel "RINCIAN IURAN
-   TENAGA KERJA"** (dari baris "No/Nomor Referensi/..." sampai baris terakhir
-   tenaga kerja, tidak perlu ikut baris "Jumlah Seluruhnya"), lalu Copy.
-4. Paste ke kotak teks di sidebar, klik **Proses**.
-5. Script akan melaporkan berapa baris di-update dan berapa baris baru
-   ditambahkan, plus peringatan kalau ada baris yang tidak terbaca atau
-   totalnya tidak cocok.
+3. Klik **Choose File**, pilih file PDF Formulir 2a PU (tagihan F2) untuk
+   lokasi itu, lalu klik **Convert dari PDF**.
+4. Script mengirim isi PDF ke Drive untuk dibaca teksnya (butuh beberapa
+   detik), lalu otomatis mengisi/mengupdate baris yang sesuai di tabel
+   rekap.
+5. Muncul ringkasan: berapa baris di-update, berapa baris baru ditambahkan,
+   plus peringatan kalau ada baris yang tidak terbaca atau totalnya tidak
+   cocok.
 6. Ulangi langkah 1-5 untuk tab-tab lain — cukup pindah tab lalu buka lagi
    menunya (atau buka sidebar sekali dan biarkan terbuka, lalu ganti tab aktif
-   sebelum klik Proses; sidebar selalu bekerja di tab yang sedang aktif).
+   sebelum klik Convert; sidebar selalu bekerja di tab yang sedang aktif).
+
+**Kalau convert PDF gagal / hasilnya kacau** (mis. PDF hasil scan gambar yang
+kualitasnya jelek, atau layout tabelnya tidak standar): buka bagian "Cara
+alternatif: tempel teks manual" di bawah tombol Convert — select tabel
+"RINCIAN IURAN TENAGA KERJA" dari Formulir 2a PU (di viewer PDF/browser), Copy,
+tempel ke kotak teks itu, klik **Proses Teks**. Jalur ini tidak butuh Drive
+API sama sekali.
 
 ### HAPUS F2
 
@@ -159,6 +184,19 @@ lengkap dengan nomor urut dan format sel mengikuti baris di atasnya.
 - Kalau nanti "Buat / Refresh Menu" (script lama) dijalankan, itu hanya
   membangun ulang sheet "MENU" dan link D1/A3 — tidak mempengaruhi data yang
   sudah diisi converter F2.
+- **Convert dari PDF** mengonversi PDF ke Google Docs lewat Drive API
+  (dengan OCR sebagai fallback kalau ada bagian berupa gambar), lalu
+  membaca teksnya. Untuk PDF Formulir 2a PU yang biasa (bukan hasil scan),
+  ini biasanya mulus karena teksnya memang sudah berbentuk teks asli, bukan
+  gambar. Tapi konversi ini butuh beberapa detik dan sesekali bisa
+  menghasilkan urutan baris/kolom yang sedikit berantakan tergantung
+  layout PDF-nya — kalau itu terjadi, pesan error/peringatan di sidebar akan
+  menyertakan cuplikan teks hasil baca PDF supaya gampang dicek, dan cara
+  tempel teks manual selalu tersedia sebagai cadangan.
+- File PDF yang di-upload untuk Convert **tidak disimpan** — script cuma
+  membuat 1 file Google Docs sementara di Drive kamu untuk baca teksnya,
+  lalu langsung menghapusnya lagi di akhir proses (baik berhasil maupun
+  gagal).
 - **HAPUS F2** hanya memindai baris 1-10 tiap tab untuk cari sel lampiran
   (link Drive / ikon 📎). Kalau lampiran F2 di tab tertentu ternyata ditaruh
   lebih ke bawah dari baris 10, kasih tahu aku posisi persisnya biar

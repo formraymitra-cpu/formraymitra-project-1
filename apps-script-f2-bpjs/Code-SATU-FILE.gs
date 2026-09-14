@@ -4,6 +4,12 @@
  * isi `Code.gs` di spreadsheet kamu dengan isi file ini, TIDAK PERLU bikin
  * file .gs atau .html tambahan lagi.
  *
+ * PENTING: fitur "Convert dari PDF" butuh Advanced Service "Drive API"
+ * (versi v2) diaktifkan dulu di Services (ikon "+" di sidebar kiri editor
+ * Apps Script) — lihat README.md untuk langkahnya. Tanpa itu, tombol
+ * "Convert dari PDF" akan error; cara tempel teks manual tetap jalan tanpa
+ * setup tambahan.
+ *
  * Menu yang muncul di spreadsheet setelah dipasang:
  *   - "📌 MENU OTOMATIS" -> Buat/Refresh Menu, No Fill Semua Sheet (lama)
  *   - "F2 BPJS" -> Convert Tagihan F2 ke Sheet Ini..., HAPUS F2 (baru)
@@ -255,19 +261,61 @@ function getActiveSheetName() {
 }
 
 /**
- * Entry point dipanggil dari sidebar (google.script.run.processF2Text(text)).
- * Selalu bekerja di sheet yang aktif ketika sidebar dibuka.
+ * Entry point dipanggil dari sidebar (google.script.run.processF2Text(text))
+ * untuk cara tempel teks manual. Selalu bekerja di sheet yang aktif ketika
+ * sidebar dibuka.
  */
 function processF2Text(rawText) {
   var sheet = SpreadsheetApp.getActiveSheet();
+  return applyF2TextToSheet(sheet, rawText);
+}
+
+/**
+ * Entry point dipanggil dari sidebar (google.script.run.processF2Pdf(...))
+ * untuk cara upload file PDF F2 langsung. base64Data = isi file (tanpa
+ * prefix "data:...;base64,", sudah dipotong di sisi client).
+ */
+function processF2Pdf(base64Data, fileName, mimeType) {
+  var sheet = SpreadsheetApp.getActiveSheet();
+  var text;
+  try {
+    text = extractTextFromPdf(base64Data, fileName, mimeType);
+  } catch (e) {
+    return {
+      ok: false,
+      message:
+        'Gagal membaca teks dari PDF (' + e.message + '). Pastikan Advanced ' +
+        'Service "Drive API" (versi v2) sudah diaktifkan di Services (lihat ' +
+        'README), lalu coba lagi. Kalau tetap gagal, pakai cara tempel teks ' +
+        'manual di bawah.',
+      warnings: []
+    };
+  }
+
+  var result = applyF2TextToSheet(sheet, text);
+  if (!result.ok && (!result.warnings || result.warnings.length === 0)) {
+    // tambahkan potongan teks hasil ekstraksi supaya gampang didiagnosis
+    // kalau ternyata parser tidak menemukan baris tenaga kerja sama sekali
+    result.message +=
+      ' (Cuplikan teks hasil baca PDF: "' + text.substring(0, 200).replace(/\s+/g, ' ').trim() + '...")';
+  }
+  return result;
+}
+
+/**
+ * Logika bersama: parse teks F2 (dari mana pun asalnya) lalu terapkan ke
+ * sheet yang aktif. Dipakai oleh processF2Text (paste manual) dan
+ * processF2Pdf (upload file).
+ */
+function applyF2TextToSheet(sheet, rawText) {
   var parsed = parseF2Text(rawText);
 
   if (parsed.records.length === 0) {
     return {
       ok: false,
       message:
-        'Tidak ada baris tenaga kerja yang terbaca dari teks yang ditempel. ' +
-        'Pastikan menyalin tabel "RINCIAN IURAN TENAGA KERJA" apa adanya (termasuk NIK 16 digit tiap baris).',
+        'Tidak ada baris tenaga kerja yang terbaca. ' +
+        'Pastikan sumbernya tabel "RINCIAN IURAN TENAGA KERJA" dari Formulir 2a PU (termasuk NIK 16 digit tiap baris).',
       warnings: parsed.warnings
     };
   }
@@ -299,6 +347,35 @@ function processF2Text(rawText) {
   result.ok = true;
   result.sheetName = sheet.getName();
   return result;
+}
+
+/**
+ * Ekstrak teks dari file PDF lewat trik konversi Drive API: upload PDF
+ * sebagai file sementara, minta Drive convert+OCR ke Google Docs (OCR aman
+ * dipakai juga untuk PDF yang sudah berbasis teks, hanya jadi fallback kalau
+ * ada bagian berupa gambar), baca teksnya lewat DocumentApp, lalu hapus file
+ * sementara itu lagi. Butuh Advanced Service "Drive API" (v2) aktif di
+ * project ini -- lihat README untuk cara mengaktifkannya.
+ */
+function extractTextFromPdf(base64Data, fileName, mimeType) {
+  var blob = Utilities.newBlob(
+    Utilities.base64Decode(base64Data),
+    mimeType || 'application/pdf',
+    fileName || 'F2.pdf'
+  );
+
+  var resource = {
+    title: 'TEMP_F2_CONVERT_' + new Date().getTime(),
+    mimeType: MimeType.GOOGLE_DOCS
+  };
+  var file = Drive.Files.insert(resource, blob, { ocr: true, ocrLanguage: 'id' });
+
+  try {
+    var doc = DocumentApp.openById(file.id);
+    return doc.getBody().getText();
+  } finally {
+    Drive.Files.remove(file.id);
+  }
 }
 
 /* ----------------------------- PARSER ----------------------------- */
@@ -732,16 +809,22 @@ var F2_SIDEBAR_HTML = `
         margin: 0 0 10px;
         line-height: 1.4;
       }
+      input[type="file"] {
+        width: 100%;
+        box-sizing: border-box;
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
       textarea {
         width: 100%;
-        height: 260px;
+        height: 180px;
         box-sizing: border-box;
         font-family: monospace;
         font-size: 11px;
         padding: 6px;
       }
       button {
-        margin-top: 10px;
+        margin-top: 4px;
         background: #1a73e8;
         color: #fff;
         border: none;
@@ -754,7 +837,7 @@ var F2_SIDEBAR_HTML = `
         background: #9aa0a6;
         cursor: default;
       }
-      #status {
+      .status {
         margin-top: 12px;
         white-space: pre-wrap;
         line-height: 1.5;
@@ -765,21 +848,48 @@ var F2_SIDEBAR_HTML = `
       .sheetname {
         font-weight: bold;
       }
+      hr {
+        margin: 18px 0;
+        border: none;
+        border-top: 1px solid #dadce0;
+      }
+      details summary {
+        cursor: pointer;
+        color: #1a73e8;
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
     </style>
   </head>
   <body>
     <h4>Convert Tagihan F2</h4>
     <p class="hint">
-      Target sheet: <span class="sheetname" id="sheetName">...</span><br />
-      Salin (select lalu copy) tabel "RINCIAN IURAN TENAGA KERJA" dari Formulir
-      2a PU BPJS Ketenagakerjaan, tempel di bawah, lalu klik Proses. Baris yang
-      nomor referensi/namanya sudah ada di rekap akan diperbarui, yang belum
-      ada akan ditambahkan otomatis.
+      Target sheet: <span class="sheetname" id="sheetName">...</span>
     </p>
-    <textarea id="raw" placeholder="Tempel teks tabel F2 di sini..."></textarea>
+
+    <p class="hint">
+      Pilih file PDF Formulir 2a PU (tagihan F2), lalu klik Convert. Baris
+      yang nomor referensi/namanya sudah ada di rekap akan diperbarui, yang
+      belum ada akan ditambahkan otomatis.
+    </p>
+    <input type="file" id="pdfFile" accept="application/pdf" />
     <br />
-    <button id="go">Proses</button>
-    <div id="status"></div>
+    <button id="goPdf">Convert dari PDF</button>
+    <div class="status" id="statusPdf"></div>
+
+    <hr />
+
+    <details>
+      <summary>Cara alternatif: tempel teks manual (kalau convert PDF gagal)</summary>
+      <p class="hint">
+        Salin (select lalu copy) tabel "RINCIAN IURAN TENAGA KERJA" dari
+        Formulir 2a PU, tempel di bawah, lalu klik Proses.
+      </p>
+      <textarea id="raw" placeholder="Tempel teks tabel F2 di sini..."></textarea>
+      <br />
+      <button id="goText">Proses Teks</button>
+      <div class="status" id="statusText"></div>
+    </details>
 
     <script>
       google.script.run
@@ -788,30 +898,7 @@ var F2_SIDEBAR_HTML = `
         })
         .getActiveSheetName();
 
-      document.getElementById('go').addEventListener('click', function () {
-        var btn = document.getElementById('go');
-        var statusEl = document.getElementById('status');
-        var text = document.getElementById('raw').value;
-        if (!text.trim()) {
-          statusEl.innerHTML = '<span class="err">Tempel dulu teks tagihan F2-nya.</span>';
-          return;
-        }
-        btn.disabled = true;
-        statusEl.textContent = 'Memproses...';
-        google.script.run
-          .withSuccessHandler(function (res) {
-            btn.disabled = false;
-            renderResult(res);
-          })
-          .withFailureHandler(function (err) {
-            btn.disabled = false;
-            statusEl.innerHTML = '<span class="err">Error: ' + err.message + '</span>';
-          })
-          .processF2Text(text);
-      });
-
-      function renderResult(res) {
-        var statusEl = document.getElementById('status');
+      function renderResult(res, statusEl) {
         if (!res.ok) {
           statusEl.innerHTML = '<span class="err">' + res.message + '</span>';
           if (res.warnings && res.warnings.length) {
@@ -832,6 +919,65 @@ var F2_SIDEBAR_HTML = `
         }
         statusEl.innerHTML = lines.join('\\n\\n');
       }
+
+      // ---- Convert dari file PDF ----
+      document.getElementById('goPdf').addEventListener('click', function () {
+        var btn = this;
+        var statusEl = document.getElementById('statusPdf');
+        var fileInput = document.getElementById('pdfFile');
+        var file = fileInput.files && fileInput.files[0];
+        if (!file) {
+          statusEl.innerHTML = '<span class="err">Pilih file PDF F2 dulu.</span>';
+          return;
+        }
+
+        btn.disabled = true;
+        statusEl.textContent = 'Membaca file...';
+
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          var base64 = e.target.result.split(',')[1];
+          statusEl.textContent = 'Mengonversi PDF & memproses...';
+          google.script.run
+            .withSuccessHandler(function (res) {
+              btn.disabled = false;
+              renderResult(res, statusEl);
+            })
+            .withFailureHandler(function (err) {
+              btn.disabled = false;
+              statusEl.innerHTML = '<span class="err">Error: ' + err.message + '</span>';
+            })
+            .processF2Pdf(base64, file.name, file.type || 'application/pdf');
+        };
+        reader.onerror = function () {
+          btn.disabled = false;
+          statusEl.innerHTML = '<span class="err">Gagal membaca file di browser.</span>';
+        };
+        reader.readAsDataURL(file);
+      });
+
+      // ---- Proses teks manual (fallback) ----
+      document.getElementById('goText').addEventListener('click', function () {
+        var btn = this;
+        var statusEl = document.getElementById('statusText');
+        var text = document.getElementById('raw').value;
+        if (!text.trim()) {
+          statusEl.innerHTML = '<span class="err">Tempel dulu teks tagihan F2-nya.</span>';
+          return;
+        }
+        btn.disabled = true;
+        statusEl.textContent = 'Memproses...';
+        google.script.run
+          .withSuccessHandler(function (res) {
+            btn.disabled = false;
+            renderResult(res, statusEl);
+          })
+          .withFailureHandler(function (err) {
+            btn.disabled = false;
+            statusEl.innerHTML = '<span class="err">Error: ' + err.message + '</span>';
+          })
+          .processF2Text(text);
+      });
     </script>
   </body>
 </html>
