@@ -113,6 +113,52 @@ export interface InvoiceDataset {
   catatan: string[];
 }
 
+export interface GajiLokasi {
+  no: number | null;
+  lokasi: string;
+  picGaji: string | null;
+  linkGajiPic: string | null;
+  cek: boolean | null;
+  bank: string | null;
+  rab: number | null;
+  gaji: number | null;
+  diterimaKaryawan: number | null;
+  bpjsKes: number | null;
+  bpjsTk: number | null;
+  payroll: number | null;
+  keterangan: string | null;
+}
+
+export interface GajiBank {
+  bank: string;
+  totalLokasi: number;
+  totalGaji: number;
+}
+
+export interface GajiBulan {
+  code: string;
+  label: string;
+  lokasi: GajiLokasi[];
+  totalLokasi: number;
+  totalCek: number;
+  pctCek: number | null;
+  totalSesuai: number;
+  pctSesuai: number | null;
+  totalGaji: number;
+  totalDiterimaKaryawan: number;
+  totalBpjsKes: number;
+  totalBpjsTk: number;
+  totalPayroll: number;
+  perBank: GajiBank[];
+}
+
+export interface GajiDataset {
+  generatedAt: string;
+  sourceFile: string | null;
+  tersedia: boolean;
+  bulanan: GajiBulan[];
+}
+
 export interface Dataset {
   generatedAt: string;
   sourceFile: string;
@@ -127,4 +173,5 @@ export interface Dataset {
   rataJamKerjaKeseluruhan: number | null;
   rentangTanggal: { mulai: string | null; akhir: string | null };
   invoice: InvoiceDataset;
+  gaji: GajiDataset;
 }

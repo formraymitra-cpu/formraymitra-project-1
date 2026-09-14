@@ -8,6 +8,7 @@ import RekapBulanan from "./pages/RekapBulanan";
 import MonitoringHarian from "./pages/MonitoringHarian";
 import Dokumentasi from "./pages/Dokumentasi";
 import Invoice from "./pages/Invoice";
+import Gaji from "./pages/Gaji";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -20,6 +21,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="/monitoring-harian" element={<MonitoringHarian />} />
           <Route path="/dokumentasi" element={<Dokumentasi />} />
           <Route path="/invoice" element={<Invoice />} />
+          <Route path="/gaji" element={<Gaji />} />
         </Route>
       </Routes>
     </HashRouter>

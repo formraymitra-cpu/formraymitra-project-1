@@ -70,6 +70,38 @@ acara sekaligus. Kalau sheet bulan tertentu belum punya kolom-kolom ini
 (misalnya bulan-bulan sebelum fitur ini mulai dipakai), panel detailnya
 otomatis menampilkan keterangan bahwa datanya belum ada — tidak error.
 
+## Menghubungkan submenu Cek Gaji
+
+Submenu **Cek Gaji** (rekap pengecekan gaji karyawan per lokasi per bulan —
+dari sheet bulanan bernama polos per bulan, mis. "AGUSTUS") baca dari
+spreadsheet **terpisah** lagi, "CEK GAJI OTOMATIS". Supaya submenu ini aktif:
+
+1. Buka spreadsheet "CEK GAJI OTOMATIS" di Google Sheets.
+2. Copy ID-nya dari URL — bagian antara `/d/` dan `/edit`.
+3. Di editor Apps Script (yang terhubung ke spreadsheet jurnal harian), buka `Code.gs`, cari baris:
+   ```js
+   var GAJI_SPREADSHEET_ID = "";
+   ```
+   isi di antara tanda kutip dengan ID yang tadi di-copy.
+4. **Deploy → Manage deployments → Edit (pensil) → Deploy** supaya perubahan ini ikut live.
+5. Buka dashboard lagi — submenu Cek Gaji sekarang menampilkan data asli, bukan pesan "belum terhubung".
+
+Selama `GAJI_SPREADSHEET_ID` masih kosong, submenu Cek Gaji tetap muncul
+di dashboard tapi menampilkan pesan bahwa belum terhubung — dashboard yang
+lain tidak terpengaruh sama sekali.
+
+Sheet bulan di spreadsheet Cek Gaji dinamai polos per bulan (`JUNI`, `JULI`,
+`AGUSTUS`, dst — tanpa tahun) dan otomatis terbaca semuanya, tambah bulan
+baru juga tidak perlu ubah kode. Semua kolom (NO, NAMA LOKASI, PIC GAJI,
+LINK GAJI PIC, CEK, BANK, RAB, GAJI, DITERIMA KARYAWAN, BPJS KES, BPJS TK,
+PAYROLL, KETERANGAN) dicari lewat nama header di baris 4, jadi tahan kalau
+kolomnya digeser — dan kolom bantu yang sengaja disembunyikan di
+spreadsheet ("NAMA REKAP GAJI", "KOLOM GAJI", "KOLOM DITERIMA KARYAWAN")
+otomatis dilewati, tidak ikut ditampilkan di dashboard. Sheet bulan yang
+formatnya belum selengkap "AGUSTUS" (mis. sheet-sheet lebih lama yang belum
+punya kolom BANK/RAB/BPJS/PAYROLL/KETERANGAN) otomatis tampil dengan
+kolom-kolom itu kosong ("—"), tanpa error.
+
 ## Menambah bulan baru
 
 Karena `Code.gs` membaca semua sheet yang namanya cocok dengan nama bulan

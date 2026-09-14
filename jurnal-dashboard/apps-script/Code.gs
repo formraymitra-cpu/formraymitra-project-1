@@ -43,6 +43,14 @@ var PLACEHOLDER_TASK = "(TIDAK ADA DATA)";
  */
 var INVOICE_SPREADSHEET_ID = "";
 
+/**
+ * ID spreadsheet "CEK GAJI OTOMATIS" (submenu Cek Gaji di dashboard).
+ * Buka spreadsheet-nya di Google Sheets, copy ID dari URL-nya (bagian
+ * antara /d/ dan /edit), lalu isi di sini. Kalau dikosongkan, submenu Cek
+ * Gaji tetap muncul tapi menampilkan pesan "belum terhubung".
+ */
+var GAJI_SPREADSHEET_ID = "";
+
 function parseHHMM(s) {
   if (!s || typeof s !== "string" || s.indexOf(":") === -1) return null;
   var parts = s.split(":");
@@ -435,6 +443,137 @@ function parseDokumenSheet(sheet, code, label) {
   };
 }
 
+function parseNumber(v) {
+  if (v === null || v === undefined || v === "") return null;
+  if (typeof v === "number") return Math.round(v);
+  return parseRupiah(String(v));
+}
+
+function parseBool(v) {
+  return typeof v === "boolean" ? v : null;
+}
+
+/**
+ * Baca satu sheet bulan "CEK GAJI OTOMATIS" (mis. "AGUSTUS"): header di
+ * baris 4, data mulai baris 5. Format sheet "AGUSTUS" dipakai sebagai
+ * standar (paling lengkap kolomnya) — semua kolom dicari lewat nama header,
+ * jadi sheet bulan lain yang belum punya kolom BANK/RAB/BPJS/PAYROLL/
+ * KETERANGAN (mis. JUNI, JULI) otomatis null tanpa error. Kolom bantu
+ * "NAMA REKAP GAJI", "KOLOM GAJI", "KOLOM DITERIMA KARYAWAN" sengaja
+ * dilewati (tidak dicari/ditampilkan) karena cuma referensi internal rumus.
+ */
+function parseGajiSheet(sheet, code, label) {
+  var header = sheet.getRange(4, 1, 1, 30).getValues()[0];
+  var noIdx = findCol(header, "NO");
+  var lokasiIdx = findCol(header, "NAMA LOKASI");
+  var picIdx = findCol(header, "PIC GAJI");
+  var linkIdx = findCol(header, "LINK GAJI PIC");
+  var cekIdx = findCol(header, "CEK");
+  var bankIdx = findCol(header, "BANK");
+  var rabIdx = findCol(header, "RAB");
+  var gajiIdx = findCol(header, "GAJI");
+  var diterimaIdx = findCol(header, "DITERIMA KARYAWAN");
+  var bpjsKesIdx = findCol(header, "BPJS KES");
+  var bpjsTkIdx = findCol(header, "BPJS TK");
+  var payrollIdx = findCol(header, "PAYROLL");
+  var keteranganIdx = findCol(header, "KETERANGAN");
+
+  var lokasiList = [];
+  var lastRow = sheet.getLastRow();
+  for (var r = 5; r <= lastRow; r++) {
+    var row = sheet.getRange(r, 1, 1, 30).getValues()[0];
+    var lokasi = lokasiIdx !== null ? row[lokasiIdx] : null;
+    if (!lokasi) break;
+    var noVal = noIdx !== null ? row[noIdx] : null;
+    lokasiList.push({
+      no: typeof noVal === "number" ? noVal : null,
+      lokasi: cleanStr(lokasi),
+      picGaji: picIdx !== null ? cellDisplay(row[picIdx]) : null,
+      linkGajiPic: linkIdx !== null ? cellDisplay(row[linkIdx]) : null,
+      cek: cekIdx !== null ? parseBool(row[cekIdx]) : null,
+      bank: bankIdx !== null ? cellDisplay(row[bankIdx]) : null,
+      rab: rabIdx !== null ? parseNumber(row[rabIdx]) : null,
+      gaji: gajiIdx !== null ? parseNumber(row[gajiIdx]) : null,
+      diterimaKaryawan: diterimaIdx !== null ? parseNumber(row[diterimaIdx]) : null,
+      bpjsKes: bpjsKesIdx !== null ? parseNumber(row[bpjsKesIdx]) : null,
+      bpjsTk: bpjsTkIdx !== null ? parseNumber(row[bpjsTkIdx]) : null,
+      payroll: payrollIdx !== null ? parseNumber(row[payrollIdx]) : null,
+      keterangan: keteranganIdx !== null ? cellDisplay(row[keteranganIdx]) : null,
+    });
+  }
+
+  var bankMap = {};
+  lokasiList.forEach(function (l) {
+    if (!l.bank) return;
+    if (!bankMap[l.bank]) bankMap[l.bank] = { bank: l.bank, totalLokasi: 0, totalGaji: 0 };
+    bankMap[l.bank].totalLokasi += 1;
+    bankMap[l.bank].totalGaji += l.gaji || 0;
+  });
+  var perBank = Object.keys(bankMap).map(function (k) { return bankMap[k]; }).sort(function (a, b) { return b.totalGaji - a.totalGaji; });
+
+  var totalCek = lokasiList.filter(function (l) { return l.cek === true; }).length;
+  var ketKnown = lokasiList.filter(function (l) { return l.keterangan; });
+  var totalSesuai = ketKnown.filter(function (l) { return l.keterangan.toUpperCase() === "SESUAI"; }).length;
+
+  return {
+    code: code,
+    label: label,
+    lokasi: lokasiList,
+    totalLokasi: lokasiList.length,
+    totalCek: totalCek,
+    pctCek: lokasiList.length ? Math.round((totalCek / lokasiList.length) * 10000) / 10000 : null,
+    totalSesuai: totalSesuai,
+    pctSesuai: ketKnown.length ? Math.round((totalSesuai / ketKnown.length) * 10000) / 10000 : null,
+    totalGaji: lokasiList.reduce(function (s, l) { return s + (l.gaji || 0); }, 0),
+    totalDiterimaKaryawan: lokasiList.reduce(function (s, l) { return s + (l.diterimaKaryawan || 0); }, 0),
+    totalBpjsKes: lokasiList.reduce(function (s, l) { return s + (l.bpjsKes || 0); }, 0),
+    totalBpjsTk: lokasiList.reduce(function (s, l) { return s + (l.bpjsTk || 0); }, 0),
+    totalPayroll: lokasiList.reduce(function (s, l) { return s + (l.payroll || 0); }, 0),
+    perBank: perBank,
+  };
+}
+
+function emptyGajiDataset() {
+  return {
+    generatedAt: new Date().toISOString(),
+    sourceFile: null,
+    tersedia: false,
+    bulanan: [],
+  };
+}
+
+/**
+ * Bangun dataset submenu Cek Gaji dari spreadsheet TERPISAH "CEK GAJI
+ * OTOMATIS" (diidentifikasi lewat GAJI_SPREADSHEET_ID di atas). Sheet-nya
+ * dinamai polos per bulan (JUNI, JULI, AGUSTUS, ...) tanpa tahun.
+ */
+function buildGajiDataset() {
+  if (!GAJI_SPREADSHEET_ID) return emptyGajiDataset();
+
+  var ss;
+  try {
+    ss = SpreadsheetApp.openById(GAJI_SPREADSHEET_ID);
+  } catch (e) {
+    return emptyGajiDataset();
+  }
+
+  var bulanan = [];
+  ss.getSheets().forEach(function (sheet) {
+    var monthNum = MONTH_NUM_UPPER[sheet.getName().trim().toUpperCase()];
+    if (!monthNum) return;
+    var mm = monthNum < 10 ? "0" + monthNum : String(monthNum);
+    bulanan.push(parseGajiSheet(sheet, mm, MONTH_LABEL_ID[monthNum] + " 2026"));
+  });
+  bulanan.sort(function (a, b) { return a.code < b.code ? -1 : a.code > b.code ? 1 : 0; });
+
+  return {
+    generatedAt: new Date().toISOString(),
+    sourceFile: ss.getName(),
+    tersedia: true,
+    bulanan: bulanan,
+  };
+}
+
 function emptyInvoiceDataset() {
   return {
     generatedAt: new Date().toISOString(),
@@ -544,6 +683,7 @@ function buildDataset() {
       akhir: tanggalList.length ? tanggalList[tanggalList.length - 1] : null,
     },
     invoice: buildInvoiceDataset(),
+    gaji: buildGajiDataset(),
   };
 }
 

@@ -10,10 +10,14 @@ Jumlah foto per tanggal dihitung otomatis dari header sheet galeri
 sheet data — jadi selalu sinkron dengan isi galeri yang sebenarnya.
 
 Jalankan ulang setiap kali ada bulan baru digabungkan:
-    python3 scripts/build-data.py <path-ke-jurnal.xlsx> [path-ke-invoice.xlsx]
+    python3 scripts/build-data.py <path-ke-jurnal.xlsx> [path-ke-invoice.xlsx] [path-ke-cek-gaji.xlsx]
 
 Argumen kedua (opsional) adalah workbook "MONITORING INVOICE DINI" — kalau
 diisi, hasilnya digabung sebagai key "invoice" di dataset yang sama.
+
+Argumen ketiga (opsional) adalah workbook "CEK GAJI OTOMATIS" (satu sheet per
+bulan: JUNI, JULI, AGUSTUS, dst — header di baris 4, data mulai baris 5) —
+kalau diisi, hasilnya digabung sebagai key "gaji".
 """
 import json
 import re
@@ -447,9 +451,121 @@ def build_invoice_dataset(invoice_src):
     }
 
 
+def parse_number(v):
+    if v is None or v == "":
+        return None
+    if isinstance(v, (int, float)):
+        return int(round(v))
+    return parse_rupiah(str(v))
+
+
+def parse_bool(v):
+    return v if isinstance(v, bool) else None
+
+
+def parse_gaji_sheet(ws, code, label):
+    header = [ws.cell(4, c).value for c in range(1, 30)]
+    no_idx = find_col(header, "NO")
+    lokasi_idx = find_col(header, "NAMA LOKASI")
+    pic_idx = find_col(header, "PIC GAJI")
+    link_idx = find_col(header, "LINK GAJI PIC")
+    cek_idx = find_col(header, "CEK")
+    bank_idx = find_col(header, "BANK")
+    rab_idx = find_col(header, "RAB")
+    gaji_idx = find_col(header, "GAJI")
+    diterima_idx = find_col(header, "DITERIMA KARYAWAN")
+    bpjs_kes_idx = find_col(header, "BPJS KES")
+    bpjs_tk_idx = find_col(header, "BPJS TK")
+    payroll_idx = find_col(header, "PAYROLL")
+    keterangan_idx = find_col(header, "KETERANGAN")
+
+    lokasi_list = []
+    r = 5
+    while True:
+        lokasi = cell_at(ws, r, lokasi_idx) if lokasi_idx is not None else None
+        if not lokasi:
+            break
+        no_val = cell_at(ws, r, no_idx)
+        lokasi_list.append({
+            "no": int(no_val) if isinstance(no_val, (int, float)) else None,
+            "lokasi": str(lokasi).strip(),
+            "picGaji": cell_display(cell_at(ws, r, pic_idx)),
+            "linkGajiPic": cell_display(cell_at(ws, r, link_idx)),
+            "cek": parse_bool(cell_at(ws, r, cek_idx)),
+            "bank": cell_display(cell_at(ws, r, bank_idx)),
+            "rab": parse_number(cell_at(ws, r, rab_idx)),
+            "gaji": parse_number(cell_at(ws, r, gaji_idx)),
+            "diterimaKaryawan": parse_number(cell_at(ws, r, diterima_idx)),
+            "bpjsKes": parse_number(cell_at(ws, r, bpjs_kes_idx)),
+            "bpjsTk": parse_number(cell_at(ws, r, bpjs_tk_idx)),
+            "payroll": parse_number(cell_at(ws, r, payroll_idx)),
+            "keterangan": cell_display(cell_at(ws, r, keterangan_idx)),
+        })
+        r += 1
+
+    bank_map = {}
+    for l in lokasi_list:
+        if not l["bank"]:
+            continue
+        b = bank_map.setdefault(l["bank"], {"bank": l["bank"], "totalLokasi": 0, "totalGaji": 0})
+        b["totalLokasi"] += 1
+        b["totalGaji"] += l["gaji"] or 0
+    per_bank = sorted(bank_map.values(), key=lambda x: -x["totalGaji"])
+
+    total_cek = sum(1 for l in lokasi_list if l["cek"] is True)
+    ket_known = [l for l in lokasi_list if l["keterangan"]]
+    total_sesuai = sum(1 for l in ket_known if l["keterangan"].upper() == "SESUAI")
+
+    return {
+        "code": code,
+        "label": label,
+        "lokasi": lokasi_list,
+        "totalLokasi": len(lokasi_list),
+        "totalCek": total_cek,
+        "pctCek": round(total_cek / len(lokasi_list), 4) if lokasi_list else None,
+        "totalSesuai": total_sesuai,
+        "pctSesuai": round(total_sesuai / len(ket_known), 4) if ket_known else None,
+        "totalGaji": sum(l["gaji"] or 0 for l in lokasi_list),
+        "totalDiterimaKaryawan": sum(l["diterimaKaryawan"] or 0 for l in lokasi_list),
+        "totalBpjsKes": sum(l["bpjsKes"] or 0 for l in lokasi_list),
+        "totalBpjsTk": sum(l["bpjsTk"] or 0 for l in lokasi_list),
+        "totalPayroll": sum(l["payroll"] or 0 for l in lokasi_list),
+        "perBank": per_bank,
+    }
+
+
+def build_gaji_dataset(gaji_src):
+    empty = {
+        "generatedAt": datetime.now().isoformat(timespec="seconds"),
+        "sourceFile": None,
+        "tersedia": False,
+        "bulanan": [],
+    }
+    if not gaji_src:
+        return empty
+
+    wb = openpyxl.load_workbook(gaji_src, data_only=True)
+    bulanan = []
+    for sn in wb.sheetnames:
+        month_num = MONTH_NUM_ID.get(sn.strip().upper())
+        if not month_num:
+            continue
+        code = f"{month_num:02d}"
+        bulanan.append(parse_gaji_sheet(wb[sn], code, f"{MONTH_LABEL_ID[month_num]} 2026"))
+    bulanan.sort(key=lambda b: b["code"])
+
+    return {
+        "generatedAt": datetime.now().isoformat(timespec="seconds"),
+        "sourceFile": gaji_src.split("/")[-1],
+        "tersedia": True,
+        "bulanan": bulanan,
+    }
+
+
 def main():
     src = sys.argv[1] if len(sys.argv) > 1 else "JURNAL HARIAN DINI SAFFANAH 2026.xlsx"
     invoice_src = sys.argv[2] if len(sys.argv) > 2 else None
+    gaji_src = sys.argv[3] if len(sys.argv) > 3 else None
     wb = openpyxl.load_workbook(src, data_only=True)
     foto_count_map = build_foto_count_map(wb)
 
@@ -470,6 +586,7 @@ def main():
     tanggal_list = [d["tanggal"] for d in days]
 
     invoice = build_invoice_dataset(invoice_src)
+    gaji = build_gaji_dataset(gaji_src)
 
     dataset = {
         "generatedAt": datetime.now().isoformat(timespec="seconds"),
@@ -488,6 +605,7 @@ def main():
             "akhir": max(tanggal_list) if tanggal_list else None,
         },
         "invoice": invoice,
+        "gaji": gaji,
     }
 
     out_path = "src/data/jurnal-data.json"
@@ -499,6 +617,8 @@ def main():
     print(f"  total tugas: {total_tugas} (selesai {total_selesai})")
     if invoice["tersedia"]:
         print(f"  invoice: {invoice['totalLokasiTagihan']} lokasi tagihan, {len(invoice['dokumenBulanan'])} bulan dokumen")
+    if gaji["tersedia"]:
+        print(f"  gaji: {len(gaji['bulanan'])} bulan")
 
 
 if __name__ == "__main__":
