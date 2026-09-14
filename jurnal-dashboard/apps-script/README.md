@@ -56,6 +56,20 @@ dengan baris terpisah (Alt+Enter di Google Sheets) — baris ke-1 di BAGIAN
 KERJA dipasangkan dengan baris ke-1 di NOMINAL TAGIHAN, dst. NOMINAL TAGIHAN
 boleh angka polos atau teks seperti "Rp. 6.577.423".
 
+Kolom **BAPP**, **BAST**, **BAP** (nomor + tanggal), **NO INVOICE DAN
+KWITANSI**, serta blok **Kontrak & Surat Pesanan** (No SP, Tanggal SP, Lama
+Kontrak, Periode Kontrak, Termin, Metode, Nomor/Status, Link Nomor) juga
+otomatis kebaca lewat nama header — semuanya dicari mulai SETELAH kolom
+TANGGAL KIRIM (karena "BAPP"/"BAST"/"BAP" juga dipakai sebagai nama kolom
+checklist boolean di awal sheet). Di dashboard, kolom-kolom ini tampil
+sebagai panel detail per lokasi — klik tombol **"Lihat"** di tabel
+"Kelengkapan Dokumen & Tagihan per Lokasi" untuk membukanya. Sel boleh diisi
+tanggal asli maupun teks yang diketik manual (mis. "29 Juni 2026"), dan
+boleh multi-baris (Alt+Enter) kalau satu lokasi punya beberapa SP/berita
+acara sekaligus. Kalau sheet bulan tertentu belum punya kolom-kolom ini
+(misalnya bulan-bulan sebelum fitur ini mulai dipakai), panel detailnya
+otomatis menampilkan keterangan bahwa datanya belum ada — tidak error.
+
 ## Menambah bulan baru
 
 Karena `Code.gs` membaca semua sheet yang namanya cocok dengan nama bulan

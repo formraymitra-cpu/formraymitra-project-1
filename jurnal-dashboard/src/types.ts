@@ -59,6 +59,22 @@ export interface BagianNominal {
   nominal: number | null;
 }
 
+export interface BeritaAcara {
+  nomor: string | null;
+  tanggal: string | null;
+}
+
+export interface KontrakInfo {
+  noSp: string | null;
+  tanggalSp: string | null;
+  lamaKontrak: string | null;
+  periodeKontrak: string | null;
+  termin: string | null;
+  metode: string | null;
+  statusNomor: string | null;
+  linkNomor: string | null;
+}
+
 export interface DokumenLokasiBulan {
   lokasi: string;
   dokumen: Record<string, boolean>;
@@ -68,6 +84,11 @@ export interface DokumenLokasiBulan {
   pctLengkap: number | null;
   tagihan: BagianNominal[];
   totalNominal: number;
+  noInvoiceKwitansi: string | null;
+  bapp: BeritaAcara;
+  bast: BeritaAcara;
+  bap: BeritaAcara;
+  kontrak: KontrakInfo;
 }
 
 export interface DokumenBulan {

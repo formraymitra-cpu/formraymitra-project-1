@@ -274,16 +274,34 @@ function tagihanBulanEntry(bulan, nominal, ket, status) {
 
 /**
  * Cari index (0-based) kolom header yang cocok persis (case-insensitive)
- * dengan `name`. Dipakai supaya posisi kolom TANGGAL KIRIM/BAGIAN KERJA/
- * NOMINAL TAGIHAN tidak perlu di-hardcode — tetap kebaca walau user
- * menyisipkan kolom baru di antaranya.
+ * dengan `name`, mulai dari index `start`. Dipakai supaya posisi kolom
+ * tidak perlu di-hardcode — tetap kebaca walau user menyisipkan/menggeser
+ * kolom. `start` dipakai untuk header yang muncul dua kali (mis. "BAPP"
+ * sebagai checklist boolean di awal, lalu "BAPP" lagi sebagai nomor berita
+ * acara belakangan) supaya ambil kemunculan yang benar.
  */
-function findCol(header, name) {
+function findCol(header, name, start) {
   var nameUp = name.trim().toUpperCase();
-  for (var i = 0; i < header.length; i++) {
+  for (var i = start || 0; i < header.length; i++) {
     if (typeof header[i] === "string" && header[i].trim().toUpperCase() === nameUp) return i;
   }
   return null;
+}
+
+/**
+ * Sebagian sel kontrak/SP diisi tanggal asli, sebagian lagi diketik manual
+ * sebagai teks ("29 Juni 2026") dan bisa multi-baris kalau satu lokasi
+ * punya beberapa SP/BAPP sekaligus. Fungsi ini menyeragamkan keduanya jadi
+ * satu string siap-tampil (bukan ISO date, karena sumbernya campur teks &
+ * tanggal).
+ */
+function cellDisplay(v) {
+  if (v === null || v === undefined || v === "") return null;
+  if (Object.prototype.toString.call(v) === "[object Date]" && !isNaN(v.getTime())) {
+    return v.getDate() + " " + MONTH_LABEL_ID[v.getMonth() + 1] + " " + v.getFullYear();
+  }
+  var s = String(v).trim();
+  return s || null;
 }
 
 function splitLines(v) {
@@ -327,16 +345,36 @@ function parseBagianNominal(bagianVal, nominalVal) {
  * checklist). BAGIAN KERJA & NOMINAL TAGIHAN juga dicari lewat nama header.
  */
 function parseDokumenSheet(sheet, code, label) {
-  var header = sheet.getRange(4, 1, 1, 40).getValues()[0];
+  var header = sheet.getRange(4, 1, 1, 55).getValues()[0];
   var tglKirimIdx = findCol(header, "TANGGAL KIRIM");
   var bagianIdx = findCol(header, "BAGIAN KERJA");
   var nominalIdx = findCol(header, "NOMINAL TAGIHAN");
   var jenisDokumen = (tglKirimIdx !== null ? header.slice(3, tglKirimIdx) : header.slice(3, 18)).filter(function (h) { return h; });
 
+  // Kolom detail kontrak/berita acara (baru dipakai mulai Agustus 2026) —
+  // dicari mulai SETELAH TANGGAL KIRIM, karena "BAPP"/"BAST"/"BAP" juga
+  // jadi nama kolom checklist boolean di awal sheet.
+  var searchFrom = tglKirimIdx !== null ? tglKirimIdx + 1 : 0;
+  var bappIdx = findCol(header, "BAPP", searchFrom);
+  var tglBappIdx = findCol(header, "TANGGAL BAPP", searchFrom);
+  var bastIdx = findCol(header, "BAST", searchFrom);
+  var tglBastIdx = findCol(header, "TANGGAL BAST", searchFrom);
+  var bapIdx = findCol(header, "BAP", searchFrom);
+  var tglBapIdx = findCol(header, "TANGGAL BAP", searchFrom);
+  var noInvIdx = findCol(header, "NO INVOICE DAN KWITANSI", searchFrom);
+  var noSpIdx = findCol(header, "No SP", searchFrom);
+  var tglSpIdx = findCol(header, "Tanggal SP", searchFrom);
+  var lamaKontrakIdx = findCol(header, "LAMA KONTRAK", searchFrom);
+  var periodeKontrakIdx = findCol(header, "PERIODE KONTRAK", searchFrom);
+  var terminIdx = findCol(header, "TERMIN", searchFrom);
+  var metodeIdx = findCol(header, "METODE", searchFrom);
+  var nomorIdx = findCol(header, "NOMOR", searchFrom);
+  var linkNomorIdx = findCol(header, "LINK NOMOR", searchFrom);
+
   var lokasiList = [];
   var lastRow = sheet.getLastRow();
   for (var r = 5; r <= lastRow; r++) {
-    var row = sheet.getRange(r, 1, 1, 40).getValues()[0];
+    var row = sheet.getRange(r, 1, 1, 55).getValues()[0];
     var lokasi = row[1];
     if (!lokasi) break;
     var dokumen = {};
@@ -360,6 +398,29 @@ function parseDokumenSheet(sheet, code, label) {
       pctLengkap: jenisDokumen.length ? Math.round((lengkap / jenisDokumen.length) * 10000) / 10000 : null,
       tagihan: tagihan,
       totalNominal: totalNominalLokasi,
+      noInvoiceKwitansi: noInvIdx !== null ? cellDisplay(row[noInvIdx]) : null,
+      bapp: {
+        nomor: bappIdx !== null ? cellDisplay(row[bappIdx]) : null,
+        tanggal: tglBappIdx !== null ? cellDisplay(row[tglBappIdx]) : null,
+      },
+      bast: {
+        nomor: bastIdx !== null ? cellDisplay(row[bastIdx]) : null,
+        tanggal: tglBastIdx !== null ? cellDisplay(row[tglBastIdx]) : null,
+      },
+      bap: {
+        nomor: bapIdx !== null ? cellDisplay(row[bapIdx]) : null,
+        tanggal: tglBapIdx !== null ? cellDisplay(row[tglBapIdx]) : null,
+      },
+      kontrak: {
+        noSp: noSpIdx !== null ? cellDisplay(row[noSpIdx]) : null,
+        tanggalSp: tglSpIdx !== null ? cellDisplay(row[tglSpIdx]) : null,
+        lamaKontrak: lamaKontrakIdx !== null ? cellDisplay(row[lamaKontrakIdx]) : null,
+        periodeKontrak: periodeKontrakIdx !== null ? cellDisplay(row[periodeKontrakIdx]) : null,
+        termin: terminIdx !== null ? cellDisplay(row[terminIdx]) : null,
+        metode: metodeIdx !== null ? cellDisplay(row[metodeIdx]) : null,
+        statusNomor: nomorIdx !== null ? cellDisplay(row[nomorIdx]) : null,
+        linkNomor: linkNomorIdx !== null ? cellDisplay(row[linkNomorIdx]) : null,
+      },
     });
   }
 

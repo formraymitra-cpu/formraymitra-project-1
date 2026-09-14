@@ -39,6 +39,20 @@ def iso(v):
     return None
 
 
+def cell_display(v):
+    """Sebagian sel kontrak/SP diisi tanggal Excel asli, sebagian lagi
+    diketik manual sebagai teks ("29 Juni 2026") dan bisa multi-baris kalau
+    satu lokasi punya beberapa SP/BAPP sekaligus. Fungsi ini menyeragamkan
+    keduanya jadi satu string siap-tampil (bukan ISO date, karena sumbernya
+    campur teks & tanggal)."""
+    if v is None or v == "":
+        return None
+    if isinstance(v, (datetime, date)):
+        return f"{v.day} {MONTH_LABEL_ID[v.month]} {v.year}"
+    s = str(v).strip()
+    return s if s else None
+
+
 def parse_hhmm(s):
     if not s or not isinstance(s, str) or ":" not in s:
         return None
@@ -246,13 +260,16 @@ def parse_tagihan_sheet(ws):
     return tagihan, notes
 
 
-def find_col(header, name):
+def find_col(header, name, start=0):
     """Cari index (0-based) kolom header yang cocok persis (case-insensitive)
-    dengan `name`. Dipakai supaya posisi kolom TANGGAL KIRIM/BAGIAN KERJA/
-    NOMINAL TAGIHAN tidak perlu di-hardcode — tetap kebaca walau user
-    menyisipkan kolom baru di antaranya."""
+    dengan `name`, mulai dari index `start`. Dipakai supaya posisi kolom
+    tidak perlu di-hardcode — tetap kebaca walau user menyisipkan/menggeser
+    kolom. `start` dipakai untuk header yang muncul dua kali (mis. "BAPP"
+    sebagai checklist boolean di awal, lalu "BAPP" lagi sebagai nomor berita
+    acara belakangan) supaya ambil kemunculan yang benar."""
     name_up = name.strip().upper()
-    for i, v in enumerate(header):
+    for i in range(start, len(header)):
+        v = header[i]
         if isinstance(v, str) and v.strip().upper() == name_up:
             return i
     return None
@@ -290,12 +307,39 @@ def parse_bagian_nominal(bagian_val, nominal_val):
     return pairs
 
 
+def cell_at(ws, r, idx):
+    """idx 0-based (hasil find_col) -> baca sel di baris r, atau None kalau
+    kolomnya tidak ditemukan di sheet ini (mis. bulan Juni belum punya blok
+    kontrak/SP)."""
+    return ws.cell(r, idx + 1).value if idx is not None else None
+
+
 def parse_dokumen_sheet(ws, code, label):
-    header = [ws.cell(4, c).value for c in range(1, 40)]
+    header = [ws.cell(4, c).value for c in range(1, 55)]
     tgl_kirim_idx = find_col(header, "TANGGAL KIRIM")
     bagian_idx = find_col(header, "BAGIAN KERJA")
     nominal_idx = find_col(header, "NOMINAL TAGIHAN")
     jenis_dokumen = [h for h in header[3:tgl_kirim_idx] if h] if tgl_kirim_idx is not None else [h for h in header[3:18] if h]
+
+    # Kolom detail kontrak/berita acara (baru dipakai mulai Agustus 2026) —
+    # dicari mulai SETELAH TANGGAL KIRIM, karena "BAPP"/"BAST"/"BAP" juga
+    # jadi nama kolom checklist boolean di awal sheet.
+    search_from = (tgl_kirim_idx + 1) if tgl_kirim_idx is not None else 0
+    bapp_idx = find_col(header, "BAPP", search_from)
+    tgl_bapp_idx = find_col(header, "TANGGAL BAPP", search_from)
+    bast_idx = find_col(header, "BAST", search_from)
+    tgl_bast_idx = find_col(header, "TANGGAL BAST", search_from)
+    bap_idx = find_col(header, "BAP", search_from)
+    tgl_bap_idx = find_col(header, "TANGGAL BAP", search_from)
+    no_inv_idx = find_col(header, "NO INVOICE DAN KWITANSI", search_from)
+    no_sp_idx = find_col(header, "No SP", search_from)
+    tgl_sp_idx = find_col(header, "Tanggal SP", search_from)
+    lama_kontrak_idx = find_col(header, "LAMA KONTRAK", search_from)
+    periode_kontrak_idx = find_col(header, "PERIODE KONTRAK", search_from)
+    termin_idx = find_col(header, "TERMIN", search_from)
+    metode_idx = find_col(header, "METODE", search_from)
+    nomor_idx = find_col(header, "NOMOR", search_from)
+    link_nomor_idx = find_col(header, "LINK NOMOR", search_from)
 
     lokasi_list = []
     r = 5
@@ -324,6 +368,20 @@ def parse_dokumen_sheet(ws, code, label):
             "pctLengkap": round(lengkap / len(jenis_dokumen), 4) if jenis_dokumen else None,
             "tagihan": tagihan,
             "totalNominal": sum(p["nominal"] for p in tagihan if p["nominal"]),
+            "noInvoiceKwitansi": cell_display(cell_at(ws, r, no_inv_idx)),
+            "bapp": {"nomor": cell_display(cell_at(ws, r, bapp_idx)), "tanggal": cell_display(cell_at(ws, r, tgl_bapp_idx))},
+            "bast": {"nomor": cell_display(cell_at(ws, r, bast_idx)), "tanggal": cell_display(cell_at(ws, r, tgl_bast_idx))},
+            "bap": {"nomor": cell_display(cell_at(ws, r, bap_idx)), "tanggal": cell_display(cell_at(ws, r, tgl_bap_idx))},
+            "kontrak": {
+                "noSp": cell_display(cell_at(ws, r, no_sp_idx)),
+                "tanggalSp": cell_display(cell_at(ws, r, tgl_sp_idx)),
+                "lamaKontrak": cell_display(cell_at(ws, r, lama_kontrak_idx)),
+                "periodeKontrak": cell_display(cell_at(ws, r, periode_kontrak_idx)),
+                "termin": cell_display(cell_at(ws, r, termin_idx)),
+                "metode": cell_display(cell_at(ws, r, metode_idx)),
+                "statusNomor": cell_display(cell_at(ws, r, nomor_idx)),
+                "linkNomor": cell_display(cell_at(ws, r, link_nomor_idx)),
+            },
         })
         r += 1
 

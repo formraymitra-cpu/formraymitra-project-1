@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-14T03:29:49",
+  "generatedAt": "2026-09-14T03:52:05",
   "sourceFile": "JURNAL HARIAN DINI SAFFANAH 2026.xlsx",
   "months": [
     {
@@ -4784,8 +4784,8 @@
     "akhir": "2026-09-09"
   },
   "invoice": {
-    "generatedAt": "2026-09-14T03:29:49",
-    "sourceFile": "69b0a8d4-MONITORING_INVOICE_DINI_1.xlsx",
+    "generatedAt": "2026-09-14T03:52:05",
+    "sourceFile": "722a54a2-MONITORING_INVOICE_DINI_1.xlsx",
     "tersedia": true,
     "tagihan": [],
     "totalLokasiTagihan": 0,
@@ -4836,7 +4836,30 @@
             "dokumenLengkap": 14,
             "pctLengkap": 1.0,
             "tagihan": [],
-            "totalNominal": 0
+            "totalNominal": 0,
+            "noInvoiceKwitansi": "2390/222/RAYMP/VI/2026",
+            "bapp": {
+              "nomor": "B-210/3329/PPK/6/2026",
+              "tanggal": "30 Juni 2026"
+            },
+            "bast": {
+              "nomor": "B-211/3329/PPK/6/2026",
+              "tanggal": "30 Juni 2026"
+            },
+            "bap": {
+              "nomor": "B-212/3329/PPK/6/2026",
+              "tanggal": "30 Juni 2026"
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS PATI",
@@ -4866,7 +4889,30 @@
                 "nominal": 2993600
               }
             ],
-            "totalNominal": 2993600
+            "totalNominal": 2993600,
+            "noInvoiceKwitansi": "2391/222/RAYMP/VII/2026",
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS REMBANG",
@@ -4891,7 +4937,30 @@
             "dokumenLengkap": 14,
             "pctLengkap": 1.0,
             "tagihan": [],
-            "totalNominal": 0
+            "totalNominal": 0,
+            "noInvoiceKwitansi": "2392/222/RAYMP/VII/2026",
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS WONOGIRI",
@@ -4916,7 +4985,30 @@
             "dokumenLengkap": 10,
             "pctLengkap": 0.7143,
             "tagihan": [],
-            "totalNominal": 0
+            "totalNominal": 0,
+            "noInvoiceKwitansi": "2393/222/RAYMP/VII/2026",
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS SUKOHARJO",
@@ -4950,7 +5042,30 @@
                 "nominal": 3208171
               }
             ],
-            "totalNominal": 9785594
+            "totalNominal": 9785594,
+            "noInvoiceKwitansi": "2394/222/RAYMP/VII/2026",
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS JEPARA",
@@ -4984,7 +5099,30 @@
                 "nominal": 3522435
               }
             ],
-            "totalNominal": 14089742
+            "totalNominal": 14089742,
+            "noInvoiceKwitansi": "2386/222/RAYMP/VI/2026\n2387/222/RAYMP/VI/2026",
+            "bapp": {
+              "nomor": "B-275/3320/PL.613/PPK/2026 - Untuk Keamanan\nB-276/3320/PL.613/PPK/2026 - Untuk Kebersihan",
+              "tanggal": "30 Juni 2026"
+            },
+            "bast": {
+              "nomor": "B-277/3320/PL.613/PPK/2026 - Untuk Keamanan\nB-278/3320/PL.613/PPK/2026 - Untuk Kebersihan",
+              "tanggal": "30 Juni 2026"
+            },
+            "bap": {
+              "nomor": "B-280/3320/PL.613/PPK/2026",
+              "tanggal": "1 Juli 2026"
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS KOTA PEKALONGAN",
@@ -5009,7 +5147,30 @@
             "dokumenLengkap": 14,
             "pctLengkap": 1.0,
             "tagihan": [],
-            "totalNominal": 0
+            "totalNominal": 0,
+            "noInvoiceKwitansi": "2395/222/RAYMP/VII/2026",
+            "bapp": {
+              "nomor": "B-18.1/3375/BAPP.PPK/2026",
+              "tanggal": "30 Juni 2026"
+            },
+            "bast": {
+              "nomor": "B-18.2/3375/BAST.PPK/2026",
+              "tanggal": "30 Juni 2026"
+            },
+            "bap": {
+              "nomor": "B-18.3/3375/BAP.PPK/2026",
+              "tanggal": "30 Juni 2026"
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS GROBOGAN",
@@ -5039,7 +5200,30 @@
                 "nominal": 3015521
               }
             ],
-            "totalNominal": 3015521
+            "totalNominal": 3015521,
+            "noInvoiceKwitansi": "2396/222/RAYMP/VI/2026",
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": "B-023.01/3315/PPK/PL.300/06/2026",
+              "tanggal": "1 Juli 2026"
+            },
+            "bap": {
+              "nomor": "B-023.02/3315/PPK/PL.300/06/2026",
+              "tanggal": "1 Juli 2026"
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS BATANG",
@@ -5064,7 +5248,30 @@
             "dokumenLengkap": 14,
             "pctLengkap": 1.0,
             "tagihan": [],
-            "totalNominal": 0
+            "totalNominal": 0,
+            "noInvoiceKwitansi": "2388/222/RAYMP/VII/2026",
+            "bapp": {
+              "nomor": "B-133/3325/PPK/2026",
+              "tanggal": "30 Juni 2026"
+            },
+            "bast": {
+              "nomor": "B-134/3325/PPK/2026",
+              "tanggal": "30 Juni 2026"
+            },
+            "bap": {
+              "nomor": "B-135/3325/PPK/2026",
+              "tanggal": "30 Juni 2026"
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS KAB PEMALANG",
@@ -5089,7 +5296,30 @@
             "dokumenLengkap": 14,
             "pctLengkap": 1.0,
             "tagihan": [],
-            "totalNominal": 0
+            "totalNominal": 0,
+            "noInvoiceKwitansi": "2397/222/RAYMP/VII/2026",
+            "bapp": {
+              "nomor": "B-01/33270/BAPP/PL.010/07/2026",
+              "tanggal": "1 Juli 2026"
+            },
+            "bast": {
+              "nomor": "B-01/33270/BAST/PL.010/07/2026",
+              "tanggal": "1 Juli 2026"
+            },
+            "bap": {
+              "nomor": "B-01/33270/BAP/PL.200/07/2026",
+              "tanggal": "3 Juli 2026"
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS KUDUS",
@@ -5119,7 +5349,30 @@
                 "nominal": 3522816
               }
             ],
-            "totalNominal": 3522816
+            "totalNominal": 3522816,
+            "noInvoiceKwitansi": "2398/222/RAYMP/VII/2026",
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS BLORA",
@@ -5149,7 +5402,30 @@
                 "nominal": 6125275
               }
             ],
-            "totalNominal": 6125275
+            "totalNominal": 6125275,
+            "noInvoiceKwitansi": "2389/222/RAYMP/VI/2026",
+            "bapp": {
+              "nomor": "016/3316-MB/PL.300/2026",
+              "tanggal": "30 Juni 2026"
+            },
+            "bast": {
+              "nomor": "017/3316-MB/PL.300/2026",
+              "tanggal": "30 Juni 2026"
+            },
+            "bap": {
+              "nomor": "018/3316-MB/PL.300/2026",
+              "tanggal": "6 Juli 2026"
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS TEGAL",
@@ -5179,7 +5455,30 @@
                 "nominal": 10541536
               }
             ],
-            "totalNominal": 10541536
+            "totalNominal": 10541536,
+            "noInvoiceKwitansi": "2399/222/RAYMP/VII/2026",
+            "bapp": {
+              "nomor": "B-176/BPS3328/PPBJ/06/2026",
+              "tanggal": "30 Juni 2026"
+            },
+            "bast": {
+              "nomor": "B-399/BPS3328/PPK/06/2026",
+              "tanggal": "30 Juni 2026"
+            },
+            "bap": {
+              "nomor": "B-400/BPS3328/PPK/07/2026",
+              "tanggal": "1 Juli 2026"
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS KENDAL",
@@ -5209,7 +5508,30 @@
                 "nominal": 9990075
               }
             ],
-            "totalNominal": 9990075
+            "totalNominal": 9990075,
+            "noInvoiceKwitansi": "2385/222/RAYMP/VI/2026",
+            "bapp": {
+              "nomor": "004/PPK.3324/ALIHDAYA-KEAMANAN/VI/2026",
+              "tanggal": "30 Juni 2026"
+            },
+            "bast": {
+              "nomor": "005/PPK.3324/ALIHDAYA-KEAMANAN/VI/2026",
+              "tanggal": "30 Juni 2026"
+            },
+            "bap": {
+              "nomor": "007/PPK.3324/ALIHDAYA-KEAMANAN/VI/2026",
+              "tanggal": "30 Juni 2026"
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS SRAGEN",
@@ -5243,7 +5565,30 @@
                 "nominal": 3300944
               }
             ],
-            "totalNominal": 6741846
+            "totalNominal": 6741846,
+            "noInvoiceKwitansi": "2400/222/RAYMP/VII/2026",
+            "bapp": {
+              "nomor": "B-029.b/BPS/3314/PPK-MANAJEMEN.BUILDING/V/2026\nB-030.b/BPS/3314/PPK-MANAJEMEN.BUILDING/VI/2026",
+              "tanggal": "31 Mei 2026\n30 Juni 2026"
+            },
+            "bast": {
+              "nomor": "B-029.c/BPS/3314/PPK-MANAJEMEN.BUILDING/V/2026\nB-030.c/BPS/3314/PPK-MANAJEMEN.BUILDING/VI/2026",
+              "tanggal": "31 Mei 2026\n30 Juni 2026"
+            },
+            "bap": {
+              "nomor": "B-029.d/BPS/3314/PPK-MANAJEMEN.BUILDING/V/2026\nB-030.d/BPS/3314/PPK-MANAJEMEN.BUILDING/VI/2026",
+              "tanggal": "31 Mei 2026\n30 Juni 2026"
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS DEMAK",
@@ -5273,7 +5618,30 @@
                 "nominal": 7489752
               }
             ],
-            "totalNominal": 7489752
+            "totalNominal": 7489752,
+            "noInvoiceKwitansi": "2401/222/RAYMP/VII/2026",
+            "bapp": {
+              "nomor": "240/PPK/CS/VI/2026",
+              "tanggal": "30 Juni 2026"
+            },
+            "bast": {
+              "nomor": "241/PPK/CS/VI/2026",
+              "tanggal": "30 Juni 2026"
+            },
+            "bap": {
+              "nomor": "242/PPK/CS/VI/2026",
+              "tanggal": "30 Juni 2026"
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS BOYOLALI",
@@ -5303,7 +5671,30 @@
                 "nominal": 6657727
               }
             ],
-            "totalNominal": 6657727
+            "totalNominal": 6657727,
+            "noInvoiceKwitansi": "2402/222/RAYMP/VII/2026",
+            "bapp": {
+              "nomor": "B-131/33090/PL613/PPK/2026",
+              "tanggal": "30 Juni 2026"
+            },
+            "bast": {
+              "nomor": "B-132/33090/PL613/PPK/2026",
+              "tanggal": "30 Juni 2026"
+            },
+            "bap": {
+              "nomor": "B-134/33090/PL613/PPK/2026",
+              "tanggal": "2 Juli 2026"
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS SALATIGA",
@@ -5333,7 +5724,30 @@
                 "nominal": 7142763
               }
             ],
-            "totalNominal": 7142763
+            "totalNominal": 7142763,
+            "noInvoiceKwitansi": "2384/222/RAYMP/VI/2026",
+            "bapp": {
+              "nomor": "PPK.016-2886/3373/06/2026\nPPK.019-2886/3373/06/2026 (Semesteran)",
+              "tanggal": "30 Juni 2026"
+            },
+            "bast": {
+              "nomor": "PPK.017-2886/3373/06/2026\nPPK.020-2886/3373/06/2026 (Semesteran)",
+              "tanggal": "30 Juni 2026"
+            },
+            "bap": {
+              "nomor": "PPK.018-2886/3373/06/2026\nPPK.021-2886/3373/06/2026 (Semesteran)",
+              "tanggal": "30 Juni 2026"
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "KEJARI KAB SEMARANG",
@@ -5358,7 +5772,30 @@
             "dokumenLengkap": 0,
             "pctLengkap": 0.0,
             "tagihan": [],
-            "totalNominal": 0
+            "totalNominal": 0,
+            "noInvoiceKwitansi": null,
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           }
         ],
         "pctRataRata": 0.9323,
@@ -5407,7 +5844,30 @@
             "dokumenLengkap": 7,
             "pctLengkap": 0.5,
             "tagihan": [],
-            "totalNominal": 0
+            "totalNominal": 0,
+            "noInvoiceKwitansi": null,
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS PATI",
@@ -5437,7 +5897,30 @@
                 "nominal": 2993600
               }
             ],
-            "totalNominal": 2993600
+            "totalNominal": 2993600,
+            "noInvoiceKwitansi": "2964/222/RAYMP/VIII/2026",
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS REMBANG",
@@ -5462,7 +5945,30 @@
             "dokumenLengkap": 7,
             "pctLengkap": 0.5,
             "tagihan": [],
-            "totalNominal": 0
+            "totalNominal": 0,
+            "noInvoiceKwitansi": null,
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS WONOGIRI",
@@ -5487,7 +5993,30 @@
             "dokumenLengkap": 14,
             "pctLengkap": 1.0,
             "tagihan": [],
-            "totalNominal": 0
+            "totalNominal": 0,
+            "noInvoiceKwitansi": null,
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS SUKOHARJO",
@@ -5521,7 +6050,30 @@
                 "nominal": 3208171
               }
             ],
-            "totalNominal": 9785594
+            "totalNominal": 9785594,
+            "noInvoiceKwitansi": "3234/222/RAYMP/VIII/2026",
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS JEPARA",
@@ -5555,7 +6107,30 @@
                 "nominal": 3522435
               }
             ],
-            "totalNominal": 14089742
+            "totalNominal": 14089742,
+            "noInvoiceKwitansi": "2868/222/RAYMP/VIII/2026",
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS KOTA PEKALONGAN",
@@ -5580,7 +6155,30 @@
             "dokumenLengkap": 7,
             "pctLengkap": 0.5,
             "tagihan": [],
-            "totalNominal": 0
+            "totalNominal": 0,
+            "noInvoiceKwitansi": null,
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS GROBOGAN",
@@ -5610,7 +6208,30 @@
                 "nominal": 3015521
               }
             ],
-            "totalNominal": 3015521
+            "totalNominal": 3015521,
+            "noInvoiceKwitansi": null,
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS BATANG",
@@ -5635,7 +6256,30 @@
             "dokumenLengkap": 7,
             "pctLengkap": 0.5,
             "tagihan": [],
-            "totalNominal": 0
+            "totalNominal": 0,
+            "noInvoiceKwitansi": null,
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS KAB PEMALANG",
@@ -5660,7 +6304,30 @@
             "dokumenLengkap": 7,
             "pctLengkap": 0.5,
             "tagihan": [],
-            "totalNominal": 0
+            "totalNominal": 0,
+            "noInvoiceKwitansi": null,
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS KUDUS",
@@ -5690,7 +6357,30 @@
                 "nominal": 3522816
               }
             ],
-            "totalNominal": 3522816
+            "totalNominal": 3522816,
+            "noInvoiceKwitansi": "2963/222/RAYMP/VIII/2026",
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS BLORA",
@@ -5720,7 +6410,30 @@
                 "nominal": 6125275
               }
             ],
-            "totalNominal": 6125275
+            "totalNominal": 6125275,
+            "noInvoiceKwitansi": "2867/222/RAYMP/VIII/2026",
+            "bapp": {
+              "nomor": "019/3316-MB/PL.300/2026",
+              "tanggal": "31 Juli 2026"
+            },
+            "bast": {
+              "nomor": "020/3316-MB/PL.300/2026",
+              "tanggal": "31 Juli 2026"
+            },
+            "bap": {
+              "nomor": "021/3316-MB/PL.300/2026",
+              "tanggal": "5 Agustus 2026"
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS TEGAL",
@@ -5750,7 +6463,30 @@
                 "nominal": 10541536
               }
             ],
-            "totalNominal": 10541536
+            "totalNominal": 10541536,
+            "noInvoiceKwitansi": "2856/222/RAYMP/VIII/2026",
+            "bapp": {
+              "nomor": "B-233/BPS3328/PPBJ/08/2026",
+              "tanggal": "31 Juli 2026"
+            },
+            "bast": {
+              "nomor": "B-425/BPS3328/PPK/07/2026",
+              "tanggal": "31 Juli 2026"
+            },
+            "bap": {
+              "nomor": "426/BPS3328/PPK/08/2026",
+              "tanggal": "1 Agustus 2026"
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS KENDAL",
@@ -5780,7 +6516,30 @@
                 "nominal": 9990075
               }
             ],
-            "totalNominal": 9990075
+            "totalNominal": 9990075,
+            "noInvoiceKwitansi": null,
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS SRAGEN",
@@ -5814,7 +6573,30 @@
                 "nominal": 3300944
               }
             ],
-            "totalNominal": 6741846
+            "totalNominal": 6741846,
+            "noInvoiceKwitansi": null,
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS DEMAK",
@@ -5844,7 +6626,30 @@
                 "nominal": 7489752
               }
             ],
-            "totalNominal": 7489752
+            "totalNominal": 7489752,
+            "noInvoiceKwitansi": "2962/222/RAYMP/VII/2026",
+            "bapp": {
+              "nomor": "BAPP 272/PPK/CS/VII/2026",
+              "tanggal": "31 Juli 2026"
+            },
+            "bast": {
+              "nomor": "BAST 273/PPK/CS/VII/2026",
+              "tanggal": "31 Juli 2026"
+            },
+            "bap": {
+              "nomor": "BAP 274/PPK/CS/VII/2026",
+              "tanggal": "31 Juli 2026"
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS BOYOLALI",
@@ -5874,7 +6679,30 @@
                 "nominal": 6657727
               }
             ],
-            "totalNominal": 6657727
+            "totalNominal": 6657727,
+            "noInvoiceKwitansi": "2834/222/RAYMP/VIII/2026",
+            "bapp": {
+              "nomor": "B-161/33090/PL613/PPK/2026",
+              "tanggal": "31 Juli 2026"
+            },
+            "bast": {
+              "nomor": "B-162/33090/PL613/PPK/2026",
+              "tanggal": "31 Juli 2026"
+            },
+            "bap": {
+              "nomor": "B-164/33090/PL613/PPK/2026",
+              "tanggal": "3 Agustus 2026"
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS SALATIGA",
@@ -5904,7 +6732,30 @@
                 "nominal": 7142763
               }
             ],
-            "totalNominal": 7142763
+            "totalNominal": 7142763,
+            "noInvoiceKwitansi": "2855/222/RAYMP/VII/2026",
+            "bapp": {
+              "nomor": "PPK.019-2886/3373/07/2026",
+              "tanggal": "31 Juli 2026"
+            },
+            "bast": {
+              "nomor": "PPK.020-2886/3373/07/2026",
+              "tanggal": "31 Juli 2026"
+            },
+            "bap": {
+              "nomor": "PPK.021-2886/3373/07/2026",
+              "tanggal": "31 Juli 2026"
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "KEJARI KAB SEMARANG",
@@ -5929,7 +6780,30 @@
             "dokumenLengkap": 0,
             "pctLengkap": 0.0,
             "tagihan": [],
-            "totalNominal": 0
+            "totalNominal": 0,
+            "noInvoiceKwitansi": null,
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           }
         ],
         "pctRataRata": 0.7105,
@@ -5978,7 +6852,30 @@
             "dokumenLengkap": 7,
             "pctLengkap": 0.5,
             "tagihan": [],
-            "totalNominal": 0
+            "totalNominal": 0,
+            "noInvoiceKwitansi": null,
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": "EP-01KW1AAMYRFD2DYXEYGE7XTVGN\nEP-01KW1AFAASW3E9Z850CT2VANWQ",
+              "tanggalSp": "29 Juni 2026\n29 Juni 2026",
+              "lamaKontrak": "3 bulan\n3 bulan",
+              "periodeKontrak": "Juli - September\nJuli - September",
+              "termin": "3 bulan\n3 bulan",
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS PATI",
@@ -6008,7 +6905,30 @@
                 "nominal": 2993600
               }
             ],
-            "totalNominal": 2993600
+            "totalNominal": 2993600,
+            "noInvoiceKwitansi": "3233/222/RAYMP/IX/2026",
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": "EP-01KWH1QY81S9ZSY7R53HKEHRY8",
+              "tanggalSp": "3 Juli 2026",
+              "lamaKontrak": "6 bulan",
+              "periodeKontrak": "Juli - Desember",
+              "termin": "1 bulan",
+              "metode": "Manual",
+              "statusNomor": "Ada",
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS REMBANG",
@@ -6033,7 +6953,30 @@
             "dokumenLengkap": 7,
             "pctLengkap": 0.5,
             "tagihan": [],
-            "totalNominal": 0
+            "totalNominal": 0,
+            "noInvoiceKwitansi": null,
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": "EP-01KWX6JFDEG6R6K1CDD8A2DQZ8",
+              "tanggalSp": "7 Juli 2026",
+              "lamaKontrak": "3 bulan",
+              "periodeKontrak": "Juli - September",
+              "termin": "3 bulan",
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS WONOGIRI",
@@ -6058,7 +7001,30 @@
             "dokumenLengkap": 7,
             "pctLengkap": 0.5,
             "tagihan": [],
-            "totalNominal": 0
+            "totalNominal": 0,
+            "noInvoiceKwitansi": null,
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": "EP-01KZDJ66WMB9S3G7G56YCZYFDR",
+              "tanggalSp": "7 Agustus 2026",
+              "lamaKontrak": "3 bulan",
+              "periodeKontrak": "Agustus - Oktober",
+              "termin": "3 bulan",
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS SUKOHARJO",
@@ -6092,7 +7058,30 @@
                 "nominal": 3208171
               }
             ],
-            "totalNominal": 9785594
+            "totalNominal": 9785594,
+            "noInvoiceKwitansi": "3352/222/RAYMP/IX/2026",
+            "bapp": {
+              "nomor": "B-221.1/33110/PPK/PL.300/2026 Untuk PAM\nB-221.2/33110/PPK/PL.300/2026 Untuk CS",
+              "tanggal": "31 Agustus 2026"
+            },
+            "bast": {
+              "nomor": "B-221.3/33110/PPK/PL.300/2026 untuk PAM\nB-221.4/33110/PPK/PL.300/2026 untuk CS",
+              "tanggal": "31 Agustus 2026"
+            },
+            "bap": {
+              "nomor": "B-226/33110/PPK/PL.300/2026 untuk PAM\nB-227/33110/PPK/PL.300/2026 untuk CS",
+              "tanggal": "4 September 2026"
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": "Manual",
+              "statusNomor": "Ada",
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS JEPARA",
@@ -6126,7 +7115,30 @@
                 "nominal": 3522435
               }
             ],
-            "totalNominal": 14089742
+            "totalNominal": 14089742,
+            "noInvoiceKwitansi": "3217/222/RAYMP/IX/2026 untuk PAM\n3218/222/RAYMP/IX/2026 untuk CS",
+            "bapp": {
+              "nomor": "B-399/3320/PL.613/PPK/2026 untuk PAM\nB-400/3320/PL.613/PPK/2026 untuk CS",
+              "tanggal": "31 Agustus 2026"
+            },
+            "bast": {
+              "nomor": "B-401/3320/PL.613/PPK/2026 untuk PAM\nB-402/3320/PL.613/PPK/2026 untuk CS",
+              "tanggal": "31 Agustus 2026"
+            },
+            "bap": {
+              "nomor": "B-403/3320/PL.613/PPK/2026",
+              "tanggal": "1 September 2026"
+            },
+            "kontrak": {
+              "noSp": "EP-01KWC0FX40PEG3BY6JC8G7AGTV\nEP-01KWC036M9XQ72CJNCST4Q1WD3",
+              "tanggalSp": "30 Juni 2026\n30 Juni 2026",
+              "lamaKontrak": "6 bulan",
+              "periodeKontrak": "Juli - Desember",
+              "termin": "1 bulan",
+              "metode": "Manual",
+              "statusNomor": "Ada",
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS KOTA PEKALONGAN",
@@ -6151,7 +7163,30 @@
             "dokumenLengkap": 7,
             "pctLengkap": 0.5,
             "tagihan": [],
-            "totalNominal": 0
+            "totalNominal": 0,
+            "noInvoiceKwitansi": null,
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": "EP-01KWKGQGBWE0KWF98XMD9367QJ",
+              "tanggalSp": "3 Juli 2026",
+              "lamaKontrak": "3 bulan",
+              "periodeKontrak": "Juli - September",
+              "termin": "3 bulan",
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS GROBOGAN",
@@ -6181,7 +7216,30 @@
                 "nominal": 3015521
               }
             ],
-            "totalNominal": 3015521
+            "totalNominal": 3015521,
+            "noInvoiceKwitansi": "3219/222/RAYMP/IX/2026",
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": "EP-01KZACMJC3A6572WYCKCSV3KDS",
+              "tanggalSp": "6 Agustus 2026",
+              "lamaKontrak": "5 bulan",
+              "periodeKontrak": "Agustus - Desember",
+              "termin": "1 bulan",
+              "metode": "Manual",
+              "statusNomor": "Ada",
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS BATANG",
@@ -6206,7 +7264,30 @@
             "dokumenLengkap": 7,
             "pctLengkap": 0.5,
             "tagihan": [],
-            "totalNominal": 0
+            "totalNominal": 0,
+            "noInvoiceKwitansi": null,
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": "EP-01KW1HSHRFVR447SXSHMGDHP59",
+              "tanggalSp": "30 Juni 2026",
+              "lamaKontrak": "6 Bulan",
+              "periodeKontrak": "Juli - Desember",
+              "termin": "3 bulan",
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS KAB PEMALANG",
@@ -6231,7 +7312,30 @@
             "dokumenLengkap": 7,
             "pctLengkap": 0.5,
             "tagihan": [],
-            "totalNominal": 0
+            "totalNominal": 0,
+            "noInvoiceKwitansi": null,
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": "EP-01KWBZ5ACVFAVTM77GEE94NH0N",
+              "tanggalSp": "30 Juni 2026",
+              "lamaKontrak": "4 bulan",
+              "periodeKontrak": "Juli - Oktober",
+              "termin": "4 bulan",
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS KUDUS",
@@ -6261,7 +7365,30 @@
                 "nominal": 3522816
               }
             ],
-            "totalNominal": 3522816
+            "totalNominal": 3522816,
+            "noInvoiceKwitansi": "3235/222/RAYMP/IX/2026",
+            "bapp": {
+              "nomor": "B-724/33190/PL.300/PPK/2026",
+              "tanggal": "31 Agustus 2026"
+            },
+            "bast": {
+              "nomor": "B-723/33190/PL.300/PPK/2026",
+              "tanggal": "31 Agustus 2026"
+            },
+            "bap": {
+              "nomor": "B-725/33190/PL.300/PPK/2026",
+              "tanggal": "31 Agustus 2026"
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": "Manual",
+              "statusNomor": "Belum",
+              "linkNomor": "NOMOR BERITA ACARA"
+            }
           },
           {
             "lokasi": "BPS BLORA",
@@ -6291,7 +7418,30 @@
                 "nominal": 6125275
               }
             ],
-            "totalNominal": 6125275
+            "totalNominal": 6125275,
+            "noInvoiceKwitansi": "3220/222/RAYMP/IX/2026",
+            "bapp": {
+              "nomor": "022/3316-MB/PL.300/2026",
+              "tanggal": "31 Agustus 2026"
+            },
+            "bast": {
+              "nomor": "023/3316-MB/PL.300/2026",
+              "tanggal": "31 Agustus 2026"
+            },
+            "bap": {
+              "nomor": "024/3316-MB/PL.300/2026",
+              "tanggal": "4 September 2026"
+            },
+            "kontrak": {
+              "noSp": "EP-01KDPNE6XPD21HVXCQBH2TDZ6M",
+              "tanggalSp": "30 Desember 2025",
+              "lamaKontrak": "1 tahun",
+              "periodeKontrak": "Januari - Desember",
+              "termin": "1 bulan",
+              "metode": "Manual",
+              "statusNomor": "Ada",
+              "linkNomor": "BPS BLORA Nomor BA s.d. Desember"
+            }
           },
           {
             "lokasi": "BPS TEGAL",
@@ -6321,7 +7471,30 @@
                 "nominal": 10541536
               }
             ],
-            "totalNominal": 10541536
+            "totalNominal": 10541536,
+            "noInvoiceKwitansi": "3236/222/RAYMP/IX/2026",
+            "bapp": {
+              "nomor": "B-275/BPS3328/PPBJ/08/2026",
+              "tanggal": "31 Agustus 2026"
+            },
+            "bast": {
+              "nomor": "B-514/BPS3328/PPK/08/2026",
+              "tanggal": "31 Agustus 2026"
+            },
+            "bap": {
+              "nomor": "B-515/BPS3328/PPK/09/2026",
+              "tanggal": "1 September 2026"
+            },
+            "kontrak": {
+              "noSp": "EP-01KWGWW9TKVQ634671DEB7G6F9",
+              "tanggalSp": "2 Juli 2026",
+              "lamaKontrak": "3 bulan",
+              "periodeKontrak": "Juli - September",
+              "termin": "1 bulan",
+              "metode": "Manual",
+              "statusNomor": "Ada",
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS KENDAL",
@@ -6351,7 +7524,30 @@
                 "nominal": null
               }
             ],
-            "totalNominal": 0
+            "totalNominal": 0,
+            "noInvoiceKwitansi": "3237/222/RAYMP/IX/2026",
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": "EP-01KWDS4KRMVC5B5MZ35GHVKPTB",
+              "tanggalSp": "1 Juli 2026",
+              "lamaKontrak": "3 bulan",
+              "periodeKontrak": "Juli - September",
+              "termin": "1 bulan",
+              "metode": "Manual",
+              "statusNomor": "Ada",
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS SRAGEN",
@@ -6385,7 +7581,30 @@
                 "nominal": 3300944
               }
             ],
-            "totalNominal": 6741846
+            "totalNominal": 6741846,
+            "noInvoiceKwitansi": "3238/222/RAYMP/IX/2026",
+            "bapp": {
+              "nomor": "Kosongan",
+              "tanggal": "31 Agustus 2026"
+            },
+            "bast": {
+              "nomor": "Kosongan",
+              "tanggal": "31 Agustus 2026"
+            },
+            "bap": {
+              "nomor": "Kosongan",
+              "tanggal": "31 Agustus 2026"
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": "Manual",
+              "statusNomor": "Kosongi",
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS DEMAK",
@@ -6415,7 +7634,30 @@
                 "nominal": 7489752
               }
             ],
-            "totalNominal": 7489752
+            "totalNominal": 7489752,
+            "noInvoiceKwitansi": "3239/222/RAYMP/IX/2026",
+            "bapp": {
+              "nomor": "BAPP 320/PPK/CS/VIII/2026",
+              "tanggal": "31 Agustus 2026"
+            },
+            "bast": {
+              "nomor": "BAST 321/PPK/CS/VIII/2026",
+              "tanggal": "31 Agustus 2026"
+            },
+            "bap": {
+              "nomor": "BAP 322/PPK/CS/VIII/2026",
+              "tanggal": "31 Agustus 2026"
+            },
+            "kontrak": {
+              "noSp": "EP-01KW8NWMYWE5EFJF0SN3Z63C0P",
+              "tanggalSp": "29 Juni 2026",
+              "lamaKontrak": "6 bulan",
+              "periodeKontrak": "Juli - Desember",
+              "termin": "1 bulan",
+              "metode": "Manual",
+              "statusNomor": "Ada",
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS BOYOLALI",
@@ -6445,7 +7687,30 @@
                 "nominal": 6657727
               }
             ],
-            "totalNominal": 6657727
+            "totalNominal": 6657727,
+            "noInvoiceKwitansi": "3240/222/RAYMP/IX/2026",
+            "bapp": {
+              "nomor": "B-175/33090/PL613/PPK/2026",
+              "tanggal": "31 Agustus 2026"
+            },
+            "bast": {
+              "nomor": "B-176/33090/PL613/PPK/2026",
+              "tanggal": "31 Agustus 2026"
+            },
+            "bap": {
+              "nomor": "B-180/33090/PL613/PPK/2026",
+              "tanggal": "3 September 2026"
+            },
+            "kontrak": {
+              "noSp": "EP-01KQEJ52T7A84CN8BREQVQ6VBE",
+              "tanggalSp": "30 April 2026",
+              "lamaKontrak": "8 bulan",
+              "periodeKontrak": "Mei - Desember",
+              "termin": "1 bulan",
+              "metode": "Manual",
+              "statusNomor": "Ada",
+              "linkNomor": null
+            }
           },
           {
             "lokasi": "BPS SALATIGA",
@@ -6475,7 +7740,30 @@
                 "nominal": 7142763
               }
             ],
-            "totalNominal": 7142763
+            "totalNominal": 7142763,
+            "noInvoiceKwitansi": "3221/222/RAYMP/IX/2026",
+            "bapp": {
+              "nomor": "PPK.022-2886/3373/08/2026",
+              "tanggal": "31 Agustus 2026"
+            },
+            "bast": {
+              "nomor": "PPK.023-2886/3373/08/2026",
+              "tanggal": "31 Agustus 2026"
+            },
+            "bap": {
+              "nomor": "PPK.024-2886/3373/08/2026",
+              "tanggal": "31 Agustus 2026"
+            },
+            "kontrak": {
+              "noSp": "EP-01KW9410HCB7HQEVX19CDGN853",
+              "tanggalSp": "29 Juni 2026",
+              "lamaKontrak": "6 bulan",
+              "periodeKontrak": "Juli - Desember",
+              "termin": "1 bulan",
+              "metode": "Manual",
+              "statusNomor": "Ada",
+              "linkNomor": "BPS SALATIGA JULI - DESEMBER Nomor MB SM 2.xlsx"
+            }
           },
           {
             "lokasi": "KEJARI KAB SEMARANG",
@@ -6500,7 +7788,30 @@
             "dokumenLengkap": 0,
             "pctLengkap": 0.0,
             "tagihan": [],
-            "totalNominal": 0
+            "totalNominal": 0,
+            "noInvoiceKwitansi": null,
+            "bapp": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bast": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "bap": {
+              "nomor": null,
+              "tanggal": null
+            },
+            "kontrak": {
+              "noSp": null,
+              "tanggalSp": null,
+              "lamaKontrak": null,
+              "periodeKontrak": null,
+              "termin": null,
+              "metode": null,
+              "statusNomor": null,
+              "linkNomor": null
+            }
           }
         ],
         "pctRataRata": 0.7632,

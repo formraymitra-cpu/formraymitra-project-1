@@ -5,12 +5,42 @@ import FilterChip from "../components/FilterChip";
 import { Search } from "../components/icons";
 import { COLORS } from "../lib/colors";
 import { formatPct, formatRupiah, formatTanggal } from "../lib/format";
+import type { DokumenLokasiBulan } from "../types";
 
 function pctColor(pct: number | null) {
   if (pct === null) return COLORS.inkTertiary;
   if (pct >= 0.9) return COLORS.good;
   if (pct >= 0.6) return COLORS.warn;
   return COLORS.bad;
+}
+
+function hasDetailData(l: DokumenLokasiBulan) {
+  return Boolean(
+    l.noInvoiceKwitansi ||
+      l.bapp.nomor ||
+      l.bapp.tanggal ||
+      l.bast.nomor ||
+      l.bast.tanggal ||
+      l.bap.nomor ||
+      l.bap.tanggal ||
+      l.kontrak.noSp ||
+      l.kontrak.tanggalSp ||
+      l.kontrak.lamaKontrak ||
+      l.kontrak.periodeKontrak ||
+      l.kontrak.termin ||
+      l.kontrak.metode ||
+      l.kontrak.statusNomor ||
+      l.kontrak.linkNomor
+  );
+}
+
+function DetailField({ label, value }: { label: string; value: string | null }) {
+  return (
+    <div className="flex flex-col gap-0.5">
+      <span className="text-[10.5px] font-bold uppercase tracking-wide text-ink-tertiary">{label}</span>
+      <span className="whitespace-pre-line text-[12.5px] font-semibold text-ink">{value ?? "—"}</span>
+    </div>
+  );
 }
 
 export default function Invoice() {
@@ -22,6 +52,7 @@ export default function Invoice() {
   const selected = inv.dokumenBulanan.find((m) => m.label === bulan) ?? inv.dokumenBulanan[inv.dokumenBulanan.length - 1];
 
   const [q, setQ] = useState("");
+  const [expandedLokasi, setExpandedLokasi] = useState<string | null>(null);
 
   const lokasiTersaring = useMemo(() => {
     if (!selected) return [];
@@ -244,9 +275,9 @@ export default function Invoice() {
         </div>
         <div className="overflow-hidden rounded-xl border border-border">
           <div className="overflow-x-auto">
-            <div className="min-w-[780px]">
-              <div className="grid grid-cols-[1.2fr_90px_80px_1.2fr_140px_120px] items-center gap-3 border-b border-border-strong bg-surface-alt px-4 py-2.5">
-                {["Lokasi", "Lengkap", "%", "Bagian Kerja", "Nominal", "Tanggal Kirim"].map((h) => (
+            <div className="min-w-[860px]">
+              <div className="grid grid-cols-[1.2fr_90px_80px_1.2fr_140px_120px_80px] items-center gap-3 border-b border-border-strong bg-surface-alt px-4 py-2.5">
+                {["Lokasi", "Lengkap", "%", "Bagian Kerja", "Nominal", "Tanggal Kirim", "Detail"].map((h) => (
                   <span key={h} className="text-[10.5px] font-bold uppercase tracking-wide text-ink-tertiary">
                     {h}
                   </span>
@@ -255,25 +286,71 @@ export default function Invoice() {
               {lokasiTersaring.length === 0 && (
                 <div className="px-4 py-10 text-center text-sm text-ink-tertiary">Tidak ada lokasi yang cocok.</div>
               )}
-              {lokasiTersaring.map((l) => (
-                <div
-                  key={l.lokasi}
-                  className="grid grid-cols-[1.2fr_90px_80px_1.2fr_140px_120px] items-center gap-3 border-b border-border px-4 py-2.5 last:border-b-0"
-                >
-                  <span className="truncate text-[13px] font-semibold">{l.lokasi}</span>
-                  <span className="text-[13px] text-ink-secondary">
-                    {l.dokumenLengkap}/{l.totalDokumen}
-                  </span>
-                  <span className="text-[13px] font-bold" style={{ color: pctColor(l.pctLengkap) }}>
-                    {formatPct(l.pctLengkap)}
-                  </span>
-                  <span className="truncate text-[12.5px] text-ink-secondary">
-                    {l.tagihan.length ? l.tagihan.map((t) => t.bagianKerja).filter(Boolean).join(", ") : "—"}
-                  </span>
-                  <span className="text-[13px] font-semibold">{l.totalNominal ? formatRupiah(l.totalNominal) : "—"}</span>
-                  <span className="text-[13px] text-ink-tertiary">{l.tanggalKirim ? formatTanggal(l.tanggalKirim) : "—"}</span>
-                </div>
-              ))}
+              {lokasiTersaring.map((l) => {
+                const isOpen = expandedLokasi === l.lokasi;
+                return (
+                  <div key={l.lokasi} className="border-b border-border last:border-b-0">
+                    <div className="grid grid-cols-[1.2fr_90px_80px_1.2fr_140px_120px_80px] items-center gap-3 px-4 py-2.5">
+                      <span className="truncate text-[13px] font-semibold">{l.lokasi}</span>
+                      <span className="text-[13px] text-ink-secondary">
+                        {l.dokumenLengkap}/{l.totalDokumen}
+                      </span>
+                      <span className="text-[13px] font-bold" style={{ color: pctColor(l.pctLengkap) }}>
+                        {formatPct(l.pctLengkap)}
+                      </span>
+                      <span className="truncate text-[12.5px] text-ink-secondary">
+                        {l.tagihan.length ? l.tagihan.map((t) => t.bagianKerja).filter(Boolean).join(", ") : "—"}
+                      </span>
+                      <span className="text-[13px] font-semibold">{l.totalNominal ? formatRupiah(l.totalNominal) : "—"}</span>
+                      <span className="text-[13px] text-ink-tertiary">{l.tanggalKirim ? formatTanggal(l.tanggalKirim) : "—"}</span>
+                      <button
+                        type="button"
+                        onClick={() => setExpandedLokasi(isOpen ? null : l.lokasi)}
+                        className="justify-self-start rounded-lg border border-border px-2.5 py-1 text-[11.5px] font-bold text-accent hover:bg-surface-alt"
+                      >
+                        {isOpen ? "Tutup" : "Lihat"}
+                      </button>
+                    </div>
+                    {isOpen && (
+                      <div className="border-t border-border bg-surface-alt px-4 py-4">
+                        {!hasDetailData(l) ? (
+                          <p className="text-[12.5px] text-ink-tertiary">
+                            Belum ada data BAPP/BAST/BAP, no. invoice &amp; kwitansi, atau kontrak/SP untuk lokasi ini
+                            di bulan ini — fitur ini baru mulai dicatat sejak Agustus 2026.
+                          </p>
+                        ) : (
+                          <div className="flex flex-col gap-4">
+                            <DetailField label="No Invoice & Kwitansi" value={l.noInvoiceKwitansi} />
+                            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                              <DetailField label="No. BAPP" value={l.bapp.nomor} />
+                              <DetailField label="Tanggal BAPP" value={l.bapp.tanggal} />
+                              <DetailField label="No. BAST" value={l.bast.nomor} />
+                              <DetailField label="Tanggal BAST" value={l.bast.tanggal} />
+                              <DetailField label="No. BAP" value={l.bap.nomor} />
+                              <DetailField label="Tanggal BAP" value={l.bap.tanggal} />
+                            </div>
+                            <div>
+                              <span className="text-[11px] font-bold uppercase tracking-wide text-ink-secondary">
+                                Kontrak &amp; Surat Pesanan
+                              </span>
+                              <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                                <DetailField label="No SP" value={l.kontrak.noSp} />
+                                <DetailField label="Tanggal SP" value={l.kontrak.tanggalSp} />
+                                <DetailField label="Lama Kontrak" value={l.kontrak.lamaKontrak} />
+                                <DetailField label="Periode Kontrak" value={l.kontrak.periodeKontrak} />
+                                <DetailField label="Termin" value={l.kontrak.termin} />
+                                <DetailField label="Metode" value={l.kontrak.metode} />
+                                <DetailField label="Nomor / Status" value={l.kontrak.statusNomor} />
+                                <DetailField label="Link Nomor" value={l.kontrak.linkNomor} />
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
