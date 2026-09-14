@@ -1,0 +1,320 @@
+/**
+ * Convert Tagihan F2 BPJS Ketenagakerjaan -> Rekap Sheet
+ * ---------------------------------------------------------
+ * Bound script: dipasang sekali di spreadsheet rekap ("08. BPJS KETENAGAKERJAAN ..."),
+ * lalu menu-nya otomatis tersedia di SEMUA tab/sheet dalam spreadsheet itu.
+ * Setiap tab dibaca/ditulis berdasarkan sheet yang sedang aktif saat menu dijalankan.
+ *
+ * Cara pakai:
+ *  1. Buka tab rekap yang mau diisi (mis. "ATR BPN PALANGKARAYA").
+ *  2. Menu "F2 BPJS" -> "Convert Tagihan F2 ke Sheet Ini...".
+ *  3. Salin (select + copy) tabel "RINCIAN IURAN TENAGA KERJA" dari Formulir 2a PU,
+ *     tempel ke kotak teks di sidebar, klik "Proses".
+ *  4. Baris yang nomor referensinya (atau namanya) sudah ada di rekap akan di-UPDATE,
+ *     baris yang belum ada akan DITAMBAHKAN otomatis sebelum baris total.
+ */
+
+var F2_AMOUNT_RE = /\d{1,3}(?:,\d{3})*\.\d{2}/g;
+var F2_DATE_RE = /\b\d{2}-\d{2}-\d{4}\b/g;
+var F2_NIK_RE = /\b\d{16}\b/;
+
+function onOpen() {
+  SpreadsheetApp.getUi()
+    .createMenu('F2 BPJS')
+    .addItem('Convert Tagihan F2 ke Sheet Ini...', 'showF2Sidebar')
+    .addToUi();
+}
+
+function showF2Sidebar() {
+  var sheetName = SpreadsheetApp.getActiveSheet().getName();
+  var html = HtmlService.createHtmlOutputFromFile('F2Sidebar')
+    .setTitle('Convert F2 -> "' + sheetName + '"');
+  SpreadsheetApp.getUi().showSidebar(html);
+}
+
+function getActiveSheetName() {
+  return SpreadsheetApp.getActiveSheet().getName();
+}
+
+/**
+ * Entry point dipanggil dari sidebar (google.script.run.processF2Text(text)).
+ * Selalu bekerja di sheet yang aktif ketika sidebar dibuka.
+ */
+function processF2Text(rawText) {
+  var sheet = SpreadsheetApp.getActiveSheet();
+  var parsed = parseF2Text(rawText);
+
+  if (parsed.records.length === 0) {
+    return {
+      ok: false,
+      message:
+        'Tidak ada baris tenaga kerja yang terbaca dari teks yang ditempel. ' +
+        'Pastikan menyalin tabel "RINCIAN IURAN TENAGA KERJA" apa adanya (termasuk NIK 16 digit tiap baris).',
+      warnings: parsed.warnings
+    };
+  }
+
+  var map = findHeaderMap(sheet);
+  if (!map) {
+    return {
+      ok: false,
+      message:
+        'Header rekap (baris dengan kolom NAMA & STATUS) tidak ditemukan di sheet "' +
+        sheet.getName() +
+        '". Cek apakah struktur tabel di tab ini sesuai template.',
+      warnings: parsed.warnings
+    };
+  }
+  if (!map.nama || !map.total) {
+    return {
+      ok: false,
+      message:
+        'Kolom wajib (NAMA dan/atau TOTAL) tidak ditemukan di header sheet "' +
+        sheet.getName() +
+        '".',
+      warnings: parsed.warnings
+    };
+  }
+
+  var result = applyRecordsToSheet(sheet, map, parsed.records);
+  result.warnings = parsed.warnings.concat(result.warnings);
+  result.ok = true;
+  result.sheetName = sheet.getName();
+  return result;
+}
+
+/* ----------------------------- PARSER ----------------------------- */
+
+/**
+ * Parse teks tagihan F2 (hasil copy-paste tabel "RINCIAN IURAN TENAGA KERJA").
+ * Setiap baris tenaga kerja diharapkan memuat, berurutan:
+ *   No | Nomor Referensi | NIK(16 digit) | [Nomor Pegawai] | Nama | Tgl Lahir(dd-mm-yyyy)
+ *   | Tgl Kepesertaan(dd-mm-yyyy) | 11 angka nominal (Upah, Rapel, Jkk, JKM,
+ *   JHT-PemberiKerja, JHT-TenagaKerja, JP-PemberiKerja, JP-TenagaKerja,
+ *   JKP-PemberiKerja, JKP-Pemerintah, Total Iuran)
+ * Delimiter kolom bebas (tab atau spasi >=1), karena hasil copy dari browser/PDF
+ * bervariasi.
+ */
+function parseF2Text(rawText) {
+  var records = [];
+  var warnings = [];
+  var lines = (rawText || '').split(/\r?\n/);
+
+  lines.forEach(function (line, idx) {
+    var trimmed = line.trim();
+    if (!trimmed) return;
+
+    var nikMatch = trimmed.match(F2_NIK_RE);
+    if (!nikMatch) return; // baris header/footer/kosong, lewati diam-diam
+
+    var nikIndex = trimmed.indexOf(nikMatch[0]);
+    var before = trimmed.substring(0, nikIndex).trim();
+    var beforeTokens = before.split(/\s+/).filter(Boolean);
+    if (beforeTokens.length === 0) {
+      warnings.push('Baris ' + (idx + 1) + ': tidak ada nomor referensi sebelum NIK, dilewati.');
+      return;
+    }
+    var referensi = beforeTokens[beforeTokens.length - 1].replace(/\D/g, '');
+
+    var after = trimmed.substring(nikIndex + nikMatch[0].length);
+    var dates = after.match(F2_DATE_RE) || [];
+    if (dates.length < 2) {
+      warnings.push('Baris ' + (idx + 1) + ': tanggal lahir/kepesertaan tidak lengkap, dilewati.');
+      return;
+    }
+    var firstDateIdx = after.indexOf(dates[0]);
+    var secondDateIdx = after.indexOf(dates[1], firstDateIdx + dates[0].length);
+
+    var namePart = after.substring(0, firstDateIdx).trim();
+    var nameTokens = namePart.split(/\s+/).filter(Boolean);
+    if (nameTokens.length > 1 && /^\d+$/.test(nameTokens[0])) {
+      // token pertama murni angka -> kemungkinan "Nomor Pegawai", pisahkan dari nama
+      nameTokens.shift();
+    }
+    var nama = nameTokens.join(' ').trim();
+    if (!nama) {
+      warnings.push('Baris ' + (idx + 1) + ': nama tenaga kerja kosong, dilewati.');
+      return;
+    }
+
+    var numsText = after.substring(secondDateIdx + dates[1].length);
+    var numMatches = numsText.match(F2_AMOUNT_RE) || [];
+    if (numMatches.length < 11) {
+      warnings.push(
+        'Baris ' + (idx + 1) + ' ("' + nama + '"): hanya ' + numMatches.length +
+        ' dari 11 nominal ditemukan, dilewati.'
+      );
+      return;
+    }
+    var nums = numMatches.slice(numMatches.length - 11).map(function (s) {
+      return parseFloat(s.replace(/,/g, ''));
+    });
+
+    records.push({
+      referensi: referensi,
+      nama: nama,
+      upah: nums[0],
+      rapel: nums[1],
+      jkk: nums[2],
+      jkm: nums[3],
+      jhtPK: nums[4],
+      jhtTK: nums[5],
+      jpPK: nums[6],
+      jpTK: nums[7],
+      jkpPK: nums[8],
+      jkpPemerintah: nums[9],
+      total: nums[10]
+    });
+  });
+
+  return { records: records, warnings: warnings };
+}
+
+/* ------------------------- HEADER DETECTION ------------------------- */
+
+/**
+ * Cari baris header rekap (baris yang mengandung kolom NAMA dan STATUS) di antara
+ * 15 baris pertama, lalu petakan posisi kolom yang relevan.
+ * JHT dan JP masing-masing muncul 2x di template (grup "Pemberi Kerja/Client" lalu
+ * grup "Tenaga Kerja/Karyawan") -> kemunculan pertama = company, kedua = employee.
+ */
+function findHeaderMap(sheet) {
+  var lastRow = Math.min(sheet.getLastRow(), 15);
+  var lastCol = sheet.getLastColumn();
+  if (lastRow < 1 || lastCol < 1) return null;
+  var data = sheet.getRange(1, 1, lastRow, lastCol).getValues();
+
+  for (var r = 0; r < data.length; r++) {
+    var row = data[r].map(function (v) {
+      return (v || '').toString().trim().toUpperCase();
+    });
+    if (row.indexOf('NAMA') === -1 || row.indexOf('STATUS') === -1) continue;
+
+    var map = { row: r + 1 };
+    var jhtSeen = 0;
+    var jpSeen = 0;
+    for (var c = 0; c < row.length; c++) {
+      var label = row[c];
+      if (!label) continue;
+      if (label === 'NO' && map.no === undefined) map.no = c + 1;
+      else if (label === 'NAMA' && map.nama === undefined) map.nama = c + 1;
+      else if (label.indexOf('NOMOR KETENAGAK') === 0) map.referensi = c + 1;
+      else if (label === 'IURAN TK CLIENT') map.tkClient = c + 1;
+      else if (label === 'IURAN TK KARYAWAN') map.tkKaryawan = c + 1;
+      else if (label === 'TOTAL') map.total = c + 1;
+      else if (label === 'STATUS') map.status = c + 1;
+      else if (label === 'JKK') map.jkk = c + 1;
+      else if (label === 'JKM') map.jkm = c + 1;
+      else if (label === 'JKP') map.jkp = c + 1;
+      else if (label === 'JHT') {
+        jhtSeen++;
+        if (jhtSeen === 1) map.jhtCompany = c + 1;
+        else map.jhtEmployee = c + 1;
+      } else if (label === 'JP') {
+        jpSeen++;
+        if (jpSeen === 1) map.jpCompany = c + 1;
+        else map.jpEmployee = c + 1;
+      }
+    }
+    return map;
+  }
+  return null;
+}
+
+/* --------------------------- WRITE TO SHEET --------------------------- */
+
+function applyRecordsToSheet(sheet, map, records) {
+  var lastCol = sheet.getLastColumn();
+  var lastRow = sheet.getLastRow();
+  var startDataRow = map.row + 1;
+
+  var dataRows = [];
+  var footerRow = null;
+  for (var r = startDataRow; r <= lastRow; r++) {
+    var namaVal = sheet.getRange(r, map.nama).getValue();
+    if (namaVal === '' || namaVal === null) {
+      var totalVal = map.total ? sheet.getRange(r, map.total).getValue() : '';
+      if (totalVal !== '' && totalVal !== null) footerRow = r; // baris total/jumlah
+      break;
+    }
+    var referensiVal = map.referensi ? sheet.getRange(r, map.referensi).getValue() : '';
+    dataRows.push({
+      row: r,
+      nama: namaVal.toString().trim(),
+      referensi: (referensiVal || '').toString().replace(/\D/g, '')
+    });
+  }
+  if (footerRow === null) {
+    footerRow = dataRows.length ? dataRows[dataRows.length - 1].row + 1 : startDataRow;
+  }
+
+  var updated = 0;
+  var added = 0;
+  var log = [];
+  var calcWarnings = [];
+
+  records.forEach(function (rec) {
+    var refDigits = rec.referensi;
+    var match = dataRows.filter(function (d) {
+      return refDigits && d.referensi && d.referensi === refDigits;
+    })[0];
+    if (!match) {
+      match = dataRows.filter(function (d) {
+        return d.nama.toUpperCase() === rec.nama.toUpperCase();
+      })[0];
+    }
+
+    var tkClient = round2(rec.jkk + rec.jkm + rec.jhtPK + rec.jpPK + rec.jkpPK);
+    var tkKaryawan = round2(rec.jhtTK + rec.jpTK);
+    var totalIuran = round2(tkClient + tkKaryawan);
+    if (Math.abs(totalIuran - rec.total) > 1) {
+      calcWarnings.push(
+        rec.nama + ': total hasil hitung (' + totalIuran + ') beda dengan Total Iuran di F2 (' +
+        rec.total + '), cek ulang datanya.'
+      );
+    }
+
+    var targetRow;
+    if (match) {
+      targetRow = match.row;
+      updated++;
+      log.push('Update: ' + rec.nama + ' (baris ' + targetRow + ')');
+    } else {
+      sheet.insertRowBefore(footerRow);
+      if (footerRow > startDataRow) {
+        sheet
+          .getRange(footerRow - 1, 1, 1, lastCol)
+          .copyTo(sheet.getRange(footerRow, 1, 1, lastCol), { formatOnly: true });
+      }
+      targetRow = footerRow;
+      footerRow++;
+      dataRows.push({ row: targetRow, nama: rec.nama, referensi: refDigits });
+      added++;
+      log.push('Tambah baris baru: ' + rec.nama + ' (baris ' + targetRow + ')');
+      if (map.no) {
+        var prevNo = targetRow > startDataRow ? sheet.getRange(targetRow - 1, map.no).getValue() : 0;
+        sheet.getRange(targetRow, map.no).setValue((parseInt(prevNo, 10) || 0) + 1);
+      }
+      if (map.status) sheet.getRange(targetRow, map.status).setValue('AKTIF');
+    }
+
+    sheet.getRange(targetRow, map.nama).setValue(rec.nama);
+    if (map.referensi) sheet.getRange(targetRow, map.referensi).setValue(refDigits);
+    if (map.tkClient) sheet.getRange(targetRow, map.tkClient).setValue(tkClient);
+    if (map.tkKaryawan) sheet.getRange(targetRow, map.tkKaryawan).setValue(tkKaryawan);
+    if (map.total) sheet.getRange(targetRow, map.total).setValue(totalIuran);
+    if (map.jkk) sheet.getRange(targetRow, map.jkk).setValue(rec.jkk);
+    if (map.jkm) sheet.getRange(targetRow, map.jkm).setValue(rec.jkm);
+    if (map.jhtCompany) sheet.getRange(targetRow, map.jhtCompany).setValue(rec.jhtPK);
+    if (map.jpCompany) sheet.getRange(targetRow, map.jpCompany).setValue(rec.jpPK);
+    if (map.jkp) sheet.getRange(targetRow, map.jkp).setValue(rec.jkpPK);
+    if (map.jhtEmployee) sheet.getRange(targetRow, map.jhtEmployee).setValue(rec.jhtTK);
+    if (map.jpEmployee) sheet.getRange(targetRow, map.jpEmployee).setValue(rec.jpTK);
+  });
+
+  return { updated: updated, added: added, log: log, warnings: calcWarnings };
+}
+
+function round2(n) {
+  return Math.round(n * 100) / 100;
+}

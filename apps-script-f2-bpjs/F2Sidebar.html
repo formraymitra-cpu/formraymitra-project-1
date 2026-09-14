@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top" />
+    <meta charset="utf-8" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+        color: #202124;
+        margin: 0;
+        padding: 12px;
+      }
+      h4 {
+        margin: 0 0 4px;
+      }
+      p.hint {
+        color: #5f6368;
+        margin: 0 0 10px;
+        line-height: 1.4;
+      }
+      textarea {
+        width: 100%;
+        height: 260px;
+        box-sizing: border-box;
+        font-family: monospace;
+        font-size: 11px;
+        padding: 6px;
+      }
+      button {
+        margin-top: 10px;
+        background: #1a73e8;
+        color: #fff;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+      }
+      button:disabled {
+        background: #9aa0a6;
+        cursor: default;
+      }
+      #status {
+        margin-top: 12px;
+        white-space: pre-wrap;
+        line-height: 1.5;
+      }
+      .ok { color: #188038; }
+      .err { color: #c5221f; }
+      .warn { color: #b06000; }
+      .sheetname {
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h4>Convert Tagihan F2</h4>
+    <p class="hint">
+      Target sheet: <span class="sheetname" id="sheetName">...</span><br />
+      Salin (select lalu copy) tabel "RINCIAN IURAN TENAGA KERJA" dari Formulir
+      2a PU BPJS Ketenagakerjaan, tempel di bawah, lalu klik Proses. Baris yang
+      nomor referensi/namanya sudah ada di rekap akan diperbarui, yang belum
+      ada akan ditambahkan otomatis.
+    </p>
+    <textarea id="raw" placeholder="Tempel teks tabel F2 di sini..."></textarea>
+    <br />
+    <button id="go">Proses</button>
+    <div id="status"></div>
+
+    <script>
+      google.script.run
+        .withSuccessHandler(function (name) {
+          document.getElementById('sheetName').textContent = name;
+        })
+        .getActiveSheetName();
+
+      document.getElementById('go').addEventListener('click', function () {
+        var btn = document.getElementById('go');
+        var statusEl = document.getElementById('status');
+        var text = document.getElementById('raw').value;
+        if (!text.trim()) {
+          statusEl.innerHTML = '<span class="err">Tempel dulu teks tagihan F2-nya.</span>';
+          return;
+        }
+        btn.disabled = true;
+        statusEl.textContent = 'Memproses...';
+        google.script.run
+          .withSuccessHandler(function (res) {
+            btn.disabled = false;
+            renderResult(res);
+          })
+          .withFailureHandler(function (err) {
+            btn.disabled = false;
+            statusEl.innerHTML = '<span class="err">Error: ' + err.message + '</span>';
+          })
+          .processF2Text(text);
+      });
+
+      function renderResult(res) {
+        var statusEl = document.getElementById('status');
+        if (!res.ok) {
+          statusEl.innerHTML = '<span class="err">' + res.message + '</span>';
+          if (res.warnings && res.warnings.length) {
+            statusEl.innerHTML += '\n\n' + res.warnings.join('\n');
+          }
+          return;
+        }
+        var lines = [];
+        lines.push(
+          '<span class="ok">Selesai: ' + res.updated + ' baris diperbarui, ' +
+            res.added + ' baris baru ditambahkan.</span>'
+        );
+        if (res.log && res.log.length) {
+          lines.push(res.log.join('\n'));
+        }
+        if (res.warnings && res.warnings.length) {
+          lines.push('<span class="warn">Perhatian:\n' + res.warnings.join('\n') + '</span>');
+        }
+        statusEl.innerHTML = lines.join('\n\n');
+      }
+    </script>
+  </body>
+</html>
