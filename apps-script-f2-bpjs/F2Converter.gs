@@ -1,9 +1,16 @@
 /**
  * Convert Tagihan F2 BPJS Ketenagakerjaan -> Rekap Sheet
  * ---------------------------------------------------------
- * Bound script: dipasang sekali di spreadsheet rekap ("08. BPJS KETENAGAKERJAAN ..."),
- * lalu menu-nya otomatis tersedia di SEMUA tab/sheet dalam spreadsheet itu.
- * Setiap tab dibaca/ditulis berdasarkan sheet yang sedang aktif saat menu dijalankan.
+ * File TERPISAH di project Apps Script yang sama dengan Code.gs kamu (yang
+ * sudah punya menu "📌 MENU OTOMATIS"). SENGAJA TIDAK mendefinisikan
+ * onOpen() di sini, karena Apps Script cuma menjalankan satu onOpen() per
+ * project -- kalau ada dua, salah satunya diam-diam tidak jalan. Tambahkan
+ * menu "F2 BPJS" ke dalam onOpen() yang SUDAH ADA di Code.gs, lihat
+ * README.md di folder ini untuk potongan kodenya.
+ *
+ * Menu-nya (setelah digabung) otomatis tersedia di SEMUA tab/sheet dalam
+ * spreadsheet itu. Setiap tab dibaca/ditulis berdasarkan sheet yang sedang
+ * aktif saat menu dijalankan.
  *
  * Cara pakai:
  *  1. Buka tab rekap yang mau diisi (mis. "ATR BPN PALANGKARAYA").
@@ -17,13 +24,6 @@
 var F2_AMOUNT_RE = /\d{1,3}(?:,\d{3})*\.\d{2}/g;
 var F2_DATE_RE = /\b\d{2}-\d{2}-\d{4}\b/g;
 var F2_NIK_RE = /\b\d{16}\b/;
-
-function onOpen() {
-  SpreadsheetApp.getUi()
-    .createMenu('F2 BPJS')
-    .addItem('Convert Tagihan F2 ke Sheet Ini...', 'showF2Sidebar')
-    .addToUi();
-}
 
 function showF2Sidebar() {
   var sheetName = SpreadsheetApp.getActiveSheet().getName();

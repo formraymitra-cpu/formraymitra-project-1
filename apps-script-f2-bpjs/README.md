@@ -2,36 +2,73 @@
 
 Script ini dipasang **langsung di spreadsheet rekap BPJS Ketenagakerjaan kamu**
 (mis. "08. BPJS KETENAGAKERJAAN AGUSTUS 26") — bukan di repo ini, karena
-spreadsheet itu file terpisah di Google Drive. Setelah dipasang sekali, menu
-converter-nya otomatis muncul di **semua tab** (ALDAS MGL, ATR BPN
-PALANGKARAYA, dst), jadi tidak perlu instal ulang per sheet.
+spreadsheet itu file terpisah di Google Drive.
+
+Spreadsheet itu **sudah punya Apps Script sendiri** (menu "📌 MENU OTOMATIS" —
+`buatMenu`, `urutkanSheetAbjad`, `tambahTombolKembali`, `hapusSemuaWarnaFill`).
+Panduan di bawah ini ditulis supaya converter F2 **berdampingan**, bukan
+menimpa, script yang sudah ada itu.
 
 Yang dikerjakan script: kamu tempel teks tabel "RINCIAN IURAN TENAGA KERJA"
 dari Formulir 2a PU (tagihan F2), lalu script otomatis membaca nomor
 referensi, nama, dan semua nominal iuran (JKK, JKM, JHT, JP, JKP — porsi
 perusahaan & karyawan), lalu mengisi/mengupdate baris yang sesuai di tabel
 rekap tab yang sedang aktif. Baris yang belum ada di rekap otomatis
-ditambahkan sebelum baris total.
+ditambahkan sebelum baris total. Kolom D1 dan A3 (dipakai sistem "⬅ MENU" /
+"KEMBALI KE MENU" milik script lama) tidak disentuh sama sekali.
+
+## Kenapa tidak cukup copy-paste langsung
+
+Script lama dan converter F2 sama-sama butuh fungsi `onOpen()` untuk
+menampilkan menu masing-masing saat spreadsheet dibuka. Tapi dalam satu
+project Apps Script, **hanya boleh ada satu `onOpen()`** — kalau ada dua,
+Apps Script cuma menjalankan salah satunya (biasanya yang terakhir dibaca),
+dan menu yang satunya lagi hilang tanpa pesan error. Jadi `onOpen()` yang
+sudah ada harus **digabung** (diedit), bukan ditambah dobel.
+
+Fungsi lain di converter F2 (`showF2Sidebar`, `getActiveSheetName`,
+`processF2Text`, `parseF2Text`, `findHeaderMap`, `applyRecordsToSheet`,
+`round2`, dan konstanta `F2_AMOUNT_RE`/`F2_DATE_RE`/`F2_NIK_RE`) namanya
+tidak bentrok dengan fungsi yang sudah ada, jadi aman ditaruh sebagai file
+terpisah.
 
 ## Cara pasang (sekali saja)
 
-1. Buka spreadsheet **"08. BPJS KETENAGAKERJAAN ..."** di Google Sheets.
-2. Menu **Extensions → Apps Script**. Harus dibuka dari dalam spreadsheet ini
-   (bukan project Apps Script terpisah), supaya script otomatis menempel ke
-   spreadsheet yang benar dan menu-nya muncul di semua tab.
-3. Di editor Apps Script:
-   - **`Code.gs`** — hapus isi default `myFunction()`, ganti dengan isi file
-     `apps-script-f2-bpjs/Code.gs` di repo ini.
-   - Buat file HTML baru (**File → New → HTML**), beri nama **`F2Sidebar`**
-     (harus persis nama ini), isi dengan `apps-script-f2-bpjs/F2Sidebar.html`.
-   - (Opsional) buka ikon gerigi **Project Settings** → centang "Show
-     appsscript.json in editor" → sesuaikan dengan
-     `apps-script-f2-bpjs/appsscript.json`.
-4. **Simpan** (ikon disket / Ctrl+S), lalu **tutup tab Apps Script dan reload
-   spreadsheet-nya** (F5). Saat spreadsheet dibuka ulang, Google akan minta
-   otorisasi — wajar, karena script perlu izin baca/tulis ke spreadsheet ini.
-   Setujui.
-5. Setelah itu, di menu bar spreadsheet akan muncul menu baru: **"F2 BPJS"**.
+1. Buka spreadsheet **"08. BPJS KETENAGAKERJAAN ..."** di Google Sheets →
+   menu **Extensions → Apps Script**.
+2. **Jangan hapus/timpa `Code.gs` yang sudah ada.** Buat file script baru:
+   **File → New → Script**, beri nama **`F2Converter`**, isi dengan seluruh
+   isi file `apps-script-f2-bpjs/F2Converter.gs` di repo ini.
+3. Buat file HTML baru (**File → New → HTML**), beri nama **`F2Sidebar`**
+   (harus persis nama ini), isi dengan `apps-script-f2-bpjs/F2Sidebar.html`.
+4. Buka kembali `Code.gs` (yang sudah ada), cari fungsi `onOpen()` di
+   paling atas, lalu tambahkan 4 baris berikut **di dalamnya**, setelah
+   blok `ui.createMenu("📌 MENU OTOMATIS")...addToUi();` yang sudah ada:
+
+   ```js
+   function onOpen() {
+     const ui = SpreadsheetApp.getUi();
+
+     ui.createMenu("📌 MENU OTOMATIS")
+       .addItem("Buat / Refresh Menu", "buatMenu")
+       .addSeparator()
+       .addItem("🧹 No Fill Semua Sheet", "hapusSemuaWarnaFill")
+       .addToUi();
+
+     // >>> tambahan untuk converter F2 <<<
+     ui.createMenu("F2 BPJS")
+       .addItem("Convert Tagihan F2 ke Sheet Ini...", "showF2Sidebar")
+       .addToUi();
+   }
+   ```
+
+   Jadi `onOpen()` tetap satu fungsi saja, cuma isinya nambah 4 baris untuk
+   memunculkan menu "F2 BPJS" di sebelah menu "📌 MENU OTOMATIS" yang lama.
+5. **Simpan** (ikon disket / Ctrl+S), lalu **tutup tab Apps Script dan reload
+   spreadsheet-nya** (F5). Saat dibuka ulang, kedua menu — "📌 MENU OTOMATIS"
+   dan "F2 BPJS" — akan muncul berdampingan di menu bar. Kalau ini pertama
+   kali script baru dijalankan, Google akan minta otorisasi tambahan — wajar,
+   setujui saja.
 
 ## Cara pakai
 
@@ -67,7 +104,8 @@ ditambahkan sebelum baris total.
 | Total Iuran                                  | TOTAL |
 
 Baris baru otomatis diberi **STATUS = AKTIF**. Kolom lain (KETERANGAN, JPG
-SIPP/REKAP TK) tidak disentuh — tetap diisi manual seperti biasa.
+SIPP/REKAP TK, D1, A3) tidak disentuh — tetap seperti biasa / tetap dikelola
+oleh script "📌 MENU OTOMATIS" yang lama.
 
 ## Pencocokan baris (update vs tambah baru)
 
@@ -93,3 +131,6 @@ lengkap dengan nomor urut dan format sel mengikuti baris di atasnya.
 - Kalau total hasil hitung script beda lebih dari Rp1 dari "Total Iuran" di
   F2, sidebar menampilkan peringatan supaya dicek manual — data tetap
   ditulis, hanya sebagai flag.
+- Kalau nanti "Buat / Refresh Menu" (script lama) dijalankan, itu hanya
+  membangun ulang sheet "MENU" dan link D1/A3 — tidak mempengaruhi data yang
+  sudah diisi converter F2.
