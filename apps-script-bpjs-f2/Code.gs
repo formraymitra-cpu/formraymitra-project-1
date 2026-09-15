@@ -489,9 +489,11 @@ function ensureTotalRow_(sheet, map, range, lastDataRow) {
   return totalRow;
 }
 
-/** Simpan PDF F2 asli ke Drive (folder "PDF F2 Sumber" di sebelah spreadsheet) dan
- * pasang linknya di H2:I2 (merge), diberi nama "<sheet> <bulan>-<tahun 2 digit>.pdf".
- * H2:I2 dipakai literal (sama seperti konvensi hapusPDFdanTeks() yang sudah ada). */
+/** Simpan PDF F2 asli ke Drive (folder "PDF F2 Sumber/<bulan>-<tahun>" di sebelah
+ * spreadsheet, satu subfolder per periode supaya PDF dari bulan-bulan berbeda tidak
+ * campur jadi satu folder besar) dan pasang linknya di H2:I2 (merge), diberi nama
+ * "<sheet> <bulan>-<tahun 2 digit>.pdf". H2:I2 dipakai literal (sama seperti
+ * konvensi hapusPDFdanTeks() yang sudah ada). */
 function attachSourcePdf_(ss, sheet, pdfBase64, periode) {
   var yy = periode && periode.year ? String(periode.year).slice(-2) : '';
   var label = periode && periode.month && yy
@@ -500,7 +502,7 @@ function attachSourcePdf_(ss, sheet, pdfBase64, periode) {
 
   var bytes = Utilities.base64Decode(pdfBase64);
   var blob = Utilities.newBlob(bytes, 'application/pdf', label);
-  var folder = getOrCreatePdfFolder_(ss);
+  var folder = getOrCreatePdfFolder_(ss, periode);
   var file = folder.createFile(blob);
   file.setName(label);
 
@@ -510,13 +512,20 @@ function attachSourcePdf_(ss, sheet, pdfBase64, periode) {
   range.setRichTextValue(rich);
 }
 
-function getOrCreatePdfFolder_(ss) {
+function getOrCreateSubfolder_(parent, name) {
+  var it = parent.getFoldersByName(name);
+  if (it.hasNext()) return it.next();
+  return parent.createFolder(name);
+}
+
+function getOrCreatePdfFolder_(ss, periode) {
   var parents = DriveApp.getFileById(ss.getId()).getParents();
   var parentFolder = parents.hasNext() ? parents.next() : DriveApp.getRootFolder();
-  var name = 'PDF F2 Sumber';
-  var it = parentFolder.getFoldersByName(name);
-  if (it.hasNext()) return it.next();
-  return parentFolder.createFolder(name);
+  var root = getOrCreateSubfolder_(parentFolder, 'PDF F2 Sumber');
+  if (periode && periode.month && periode.year) {
+    return getOrCreateSubfolder_(root, periode.month + '-' + periode.year);
+  }
+  return root;
 }
 
 /**

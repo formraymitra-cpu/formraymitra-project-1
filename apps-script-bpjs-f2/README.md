@@ -14,7 +14,7 @@ Menu tambahan di dalam spreadsheet **"09. BPJS KETENAGAKERJAAN ..."** (atau spre
 6. Baris **TOTAL** otomatis dibuat/diperbarui tepat di bawah baris data terakhir, isi rumus SUM untuk kolom JKK sampai JP-karyawan dan kolom TOTAL. Kalau baris TOTAL sudah ada dari proses sebelumnya, dipakai ulang (tidak dobel, tidak bikin baris baru tiap import).
 7. Header gabungan **"IURAN TK CLIENT"** (merge di atas kolom JKK–JKP) dan **"IURAN TK KARYAWAN"** (merge di atas kolom JHT karyawan–JP karyawan) otomatis dipasang di baris tepat di atas header kolom.
 8. Setiap baris yang diisi/diupdate otomatis dirapikan: **tanpa warna latar**, **tidak bold**, dan **NAMA rata kiri** — ikut membetulkan baris-baris lama yang formatnya masih ikut warna header, asal orangnya ada di PDF yang sedang diproses.
-9. File PDF F2 aslinya diunggah ke folder Drive **"PDF F2 Sumber"** (sejajar dengan spreadsheet-nya) lalu link-nya dipasang di **H2:I2** (merge), diberi nama `<nama sheet> <bulan>-<2 digit tahun>.pdf` — menimpa link sebelumnya kalau sheet itu diimport ulang.
+9. File PDF F2 aslinya diunggah ke folder Drive **"PDF F2 Sumber/<bulan>-<tahun>"** (sejajar dengan spreadsheet-nya, satu subfolder per periode supaya PDF bulan-bulan berbeda tidak campur jadi satu folder besar) lalu link-nya dipasang di **H2:I2** (merge), diberi nama `<nama sheet> <bulan>-<2 digit tahun>.pdf` — menimpa link sebelumnya kalau sheet itu diimport ulang.
 
 ## Cara pasang (sekali saja per spreadsheet)
 
