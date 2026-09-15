@@ -330,8 +330,9 @@ function colLetter_(col) {
  * Cari baris header ("NO | NAMA | NOMOR KETENAGAKERJAAN | IURAN TK CLIENT | IURAN TK
  * KARYAWAN | TOTAL | STATUS | KETERANGAN | JPG SIPP / REKAP TK | JKK | JKM | JHT | JP |
  * JKP | | JHT | JP") di 15 baris pertama sheet, lalu petakan nama kolom logis -> nomor
- * kolom (1-based). JHT dan JP masing-masing muncul 2x di header: yang pertama = total
- * (Pemberi Kerja + Tenaga Kerja), yang kedua = porsi Tenaga Kerja (karyawan) saja.
+ * kolom (1-based). JHT dan JP masing-masing muncul 2x di header: yang pertama = porsi
+ * Pemberi Kerja (ikut IURAN TK CLIENT), yang kedua = porsi Tenaga Kerja/karyawan
+ * (ikut IURAN TK KARYAWAN).
  */
 function findHeaderMap_(sheet) {
   var maxRow = Math.min(15, sheet.getLastRow());
@@ -365,10 +366,13 @@ function findHeaderMap_(sheet) {
       else if (v2.indexOf('JPG SIPP') === 0 && map.jpgSipp === undefined) map.jpgSipp = col;
       else if (v2 === 'JKK' && map.jkk === undefined) map.jkk = col;
       else if (v2 === 'JKM' && map.jkm === undefined) map.jkm = col;
-      else if (v2 === 'JHT' && map.jhtTotal === undefined) map.jhtTotal = col;
-      else if (v2 === 'JHT' && map.jhtTotal !== undefined && map.jhtKaryawan === undefined) map.jhtKaryawan = col;
-      else if (v2 === 'JP' && map.jpTotal === undefined) map.jpTotal = col;
-      else if (v2 === 'JP' && map.jpTotal !== undefined && map.jpKaryawan === undefined) map.jpKaryawan = col;
+      // JHT dan JP masing-masing muncul 2x di header SIPP: yang pertama = porsi
+      // Pemberi Kerja (masuk IURAN TK CLIENT), yang kedua = porsi Tenaga Kerja
+      // (masuk IURAN TK KARYAWAN). Tidak dijumlahkan satu sama lain.
+      else if (v2 === 'JHT' && map.jhtPK === undefined) map.jhtPK = col;
+      else if (v2 === 'JHT' && map.jhtPK !== undefined && map.jhtTK === undefined) map.jhtTK = col;
+      else if (v2 === 'JP' && map.jpPK === undefined) map.jpPK = col;
+      else if (v2 === 'JP' && map.jpPK !== undefined && map.jpTK === undefined) map.jpTK = col;
       else if (v2 === 'JKP' && map.jkp === undefined) map.jkp = col;
     }
     return map;
@@ -399,12 +403,14 @@ function findDataRange_(sheet, map) {
   return { start: start, end: end, totalRow: totalRow };
 }
 
-/** Rapikan format 1 baris data: no fill, tidak bold, NAMA rata kiri. Tidak pernah
- * menyentuh KETERANGAN (H) maupun JPG SIPP / REKAP TK (I) — itu area manual. */
+/** Rapikan format 1 baris data: no fill, tidak bold, NAMA rata kiri. KETERANGAN (H)
+ * dan JPG SIPP / REKAP TK (I) juga di-no-fill (isinya tetap tidak disentuh — itu
+ * area manual, cuma warnanya yang dirapikan). */
 function styleDataRow_(sheet, row, map) {
   var cols = [
     map.no, map.nama, map.noKtk, map.iuranClient, map.iuranKaryawan, map.total, map.status,
-    map.jkk, map.jkm, map.jhtTotal, map.jpTotal, map.jkp, map.jhtKaryawan, map.jpKaryawan
+    map.keterangan, map.jpgSipp,
+    map.jkk, map.jkm, map.jhtPK, map.jpPK, map.jkp, map.jhtTK, map.jpTK
   ].filter(function (c) { return !!c; });
   cols.forEach(function (c) {
     sheet.getRange(row, c).setBackground(null).setFontWeight('normal');
@@ -420,9 +426,9 @@ function setRowFormulas_(sheet, row, map) {
       '=SUM(' + colLetter_(map.jkk) + row + ':' + colLetter_(map.jkp) + row + ')'
     );
   }
-  if (map.iuranKaryawan && map.jhtKaryawan && map.jpKaryawan) {
+  if (map.iuranKaryawan && map.jhtTK && map.jpTK) {
     sheet.getRange(row, map.iuranKaryawan).setFormula(
-      '=SUM(' + colLetter_(map.jhtKaryawan) + row + ':' + colLetter_(map.jpKaryawan) + row + ')'
+      '=SUM(' + colLetter_(map.jhtTK) + row + ':' + colLetter_(map.jpTK) + row + ')'
     );
   }
   if (map.total && map.iuranClient && map.iuranKaryawan) {
@@ -442,8 +448,8 @@ function ensureGroupHeaders_(sheet, map) {
     r1.merge();
     r1.setValue('IURAN TK CLIENT').setFontWeight('bold').setHorizontalAlignment('center');
   }
-  if (map.jhtKaryawan && map.jpKaryawan && map.jpKaryawan >= map.jhtKaryawan) {
-    var r2 = sheet.getRange(groupRow, map.jhtKaryawan, 1, map.jpKaryawan - map.jhtKaryawan + 1);
+  if (map.jhtTK && map.jpTK && map.jpTK >= map.jhtTK) {
+    var r2 = sheet.getRange(groupRow, map.jhtTK, 1, map.jpTK - map.jhtTK + 1);
     r2.merge();
     r2.setValue('IURAN TK KARYAWAN').setFontWeight('bold').setHorizontalAlignment('center');
   }
@@ -471,18 +477,14 @@ function ensureTotalRow_(sheet, map, range, lastDataRow) {
   var dataStart = map.headerRow + 1;
   var dataEnd = Math.max(lastDataRow, dataStart - 1);
   if (dataEnd >= dataStart) {
-    if (map.jkk && map.jpKaryawan) {
-      for (var c = map.jkk; c <= map.jpKaryawan; c++) {
-        sheet.getRange(totalRow, c).setFormula(
-          '=SUM(' + colLetter_(c) + dataStart + ':' + colLetter_(c) + dataEnd + ')'
-        ).setBackground(null).setFontWeight('normal');
-      }
-    }
-    if (map.total) {
-      sheet.getRange(totalRow, map.total).setFormula(
-        '=SUM(' + colLetter_(map.total) + dataStart + ':' + colLetter_(map.total) + dataEnd + ')'
-      ).setBackground(null).setFontWeight('normal');
-    }
+    // Kolom O (pembatas merah, tidak ada headernya) sengaja dilewati — bukan data.
+    var sumCols = [map.jkk, map.jkm, map.jhtPK, map.jpPK, map.jkp, map.jhtTK, map.jpTK, map.total]
+      .filter(function (c) { return !!c; });
+    sumCols.forEach(function (c) {
+      sheet.getRange(totalRow, c).setFormula(
+        '=SUM(' + colLetter_(c) + dataStart + ':' + colLetter_(c) + dataEnd + ')'
+      ).setBackground(null).setFontWeight('bold');
+    });
   }
   return totalRow;
 }
@@ -579,11 +581,13 @@ function importToSheet(payload) {
     if (map.status) sheet.getRange(targetRow, map.status).setValue('AKTIF');
     if (map.jkk) sheet.getRange(targetRow, map.jkk).setValue(num_(emp.jkk));
     if (map.jkm) sheet.getRange(targetRow, map.jkm).setValue(num_(emp.jkm));
-    if (map.jhtTotal) sheet.getRange(targetRow, map.jhtTotal).setValue(round2_(num_(emp.jhtPK) + num_(emp.jhtTK)));
-    if (map.jpTotal) sheet.getRange(targetRow, map.jpTotal).setValue(round2_(num_(emp.jpPK) + num_(emp.jpTK)));
+    // JHT & JP: Pemberi Kerja dan Tenaga Kerja masing-masing kolom sendiri, TIDAK
+    // dijumlahkan — sesuai pembagian aslinya di tabel SIPP/F2.
+    if (map.jhtPK) sheet.getRange(targetRow, map.jhtPK).setValue(num_(emp.jhtPK));
+    if (map.jpPK) sheet.getRange(targetRow, map.jpPK).setValue(num_(emp.jpPK));
     if (map.jkp) sheet.getRange(targetRow, map.jkp).setValue(round2_(num_(emp.jkpPK) + num_(emp.jkpPemerintah)));
-    if (map.jhtKaryawan) sheet.getRange(targetRow, map.jhtKaryawan).setValue(num_(emp.jhtTK));
-    if (map.jpKaryawan) sheet.getRange(targetRow, map.jpKaryawan).setValue(num_(emp.jpTK));
+    if (map.jhtTK) sheet.getRange(targetRow, map.jhtTK).setValue(num_(emp.jhtTK));
+    if (map.jpTK) sheet.getRange(targetRow, map.jpTK).setValue(num_(emp.jpTK));
 
     setRowFormulas_(sheet, targetRow, map);
     styleDataRow_(sheet, targetRow, map);
