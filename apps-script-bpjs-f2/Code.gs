@@ -51,8 +51,12 @@ function buatMenu() {
   menuSheet.getRange("A1").setValue("NOMOR");
   menuSheet.getRange("B1").setValue("NAMA LOKASI");
   menuSheet.getRange("C1").setValue("CEK KESESUAIAN");
+  menuSheet.getRange("D1").setValue("JUMLAH ANGGOTA");
+  menuSheet.getRange("E1").setValue("TOTAL TAGIHAN");
+  menuSheet.getRange("F1").setValue("JUMLAH PROGRAM");
+  menuSheet.getRange("G1").setValue("JENIS PROGRAM");
 
-  menuSheet.getRange("A1:C1")
+  menuSheet.getRange("A1:G1")
     .setFontWeight("bold")
     .setBackground("#d9ead3")
     .setHorizontalAlignment("center");
@@ -123,14 +127,20 @@ function buatMenu() {
           .setFontWeight("normal");
       }
 
+      const stats = getLocationStats_(sheet);
+      menuSheet.getRange(row, 4).setValue(stats.anggota);
+      menuSheet.getRange(row, 5).setValue(stats.totalTagihan).setNumberFormat("#,##0.00");
+      menuSheet.getRange(row, 6).setValue(stats.jumlahProgram);
+      menuSheet.getRange(row, 7).setValue(stats.jenisProgram);
+
       nomor++;
       row++;
     }
   });
 
-  menuSheet.autoResizeColumns(1, 3);
+  menuSheet.autoResizeColumns(1, 7);
 
-  menuSheet.getRange(1, 1, row - 1, 3)
+  menuSheet.getRange(1, 1, row - 1, 7)
     .setBorder(true, true, true, true, true, true);
 
   if (row > 2) {
@@ -139,6 +149,12 @@ function buatMenu() {
       .setHorizontalAlignment("center");
 
     menuSheet.getRange(2, 3, row - 2, 1)
+      .setHorizontalAlignment("center");
+
+    menuSheet.getRange(2, 4, row - 2, 1)
+      .setHorizontalAlignment("center");
+
+    menuSheet.getRange(2, 6, row - 2, 1)
       .setHorizontalAlignment("center");
   }
 
@@ -386,6 +402,12 @@ var TOTAL_LABEL = 'TOTAL';
  * Cari rentang baris data (setelah header) sampai sebelum baris kosong atau baris
  * penanda TOTAL yang sudah ada. Berhenti persis di batas data yang ada — tidak pernah
  * masuk ke baris kosong/area manual di bawahnya.
+ *
+ * Beberapa sheet lama sudah punya baris TOTAL bikinan manual/proses sebelumnya:
+ * NO & NAMA-nya kosong, tapi kolom TOTAL atau JKK sudah keisi angka. Baris seperti
+ * itu juga dianggap baris TOTAL (supaya tidak dibuatkan baris TOTAL baru yang
+ * dobel) — beda dengan baris kosong asli (NO, NAMA, TOTAL, JKK semuanya kosong)
+ * yang berarti benar-benar akhir data / awal area manual.
  */
 function findDataRange_(sheet, map) {
   var lastRow = sheet.getLastRow();
@@ -396,11 +418,67 @@ function findDataRange_(sheet, map) {
     var namaVal = map.nama ? sheet.getRange(r, map.nama).getValue() : '';
     var noVal = map.no ? sheet.getRange(r, map.no).getValue() : '';
     var namaNorm = norm_(namaVal);
+    var noBlank = String(noVal).trim() === '';
+
     if (namaNorm === TOTAL_LABEL) { totalRow = r; break; }
-    if (namaNorm === '' && String(noVal).trim() === '') break;
+
+    if (namaNorm === '' && noBlank) {
+      var hasTotalValue = (map.total && String(sheet.getRange(r, map.total).getValue()).trim() !== '') ||
+                           (map.jkk && String(sheet.getRange(r, map.jkk).getValue()).trim() !== '');
+      if (hasTotalValue) totalRow = r;
+      break;
+    }
     end = r;
   }
   return { start: start, end: end, totalRow: totalRow };
+}
+
+/**
+ * Ringkasan 1 sheet lokasi untuk sheet MENU: jumlah anggota (banyak baris
+ * karyawan), total tagihan (nilai TOTAL di baris TOTAL), jumlah & jenis program
+ * BPJS yang aktif (dilihat dari kolom JKK-JKP di baris TOTAL, bukan per orang —
+ * program dianggap aktif kalau totalnya di lokasi itu tidak 0).
+ */
+function getLocationStats_(sheet) {
+  var map = findHeaderMap_(sheet);
+  if (!map) {
+    return { anggota: 0, totalTagihan: 0, jumlahProgram: 0, jenisProgram: '-' };
+  }
+
+  var range = findDataRange_(sheet, map);
+  var anggota = range.end >= range.start ? (range.end - range.start + 1) : 0;
+
+  var totalTagihan = (range.totalRow && map.total)
+    ? num_(sheet.getRange(range.totalRow, map.total).getValue())
+    : 0;
+
+  var programCols = [
+    { key: 'JKK', col: map.jkk },
+    { key: 'JKM', col: map.jkm },
+    { key: 'JHT', col: map.jhtPK },
+    { key: 'JP', col: map.jpPK },
+    { key: 'JKP', col: map.jkp }
+  ];
+  var aktif = [];
+  if (range.totalRow) {
+    programCols.forEach(function (p) {
+      if (!p.col) return;
+      if (num_(sheet.getRange(range.totalRow, p.col).getValue()) !== 0) aktif.push(p.key);
+    });
+  }
+
+  return {
+    anggota: anggota,
+    totalTagihan: totalTagihan,
+    jumlahProgram: aktif.length,
+    jenisProgram: joinProgramNames_(aktif)
+  };
+}
+
+function joinProgramNames_(names) {
+  if (names.length === 0) return '-';
+  if (names.length === 1) return names[0];
+  return names.slice(0, -1).join(', ') + ' dan ' + names[names.length - 1];
 }
 
 /** Rapikan format 1 baris data: no fill, tidak bold, NAMA rata kiri. KETERANGAN (H)
