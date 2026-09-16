@@ -138,11 +138,6 @@ function buatMenu() {
     }
   });
 
-  menuSheet.autoResizeColumns(1, 7);
-
-  menuSheet.getRange(1, 1, row - 1, 7)
-    .setBorder(true, true, true, true, true, true);
-
   if (row > 2) {
 
     menuSheet.getRange(2, 1, row - 2, 1)
@@ -156,7 +151,25 @@ function buatMenu() {
 
     menuSheet.getRange(2, 6, row - 2, 1)
       .setHorizontalAlignment("center");
+
+    // Baris ringkasan total di bawah data: C = jumlah lokasi yang SESUAI,
+    // D = jumlah anggota semua lokasi, E = jumlah tagihan semua lokasi.
+    const lastDataRow = row - 1;
+    menuSheet.getRange(row, 2).setValue("TOTAL");
+    menuSheet.getRange(row, 3).setFormula(`=COUNTIF(C2:C${lastDataRow},"SESUAI")`);
+    menuSheet.getRange(row, 4).setFormula(`=SUM(D2:D${lastDataRow})`);
+    menuSheet.getRange(row, 5).setFormula(`=SUM(E2:E${lastDataRow})`).setNumberFormat("#,##0.00");
+
+    menuSheet.getRange(row, 2, 1, 4).setFontWeight("bold");
+    menuSheet.getRange(row, 2, 1, 3).setHorizontalAlignment("center"); // TOTAL, C, D — E (uang) biarkan rata kanan default
+
+    row++;
   }
+
+  menuSheet.autoResizeColumns(1, 7);
+
+  menuSheet.getRange(1, 1, row - 1, 7)
+    .setBorder(true, true, true, true, true, true);
 
   tambahTombolKembali(ss, menuSheet);
 }
