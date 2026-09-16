@@ -435,9 +435,10 @@ function findDataRange_(sheet, map) {
 
 /**
  * Ringkasan 1 sheet lokasi untuk sheet MENU: jumlah anggota (banyak baris
- * karyawan), total tagihan (nilai TOTAL di baris TOTAL), jumlah & jenis program
- * BPJS yang aktif (dilihat dari kolom JKK-JKP di baris TOTAL, bukan per orang —
- * program dianggap aktif kalau totalnya di lokasi itu tidak 0).
+ * karyawan), total tagihan, jumlah & jenis program BPJS yang aktif (JKK-JKP).
+ * Dihitung langsung dari baris-baris karyawannya (dijumlahkan sendiri), BUKAN
+ * dari baris TOTAL — supaya lokasi yang anggotanya cuma 1 orang dan belum
+ * punya baris TOTAL manual tetap kehitung benar, bukan 0.
  */
 function getLocationStats_(sheet) {
   var map = findHeaderMap_(sheet);
@@ -448,28 +449,37 @@ function getLocationStats_(sheet) {
   var range = findDataRange_(sheet, map);
   var anggota = range.end >= range.start ? (range.end - range.start + 1) : 0;
 
-  var totalTagihan = (range.totalRow && map.total)
-    ? num_(sheet.getRange(range.totalRow, map.total).getValue())
-    : 0;
-
-  var programCols = [
-    { key: 'JKK', col: map.jkk },
-    { key: 'JKM', col: map.jkm },
-    { key: 'JHT', col: map.jhtPK },
-    { key: 'JP', col: map.jpPK },
-    { key: 'JKP', col: map.jkp }
-  ];
+  var totalTagihan = 0;
   var aktif = [];
-  if (range.totalRow) {
+
+  if (anggota > 0) {
+    var numRows = anggota;
+    if (map.total) {
+      sheet.getRange(range.start, map.total, numRows, 1).getValues().forEach(function (r) {
+        totalTagihan += num_(r[0]);
+      });
+    }
+
+    var programCols = [
+      { key: 'JKK', col: map.jkk },
+      { key: 'JKM', col: map.jkm },
+      { key: 'JHT', col: map.jhtPK },
+      { key: 'JP', col: map.jpPK },
+      { key: 'JKP', col: map.jkp }
+    ];
     programCols.forEach(function (p) {
       if (!p.col) return;
-      if (num_(sheet.getRange(range.totalRow, p.col).getValue()) !== 0) aktif.push(p.key);
+      var sum = 0;
+      sheet.getRange(range.start, p.col, numRows, 1).getValues().forEach(function (r) {
+        sum += num_(r[0]);
+      });
+      if (sum !== 0) aktif.push(p.key);
     });
   }
 
   return {
     anggota: anggota,
-    totalTagihan: totalTagihan,
+    totalTagihan: round2_(totalTagihan),
     jumlahProgram: aktif.length,
     jenisProgram: joinProgramNames_(aktif)
   };
