@@ -2971,7 +2971,36 @@ const CONFIG_NOMINAL_TRANSFER = {
      * "POLRES": "KEPOLISIAN RESOR",
      */
 
-  }
+  },
+
+  /*
+   * ==========================================================
+   * KATA YANG DIABAIKAN
+   * ==========================================================
+   *
+   * Kata-kata di sini akan dibuang dari nama lokasi sebelum
+   * dicocokkan (di kedua sisi: sheet CEK GAJI OTOMATIS maupun
+   * sheet Nominal Transfer).
+   *
+   * Dipakai untuk kata tambahan yang tidak berhubungan dengan
+   * identitas lokasi itu sendiri, contoh: di sheet Nominal
+   * Transfer semua nama lokasi punya akhiran "PENGECEKAN"
+   * (mis. "SAMSAT 1 PENGECEKAN"), padahal di CEK GAJI OTOMATIS
+   * kata itu tidak ada.
+   *
+   * Tambahkan kata baru tanpa menghapus yang sudah ada.
+   */
+  IGNORED_WORDS: [
+
+    "PENGECEKAN"
+
+    /*
+     * CONTOH KATA BARU:
+     *
+     * "PTSL",
+     */
+
+  ]
 
 };
 
@@ -3744,8 +3773,12 @@ function buildNominalTransferLookup_(sourceSheet) {
 /* ============================================================
  * 43. CANONICAL LOCATION KEY
  *
- * Menggabungkan ekspansi singkatan + normalisasi nama lokasi,
- * supaya "KEJARI SEMARANG" dan "KEJAKSAAN NEGERI SEMARANG"
+ * Menggabungkan ekspansi singkatan, pembuangan kata yang
+ * diabaikan, lalu normalisasi nama lokasi. Sehingga:
+ *
+ * - "KEJARI SEMARANG" = "KEJAKSAAN NEGERI SEMARANG" (singkatan)
+ * - "SAMSAT 1 PENGECEKAN" = "SAMSAT 1" (kata diabaikan)
+ *
  * menghasilkan key yang sama.
  * ============================================================
  */
@@ -3753,7 +3786,9 @@ function buildNominalTransferLookup_(sourceSheet) {
 function canonicalLocationKey_(text) {
 
   return normalizeLocationName_(
-    expandAbbreviations_(text)
+    removeIgnoredWords_(
+      expandAbbreviations_(text)
+    )
   );
 
 }
@@ -3806,7 +3841,52 @@ function expandAbbreviations_(text) {
 
 
 /* ============================================================
- * 45. ESCAPE REGEXP & ALIAS MAP BUILDER
+ * 45. REMOVE IGNORED WORDS
+ *
+ * Membuang setiap kata (sebagai kata utuh) yang terdaftar di
+ * CONFIG_NOMINAL_TRANSFER.IGNORED_WORDS, misalnya "PENGECEKAN"
+ * yang menempel di semua nama lokasi pada sheet sumber tapi
+ * tidak ada di NAMA LOKASI tujuan.
+ * ============================================================
+ */
+
+function removeIgnoredWords_(text) {
+
+  if (
+    text === null ||
+    text === undefined
+  ) {
+
+    return "";
+
+  }
+
+  let result =
+    " " + String(text).toUpperCase() + " ";
+
+  const ignoredWords =
+    CONFIG_NOMINAL_TRANSFER.IGNORED_WORDS || [];
+
+  for (const word of ignoredWords) {
+
+    const pattern =
+      new RegExp(
+        "\\b" + escapeRegExp_(word) + "\\b",
+        "g"
+      );
+
+    result =
+      result.replace(pattern, " ");
+
+  }
+
+  return result.trim();
+
+}
+
+
+/* ============================================================
+ * 46. ESCAPE REGEXP & ALIAS MAP BUILDER
  * ============================================================
  */
 
