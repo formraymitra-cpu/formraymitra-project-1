@@ -2941,8 +2941,7 @@ const CONFIG_NOMINAL_TRANSFER = {
     "UPPD KOTA SEMARANG 1": "SAMSAT 1",
     "UPPD KOTA SEMARANG 2": "SAMSAT 2",
     "UPPD KOTA SEMARANG 3": "SAMSAT 3",
-    "BAPENDA PROV JATENG": "BAPENDA",
-    "ESDM SLAMET SELATAN PROV JATENG": "ESDM SLAMET SELATAN"
+    "BAPENDA PROV JATENG": "BAPENDA"
 
     /*
      * CONTOH ALIAS BARU:
@@ -3000,7 +2999,14 @@ const CONFIG_NOMINAL_TRANSFER = {
      * Dipakai untuk "UPPD KAB. BLORA PENGECEKAN PTSP" /
      * "UPPD KAB. BATANG PENGECEKAN PTSP".
      */
-    "PTSP"
+    "PTSP",
+
+    /*
+     * Kata umum "kantor/instansi" yang sering nempel di salah
+     * satu sisi saja, contoh: "DINAS ESDM SLAMET SELATAN" (CEK
+     * GAJI OTOMATIS) vs "ESDM SLAMET SELATAN" (Nominal Transfer).
+     */
+    "DINAS"
 
     /*
      * CONTOH KATA BARU:
