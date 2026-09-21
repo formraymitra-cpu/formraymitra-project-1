@@ -99,6 +99,11 @@
 
     <h3>🔎 Konfirmasi Lokasi Nominal Transfer</h3>
 
+    <div
+      id="fatalError"
+      style="display:none; background:#fce8e6; color:#c5221f; border:1px solid #f28b82; border-radius:6px; padding:10px 12px; margin-bottom:12px; white-space:pre-wrap; font-family:monospace; font-size:12px;"
+    ></div>
+
     <div id="ringkasan"><?!= ringkasanHtml ?></div>
 
     <p class="petunjuk">
@@ -129,6 +134,27 @@
     </div>
 
     <div id="status"></div>
+
+    <script>
+      /*
+       * Script terpisah ini didaftarkan LEBIH DULU (sebelum script
+       * utama di bawah), supaya kalau script utama gagal parse/jalan
+       * (misalnya karena ada isi lokasi yang aneh dan merusak sintaks
+       * JS), errornya tetap tertangkap dan ditampilkan di layar --
+       * tanpa perlu buka DevTools Console.
+       */
+      window.onerror = function (message, source, lineno, colno) {
+        var el = document.getElementById("fatalError");
+        if (el) {
+          el.textContent =
+            "Terjadi error JavaScript di dialog ini:\n" +
+            message +
+            "\n(baris " + lineno + ", kolom " + colno + ")";
+          el.style.display = "block";
+        }
+        return false;
+      };
+    </script>
 
     <script>
       var confirmList = <?!= confirmListJson ?>;
@@ -300,7 +326,26 @@
         google.script.host.close();
       });
 
-      renderRows();
+      try {
+
+        if (!Array.isArray(confirmList) || !Array.isArray(destOptions)) {
+          throw new Error(
+            "Data dari server tidak valid (confirmList/destOptions bukan array)."
+          );
+        }
+
+        renderRows();
+
+      } catch (err) {
+
+        var el = document.getElementById("fatalError");
+        if (el) {
+          el.textContent =
+            "Gagal menampilkan data:\n" + (err && err.message ? err.message : err);
+          el.style.display = "block";
+        }
+
+      }
     </script>
 
   </body>
