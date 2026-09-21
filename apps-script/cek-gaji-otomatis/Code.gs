@@ -112,6 +112,7 @@ function onOpen() {
     .addItem("▶ Jalankan Batch Berikutnya", "menuRunBatchBerikutnya")
     .addSeparator()
     .addItem("🏦 Buat Kolom Nominal Tertransfer", "menuBuatKolomNominalTertransfer")
+    .addItem("🔄 Update Kolom Nominal Tertransfer", "menuUpdateKolomNominalTertransfer")
     .addSeparator()
     .addItem("📊 Cek Progress", "menuCekProgress")
     .addItem("🔄 Reset Progress Sheet", "menuResetProgress")
@@ -3184,7 +3185,156 @@ function menuBuatKolomNominalTertransfer() {
 
 
 /* ============================================================
- * 39. PROSES KOLOM NOMINAL TERTRANSFER
+ * 39. MENU - UPDATE KOLOM NOMINAL TERTRANSFER
+ *
+ * Berbeda dari "Buat Kolom Nominal Tertransfer", menu ini tidak
+ * menampilkan popup link/sheet lagi. Menu ini langsung memakai
+ * link & nama sheet sumber yang terakhir disimpan untuk sheet
+ * bulan yang aktif, lalu menjalankan ulang pencocokan supaya
+ * kolom NOMINAL TERTRANSFER mengikuti update terbaru di
+ * spreadsheet sumber.
+ *
+ * Kalau sheet bulan ini belum pernah disetup lewat menu "Buat
+ * Kolom Nominal Tertransfer", pengguna diarahkan ke menu itu
+ * dulu.
+ * ============================================================
+ */
+
+function menuUpdateKolomNominalTertransfer() {
+
+  const ss =
+    SpreadsheetApp.getActiveSpreadsheet();
+
+  const ui =
+    SpreadsheetApp.getUi();
+
+  const sheet =
+    ss.getActiveSheet();
+
+  const sheetName =
+    sheet.getName();
+
+  if (!isMonthSheet_(sheetName)) {
+
+    ui.alert(
+      "NOMINAL TERTRANSFER",
+      "Sheet aktif adalah \"" + sheetName +
+      "\".\n\n" +
+      "Silakan buka sheet bulan seperti JUNI, JULI, AGUSTUS, dst.",
+      ui.ButtonSet.OK
+    );
+
+    return;
+  }
+
+  const properties =
+    PropertiesService.getDocumentProperties();
+
+  const propKeyLink =
+    "NOMINAL_TRANSFER_LINK_" + sheetName;
+
+  const propKeySheet =
+    "NOMINAL_TRANSFER_SHEET_" + sheetName;
+
+  const sourceUrl =
+    properties.getProperty(propKeyLink) || "";
+
+  const sourceSheetName =
+    properties.getProperty(propKeySheet) || "";
+
+  if (!sourceUrl || !sourceSheetName) {
+
+    ui.alert(
+      "NOMINAL TERTRANSFER",
+      "Belum ada sumber nominal transfer yang tersimpan untuk " +
+      "sheet " + sheetName + ".\n\n" +
+      "Jalankan menu \"Buat Kolom Nominal Tertransfer\" terlebih " +
+      "dahulu (link & nama sheet sumber hanya perlu diisi sekali).",
+      ui.ButtonSet.OK
+    );
+
+    return;
+  }
+
+  const sourceId =
+    extractSpreadsheetId_(sourceUrl);
+
+  if (!sourceId) {
+
+    ui.alert(
+      "NOMINAL TERTRANSFER",
+      "Link spreadsheet yang tersimpan tidak valid:\n" +
+      sourceUrl + "\n\n" +
+      "Jalankan ulang menu \"Buat Kolom Nominal Tertransfer\" " +
+      "untuk memasukkan link baru.",
+      ui.ButtonSet.OK
+    );
+
+    return;
+  }
+
+  let sourceSS;
+
+  try {
+
+    sourceSS =
+      SpreadsheetApp.openById(sourceId);
+
+  } catch (err) {
+
+    ui.alert(
+      "NOMINAL TERTRANSFER",
+      "Gagal membuka spreadsheet sumber:\n" + err.message,
+      ui.ButtonSet.OK
+    );
+
+    return;
+  }
+
+  const sourceSheet =
+    sourceSS.getSheetByName(sourceSheetName);
+
+  if (!sourceSheet) {
+
+    ui.alert(
+      "NOMINAL TERTRANSFER",
+      "Sheet \"" + sourceSheetName +
+      "\" tidak ditemukan lagi di spreadsheet sumber.\n\n" +
+      "Jalankan ulang menu \"Buat Kolom Nominal Tertransfer\" " +
+      "untuk memilih sheet yang benar.",
+      ui.ButtonSet.OK
+    );
+
+    return;
+  }
+
+  const confirm = ui.alert(
+    "🔄 KONFIRMASI UPDATE",
+    "Sheet tujuan: " + sheetName + "\n\n" +
+    "Sumber nominal transfer (tersimpan sebelumnya):\n" +
+    sourceUrl + "\n" +
+    "Sheet: " + sourceSheetName + "\n\n" +
+    "Kolom \"" + CONFIG_NOMINAL_TRANSFER.COLUMN_HEADER +
+    "\" akan diperbarui mengikuti data terbaru di sumber " +
+    "tersebut.\n\n" +
+    "Lanjutkan?",
+    ui.ButtonSet.YES_NO
+  );
+
+  if (confirm !== ui.Button.YES) {
+    return;
+  }
+
+  prosesKolomNominalTertransfer_(
+    sheet,
+    sourceSheet
+  );
+
+}
+
+
+/* ============================================================
+ * 40. PROSES KOLOM NOMINAL TERTRANSFER
  * ============================================================
  */
 
@@ -3380,7 +3530,7 @@ function prosesKolomNominalTertransfer_(
 
 
 /* ============================================================
- * 40. SIAPKAN KOLOM NOMINAL TERTRANSFER DI SHEET TUJUAN
+ * 41. SIAPKAN KOLOM NOMINAL TERTRANSFER DI SHEET TUJUAN
  *
  * Kolom disisipkan tepat setelah PAYROLL (yang secara alami
  * berarti sebelum KETERANGAN). Jika kolom sudah pernah dibuat
@@ -3445,7 +3595,7 @@ function siapkanKolomNominalTertransfer_(destSheet) {
 
 
 /* ============================================================
- * 41. BANGUN LOOKUP NOMINAL TERTRANSFER DARI SHEET SUMBER
+ * 42. BANGUN LOOKUP NOMINAL TERTRANSFER DARI SHEET SUMBER
  *
  * Sheet sumber diasumsikan berbentuk tabel datar (satu baris
  * per lokasi), bukan blok per lokasi seperti rekap gaji PIC.
@@ -3592,7 +3742,7 @@ function buildNominalTransferLookup_(sourceSheet) {
 
 
 /* ============================================================
- * 42. CANONICAL LOCATION KEY
+ * 43. CANONICAL LOCATION KEY
  *
  * Menggabungkan ekspansi singkatan + normalisasi nama lokasi,
  * supaya "KEJARI SEMARANG" dan "KEJAKSAAN NEGERI SEMARANG"
@@ -3610,7 +3760,7 @@ function canonicalLocationKey_(text) {
 
 
 /* ============================================================
- * 43. EXPAND ABBREVIATIONS
+ * 44. EXPAND ABBREVIATIONS
  *
  * Mengganti setiap singkatan (sebagai kata utuh) dengan
  * kepanjangannya, berdasarkan CONFIG_NOMINAL_TRANSFER.ABBREVIATIONS.
@@ -3656,7 +3806,7 @@ function expandAbbreviations_(text) {
 
 
 /* ============================================================
- * 44. ESCAPE REGEXP & ALIAS MAP BUILDER
+ * 45. ESCAPE REGEXP & ALIAS MAP BUILDER
  * ============================================================
  */
 
