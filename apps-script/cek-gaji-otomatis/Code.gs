@@ -2938,9 +2938,9 @@ const CONFIG_NOMINAL_TRANSFER = {
    */
   LOCATION_ALIASES: {
 
-    "UPPD KOTA SEMARANG 1": "UPPD SAMSAT 1",
-    "UPPD KOTA SEMARANG 2": "UPPD SAMSAT 2",
-    "UPPD KOTA SEMARANG 3": "UPPD SAMSAT 3"
+    "UPPD KOTA SEMARANG 1": "SAMSAT 1",
+    "UPPD KOTA SEMARANG 2": "SAMSAT 2",
+    "UPPD KOTA SEMARANG 3": "SAMSAT 3"
 
     /*
      * CONTOH ALIAS BARU:
@@ -3474,18 +3474,21 @@ function prosesKolomNominalTertransfer_(
 
   /*
    * ==========================================================
-   * COCOKKAN & TULIS HASIL
+   * TAHAP 1: EXACT MATCH (+ ALIAS)
    *
    * PENTING:
    *
    * Lokasi yang tidak ditemukan TIDAK ditulis / ditimpa,
-   * supaya data manual yang sudah ada tetap aman.
+   * supaya data manual yang sudah ada tetap aman. Hanya
+   * exact/alias match yang boleh langsung menulis nilai.
    * ==========================================================
    */
 
   let sukses = 0;
 
-  const tidakDitemukan = [];
+  const usedSourceKeys = new Set();
+
+  const destEntriesBelumKetemu = [];
 
   for (let i = 0; i < namaLokasiValues.length; i++) {
 
@@ -3506,13 +3509,15 @@ function prosesKolomNominalTertransfer_(
       aliasMap[key] || key;
 
     const nominal =
-      lookup[finalKey];
+      lookup.byKey[finalKey];
 
     if (nominal === undefined) {
 
-      tidakDitemukan.push(
-        String(location).trim()
-      );
+      destEntriesBelumKetemu.push({
+        rowNumber: rowNumber,
+        name: String(location).trim(),
+        tokens: canonicalTokens_(location)
+      });
 
       continue;
     }
@@ -3521,38 +3526,104 @@ function prosesKolomNominalTertransfer_(
       .getRange(rowNumber, columnIndex)
       .setValue(nominal);
 
+    usedSourceKeys.add(finalKey);
+
     sukses++;
 
   }
 
   SpreadsheetApp.flush();
 
-  let message =
-    "Sheet: " + destSheet.getName() + "\n\n" +
-    "Berhasil dicocokkan: " + sukses + "\n" +
-    "Tidak ditemukan: " + tidakDitemukan.length;
+  /*
+   * ==========================================================
+   * TAHAP 2: CARI KANDIDAT UNTUK KONFIRMASI MANUAL
+   *
+   * Hanya entri sumber yang BELUM kepakai di tahap 1 dan yang
+   * "terindikasi" mirip (skor di atas ambang) dengan salah satu
+   * lokasi tujuan yang masih kosong yang akan ditawarkan lewat
+   * popup. Entri sumber yang sama sekali tidak mirip dengan
+   * lokasi manapun tetap dianggap "tidak ditemukan" tanpa
+   * ditawarkan (supaya popup tidak penuh data yang tidak
+   * berhubungan).
+   * ==========================================================
+   */
 
-  if (tidakDitemukan.length > 0) {
+  const sourceEntriesBelumKepakai =
+    lookup.entries.filter(function (entry) {
+      return !usedSourceKeys.has(entry.key);
+    });
 
-    message +=
-      "\n\nLokasi yang tidak ditemukan (tidak ditimpa):\n" +
-      tidakDitemukan.slice(0, 20).join("\n");
+  const confirmList =
+    cariKandidatLokasiMirip_(
+      sourceEntriesBelumKepakai,
+      destEntriesBelumKetemu,
+      5
+    );
 
-    if (tidakDitemukan.length > 20) {
+  const tidakDitemukan =
+    destEntriesBelumKetemu.length;
+
+  if (confirmList.length === 0) {
+
+    let message =
+      "Sheet: " + destSheet.getName() + "\n\n" +
+      "Berhasil dicocokkan: " + sukses + "\n" +
+      "Tidak ditemukan: " + tidakDitemukan;
+
+    if (tidakDitemukan > 0) {
 
       message +=
-        "\n... dan " +
-        (tidakDitemukan.length - 20) +
-        " lainnya.";
+        "\n\nLokasi yang tidak ditemukan (tidak ditimpa):\n" +
+        destEntriesBelumKetemu
+          .slice(0, 20)
+          .map(function (d) { return d.name; })
+          .join("\n");
+
+      if (tidakDitemukan > 20) {
+
+        message +=
+          "\n... dan " +
+          (tidakDitemukan - 20) +
+          " lainnya.";
+
+      }
 
     }
 
+    ui.alert(
+      "✅ NOMINAL TERTRANSFER SELESAI",
+      message,
+      ui.ButtonSet.OK
+    );
+
+    return;
   }
 
-  ui.alert(
-    "✅ NOMINAL TERTRANSFER SELESAI",
-    message,
-    ui.ButtonSet.OK
+  /*
+   * ==========================================================
+   * TAHAP 3: TAMPILKAN POPUP KONFIRMASI
+   *
+   * Ada entri sumber yang "terindikasi" tapi belum yakin cocok
+   * ke lokasi tujuan mana. Tampilkan lewat dialog supaya
+   * pengguna yang memutuskan, bukan sistem yang menebak.
+   * ==========================================================
+   */
+
+  const ringkasan =
+    "Sheet: " + destSheet.getName() + "<br>" +
+    "Berhasil dicocokkan otomatis: " + sukses + "<br>" +
+    "Perlu dikonfirmasi manual: " + confirmList.length + "<br>" +
+    "Sisanya (" +
+    (tidakDitemukan - confirmList.length) +
+    ") tidak ditemukan sama sekali dan dilewati.";
+
+  tampilkanKonfirmasiLokasi_(
+    destSheet.getName(),
+    ringkasan,
+    confirmList,
+    destEntriesBelumKetemu.map(function (d) {
+      return { rowNumber: d.rowNumber, name: d.name };
+    })
   );
 
 }
@@ -3630,6 +3701,16 @@ function siapkanKolomNominalTertransfer_(destSheet) {
  * per lokasi), bukan blok per lokasi seperti rekap gaji PIC.
  * Header tabel dicari otomatis berdasarkan nama kolom yang
  * mengandung kata LOKASI/NAMA dan NOMINAL/TRANSFER.
+ *
+ * Mengembalikan:
+ *   {
+ *     byKey: { canonicalKey: nominal, ... },
+ *     entries: [ { name, key, tokens, nominal }, ... ]
+ *   }
+ *
+ * "entries" dipakai untuk fuzzy matching (lihat
+ * cariKandidatLokasiMirip_) pada lokasi yang tidak ketemu
+ * lewat pencocokan exact/alias.
  * ============================================================
  */
 
@@ -3730,7 +3811,7 @@ function buildNominalTransferLookup_(sourceSheet) {
     lastRow - dataStartRow + 1;
 
   if (numRows <= 0) {
-    return {};
+    return { byKey: {}, entries: [] };
   }
 
   const data =
@@ -3738,7 +3819,8 @@ function buildNominalTransferLookup_(sourceSheet) {
       .getRange(dataStartRow, 1, numRows, lastColumn)
       .getDisplayValues();
 
-  const lookup = {};
+  const byKey = {};
+  const entries = [];
 
   for (let r = 0; r < data.length; r++) {
 
@@ -3761,11 +3843,21 @@ function buildNominalTransferLookup_(sourceSheet) {
     const key =
       canonicalLocationKey_(name);
 
-    lookup[key] = nominal;
+    byKey[key] = nominal;
+
+    entries.push({
+      name: String(name).trim(),
+      key: key,
+      tokens: canonicalTokens_(name),
+      nominal: nominal
+    });
 
   }
 
-  return lookup;
+  return {
+    byKey: byKey,
+    entries: entries
+  };
 
 }
 
@@ -3795,7 +3887,33 @@ function canonicalLocationKey_(text) {
 
 
 /* ============================================================
- * 44. EXPAND ABBREVIATIONS
+ * 44. CANONICAL LOCATION TOKENS
+ *
+ * Sama seperti canonicalLocationKey_(), tapi hasilnya berupa
+ * array kata (bukan digabung tanpa spasi). Dipakai untuk
+ * fuzzy matching di cariKandidatLokasiMirip_(), supaya lokasi
+ * yang mirip tapi tidak identik tetap bisa "terindikasi".
+ * ============================================================
+ */
+
+function canonicalTokens_(text) {
+
+  const cleaned =
+    removeIgnoredWords_(
+      expandAbbreviations_(text)
+    );
+
+  return cleaned
+    .split(/[^A-Z0-9]+/)
+    .filter(function (token) {
+      return token.length > 0;
+    });
+
+}
+
+
+/* ============================================================
+ * 45. EXPAND ABBREVIATIONS
  *
  * Mengganti setiap singkatan (sebagai kata utuh) dengan
  * kepanjangannya, berdasarkan CONFIG_NOMINAL_TRANSFER.ABBREVIATIONS.
@@ -3841,7 +3959,7 @@ function expandAbbreviations_(text) {
 
 
 /* ============================================================
- * 45. REMOVE IGNORED WORDS
+ * 46. REMOVE IGNORED WORDS
  *
  * Membuang setiap kata (sebagai kata utuh) yang terdaftar di
  * CONFIG_NOMINAL_TRANSFER.IGNORED_WORDS, misalnya "PENGECEKAN"
@@ -3886,7 +4004,7 @@ function removeIgnoredWords_(text) {
 
 
 /* ============================================================
- * 46. ESCAPE REGEXP & ALIAS MAP BUILDER
+ * 47. ESCAPE REGEXP & ALIAS MAP BUILDER
  * ============================================================
  */
 
@@ -3903,8 +4021,18 @@ function buildNormalizedAliasMap_() {
 
   const map = {};
 
+  /*
+   * Gabungkan alias tetap dari CONFIG_NOMINAL_TRANSFER dengan
+   * alias tambahan yang pernah disimpan lewat popup konfirmasi
+   * (lihat getExtraAliases_ / addExtraAlias_). Alias tambahan
+   * tidak menimpa alias tetap kalau kuncinya sama.
+   */
   const aliases =
-    CONFIG_NOMINAL_TRANSFER.LOCATION_ALIASES;
+    Object.assign(
+      {},
+      CONFIG_NOMINAL_TRANSFER.LOCATION_ALIASES,
+      getExtraAliases_()
+    );
 
   for (const from in aliases) {
 
@@ -3914,5 +4042,314 @@ function buildNormalizedAliasMap_() {
   }
 
   return map;
+
+}
+
+
+/* ============================================================
+ * 48. PENYIMPANAN ALIAS TAMBAHAN
+ *
+ * Alias yang dikonfirmasi manual oleh pengguna lewat popup
+ * "Konfirmasi Lokasi" disimpan di sini (Document Properties,
+ * berlaku untuk semua sheet bulan pada spreadsheet ini) supaya
+ * tidak perlu dikonfirmasi ulang di bulan-bulan berikutnya.
+ * ============================================================
+ */
+
+function getExtraAliases_() {
+
+  const raw =
+    PropertiesService
+      .getDocumentProperties()
+      .getProperty("NOMINAL_TRANSFER_EXTRA_ALIASES");
+
+  if (!raw) {
+    return {};
+  }
+
+  try {
+
+    const parsed =
+      JSON.parse(raw);
+
+    return (parsed && typeof parsed === "object") ? parsed : {};
+
+  } catch (err) {
+
+    return {};
+
+  }
+
+}
+
+function addExtraAlias_(destName, sourceName) {
+
+  if (!destName || !sourceName) {
+    return;
+  }
+
+  const properties =
+    PropertiesService.getDocumentProperties();
+
+  const extra =
+    getExtraAliases_();
+
+  extra[destName] = sourceName;
+
+  properties.setProperty(
+    "NOMINAL_TRANSFER_EXTRA_ALIASES",
+    JSON.stringify(extra)
+  );
+
+}
+
+
+/* ============================================================
+ * 49. SKOR KEMIRIPAN LOKASI (FUZZY MATCH)
+ *
+ * Dipakai HANYA untuk menyarankan kandidat di popup konfirmasi,
+ * TIDAK PERNAH dipakai untuk langsung menulis nilai (itu tetap
+ * exklusif untuk exact match + alias, sesuai prinsip STRICT
+ * di file ini). Skor dihitung dari proporsi kata bermakna
+ * (>= 3 huruf/angka) yang sama, relatif terhadap sisi yang
+ * kata-nya lebih sedikit, supaya nama yang lebih pendek tapi
+ * "termuat penuh" di nama yang lebih panjang tetap dapat skor
+ * tinggi walau ada kata tambahan yang tidak dikenal.
+ * ============================================================
+ */
+
+function tokenSimilarityScore_(tokensA, tokensB) {
+
+  const significantA =
+    tokensA.filter(function (t) { return t.length >= 3; });
+
+  const significantB =
+    tokensB.filter(function (t) { return t.length >= 3; });
+
+  if (!significantA.length || !significantB.length) {
+    return 0;
+  }
+
+  const setB =
+    new Set(significantB);
+
+  let common = 0;
+
+  significantA.forEach(function (t) {
+    if (setB.has(t)) common++;
+  });
+
+  const smaller =
+    Math.min(significantA.length, significantB.length);
+
+  return smaller === 0 ? 0 : common / smaller;
+
+}
+
+
+/* ============================================================
+ * 50. CARI KANDIDAT LOKASI MIRIP
+ *
+ * Untuk tiap entri sumber yang belum kepakai di exact pass,
+ * cari baris NAMA LOKASI tujuan yang paling mirip (di antara
+ * baris tujuan yang juga belum terisi). Entri sumber yang sama
+ * sekali tidak mirip dengan lokasi tujuan mana pun (skor di
+ * bawah ambang) dilewati begitu saja -- tidak dimasukkan ke
+ * daftar konfirmasi, supaya popup tidak penuh data yang memang
+ * tidak berhubungan.
+ * ============================================================
+ */
+
+function cariKandidatLokasiMirip_(
+  sourceEntries,
+  destEntries,
+  maxKandidatPerBaris
+) {
+
+  const AMBANG_SKOR = 0.5;
+
+  const confirmList = [];
+
+  for (const src of sourceEntries) {
+
+    const skorList = [];
+
+    for (const dest of destEntries) {
+
+      const skor =
+        tokenSimilarityScore_(
+          src.tokens,
+          dest.tokens
+        );
+
+      if (skor >= AMBANG_SKOR) {
+
+        skorList.push({
+          rowNumber: dest.rowNumber,
+          name: dest.name,
+          score: skor
+        });
+
+      }
+
+    }
+
+    if (skorList.length === 0) {
+      continue;
+    }
+
+    skorList.sort(function (a, b) {
+      return b.score - a.score;
+    });
+
+    confirmList.push({
+      sourceName: src.name,
+      sourceKey: src.key,
+      nominal: src.nominal,
+      candidates: skorList.slice(0, maxKandidatPerBaris)
+    });
+
+  }
+
+  return confirmList;
+
+}
+
+
+/* ============================================================
+ * 51. TAMPILKAN POPUP KONFIRMASI LOKASI
+ *
+ * Membuka dialog modal (HtmlService) berisi daftar lokasi
+ * sumber yang "terindikasi" tapi belum yakin cocok ke lokasi
+ * tujuan mana. Pengguna memilih lokasi tujuan yang sesuai dari
+ * dropdown (berisi seluruh lokasi tujuan yang masih kosong),
+ * lalu klik simpan. Penulisan nilai yang sesungguhnya terjadi
+ * di applyNominalTransferKonfirmasi_(), dipanggil oleh dialog
+ * lewat google.script.run.
+ * ============================================================
+ */
+
+function tampilkanKonfirmasiLokasi_(
+  sheetName,
+  ringkasan,
+  confirmList,
+  destOptions
+) {
+
+  const template =
+    HtmlService.createTemplateFromFile(
+      "KonfirmasiLokasi"
+    );
+
+  template.sheetName = sheetName;
+  template.ringkasanHtml = ringkasan;
+  template.confirmListJson = JSON.stringify(confirmList);
+  template.destOptionsJson = JSON.stringify(destOptions);
+
+  const output =
+    template
+      .evaluate()
+      .setWidth(760)
+      .setHeight(600);
+
+  SpreadsheetApp.getUi().showModalDialog(
+    output,
+    "🔎 Konfirmasi Lokasi Nominal Transfer"
+  );
+
+}
+
+
+/* ============================================================
+ * 52. TERAPKAN HASIL KONFIRMASI (dipanggil dari dialog)
+ *
+ * payloadJson berbentuk:
+ *   {
+ *     sheetName: "SEPTEMBER",
+ *     picks: [
+ *       {
+ *         destRowNumber: 12,
+ *         destName: "UPPD KAB BLORA",
+ *         sourceName: "UPPD KAB. BLORA PENGECEKAN PTSL",
+ *         nominal: 34922000,
+ *         saveAlias: true
+ *       },
+ *       ...
+ *     ]
+ *   }
+ *
+ * Baris dengan destRowNumber kosong (pengguna memilih
+ * "Lewati") tidak diproses.
+ * ============================================================
+ */
+
+function applyNominalTransferKonfirmasi_(payloadJson) {
+
+  const payload =
+    JSON.parse(payloadJson);
+
+  const ss =
+    SpreadsheetApp.getActiveSpreadsheet();
+
+  const destSheet =
+    ss.getSheetByName(payload.sheetName);
+
+  if (!destSheet) {
+
+    throw new Error(
+      "Sheet \"" + payload.sheetName + "\" tidak ditemukan."
+    );
+
+  }
+
+  const headerMap =
+    getDestinationHeaderMap_(destSheet);
+
+  const columnIndex =
+    headerMap[
+      normalizeHeader_(
+        CONFIG_NOMINAL_TRANSFER.COLUMN_HEADER
+      )
+    ];
+
+  if (!columnIndex) {
+
+    throw new Error(
+      "Kolom \"" +
+      CONFIG_NOMINAL_TRANSFER.COLUMN_HEADER +
+      "\" tidak ditemukan di sheet \"" +
+      payload.sheetName + "\"."
+    );
+
+  }
+
+  let applied = 0;
+
+  (payload.picks || []).forEach(function (pick) {
+
+    if (!pick.destRowNumber) {
+      return;
+    }
+
+    destSheet
+      .getRange(Number(pick.destRowNumber), columnIndex)
+      .setValue(pick.nominal);
+
+    applied++;
+
+    if (pick.saveAlias && pick.destName && pick.sourceName) {
+
+      addExtraAlias_(
+        pick.destName,
+        pick.sourceName
+      );
+
+    }
+
+  });
+
+  SpreadsheetApp.flush();
+
+  return { applied: applied };
 
 }
