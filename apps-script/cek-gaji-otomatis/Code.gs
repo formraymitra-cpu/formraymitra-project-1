@@ -3488,7 +3488,7 @@ function prosesKolomNominalTertransfer_(
 
   /*
    * ==========================================================
-   * COCOKKAN & TULIS HASIL
+   * TAHAP 1: EXACT MATCH (+ ALIAS)
    *
    * PENTING:
    *
@@ -3499,7 +3499,9 @@ function prosesKolomNominalTertransfer_(
 
   let sukses = 0;
 
-  const tidakDitemukan = [];
+  const usedSourceKeys = new Set();
+
+  const destBelumKetemu = [];
 
   for (let i = 0; i < namaLokasiValues.length; i++) {
 
@@ -3524,9 +3526,11 @@ function prosesKolomNominalTertransfer_(
 
     if (nominal === undefined) {
 
-      tidakDitemukan.push(
-        String(location).trim()
-      );
+      destBelumKetemu.push({
+        rowNumber: rowNumber,
+        name: String(location).trim(),
+        tokens: canonicalTokens_(location)
+      });
 
       continue;
     }
@@ -3535,22 +3539,69 @@ function prosesKolomNominalTertransfer_(
       .getRange(rowNumber, columnIndex)
       .setValue(nominal);
 
+    usedSourceKeys.add(finalKey);
+
     sukses++;
 
   }
 
+  /*
+   * ==========================================================
+   * TAHAP 2: KANDUNGAN PENUH (CONTAINMENT)
+   *
+   * Lihat cariPasanganKandunganPenuh_() -- hanya diterapkan
+   * kalau pasangannya unik/tidak ambigu.
+   * ==========================================================
+   */
+
+  const sourceBelumKepakai =
+    lookup.entries.filter(function (entry) {
+      return !usedSourceKeys.has(entry.key);
+    });
+
+  const pasanganKandunganPenuh =
+    cariPasanganKandunganPenuh_(
+      sourceBelumKepakai,
+      destBelumKetemu
+    );
+
+  let cocokKandunganPenuh = 0;
+
+  const destRowSudahDitulis = new Set();
+
+  pasanganKandunganPenuh.forEach(function (pasangan) {
+
+    destSheet
+      .getRange(pasangan.destRowNumber, columnIndex)
+      .setValue(pasangan.nominal);
+
+    destRowSudahDitulis.add(pasangan.destRowNumber);
+
+    cocokKandunganPenuh++;
+
+  });
+
   SpreadsheetApp.flush();
+
+  const tidakDitemukan =
+    destBelumKetemu.filter(function (d) {
+      return !destRowSudahDitulis.has(d.rowNumber);
+    });
 
   let message =
     "Sheet: " + destSheet.getName() + "\n\n" +
-    "Berhasil dicocokkan: " + sukses + "\n" +
+    "Berhasil dicocokkan (exact/alias): " + sukses + "\n" +
+    "Berhasil dicocokkan (kandungan penuh): " + cocokKandunganPenuh + "\n" +
     "Tidak ditemukan: " + tidakDitemukan.length;
 
   if (tidakDitemukan.length > 0) {
 
     message +=
       "\n\nLokasi yang tidak ditemukan (tidak ditimpa):\n" +
-      tidakDitemukan.slice(0, 20).join("\n");
+      tidakDitemukan
+        .slice(0, 20)
+        .map(function (d) { return d.name; })
+        .join("\n");
 
     if (tidakDitemukan.length > 20) {
 
@@ -3648,7 +3699,7 @@ function siapkanKolomNominalTertransfer_(destSheet) {
  * Mengembalikan:
  *   {
  *     byKey: { canonicalKey: nominal, ... },
- *     entries: [ { name, key, nominal }, ... ]
+ *     entries: [ { name, key, tokens, nominal }, ... ]
  *   }
  * ============================================================
  */
@@ -3787,6 +3838,7 @@ function buildNominalTransferLookup_(sourceSheet) {
     entries.push({
       name: String(name).trim(),
       key: key,
+      tokens: canonicalTokens_(name),
       nominal: nominal
     });
 
@@ -3825,7 +3877,32 @@ function canonicalLocationKey_(text) {
 
 
 /* ============================================================
- * 44. EXPAND ABBREVIATIONS
+ * 44. CANONICAL LOCATION TOKENS
+ *
+ * Sama seperti canonicalLocationKey_(), tapi hasilnya array kata
+ * (bukan digabung tanpa spasi). Dipakai untuk pencocokan
+ * "kandungan penuh" -- lihat cariPasanganKandunganPenuh_().
+ * ============================================================
+ */
+
+function canonicalTokens_(text) {
+
+  const cleaned =
+    removeIgnoredWords_(
+      expandAbbreviations_(text)
+    );
+
+  return cleaned
+    .split(/[^A-Z0-9]+/)
+    .filter(function (token) {
+      return token.length > 0;
+    });
+
+}
+
+
+/* ============================================================
+ * 45. EXPAND ABBREVIATIONS
  *
  * Mengganti setiap singkatan (sebagai kata utuh) dengan
  * kepanjangannya, berdasarkan CONFIG_NOMINAL_TRANSFER.ABBREVIATIONS.
@@ -3871,7 +3948,7 @@ function expandAbbreviations_(text) {
 
 
 /* ============================================================
- * 45. REMOVE IGNORED WORDS
+ * 46. REMOVE IGNORED WORDS
  *
  * Membuang setiap kata (sebagai kata utuh) yang terdaftar di
  * CONFIG_NOMINAL_TRANSFER.IGNORED_WORDS, misalnya "PENGECEKAN"
@@ -3916,7 +3993,7 @@ function removeIgnoredWords_(text) {
 
 
 /* ============================================================
- * 46. ESCAPE REGEXP & ALIAS MAP BUILDER
+ * 47. ESCAPE REGEXP & ALIAS MAP BUILDER
  * ============================================================
  */
 
@@ -3944,6 +4021,119 @@ function buildNormalizedAliasMap_() {
   }
 
   return map;
+
+}
+
+
+/* ============================================================
+ * 48. PENCOCOKAN "KANDUNGAN PENUH" (CONTAINMENT)
+ *
+ * Dipakai SETELAH exact+alias match, untuk lokasi yang masih
+ * belum ketemu. Kalau SELURUH kata (minimal 2 kata) dari nama
+ * yang lebih pendek muncul semua di nama yang lebih panjang,
+ * itu dianggap lokasi yang sama -- misalnya:
+ *
+ *   "ESDM SLAMET SELATAN"        (sumber)
+ *   "DINAS ESDM SLAMET SELATAN"  (tujuan)
+ *
+ * Ini BUKAN sekadar "ada beberapa kata yang sama": harus semua
+ * kata dari sisi yang lebih pendek ada, bukan cuma sebagian.
+ *
+ * Supaya tetap aman (tidak menebak lokasi yang salah), pasangan
+ * hanya diterapkan kalau UNIK -- satu entri sumber cuma cocok ke
+ * SATU lokasi tujuan, dan lokasi tujuan itu cuma dicocokkan oleh
+ * SATU entri sumber. Kalau ada lebih dari satu kandidat yang
+ * sama-sama valid (ambigu), tidak ada yang diterapkan -- lokasi
+ * itu tetap dianggap "tidak ditemukan", lebih aman daripada
+ * menebak salah.
+ *
+ * Mengembalikan array pasangan:
+ *   [ { sourceIndex, destRowNumber, nominal }, ... ]
+ * ============================================================
+ */
+
+function cariPasanganKandunganPenuh_(
+  sourceEntries,
+  destEntries
+) {
+
+  const MIN_KATA =
+    2;
+
+  /*
+   * candidatesBySource[i] = daftar index destEntries yang cocok
+   * candidatesByDest[j]   = daftar index sourceEntries yang cocok
+   */
+  const candidatesBySource = sourceEntries.map(function () { return []; });
+  const candidatesByDest = destEntries.map(function () { return []; });
+
+  for (let i = 0; i < sourceEntries.length; i++) {
+
+    const sourceTokens =
+      sourceEntries[i].tokens;
+
+    for (let j = 0; j < destEntries.length; j++) {
+
+      const destTokens =
+        destEntries[j].tokens;
+
+      const smaller =
+        sourceTokens.length <= destTokens.length
+          ? sourceTokens
+          : destTokens;
+
+      const bigger =
+        sourceTokens.length <= destTokens.length
+          ? destTokens
+          : sourceTokens;
+
+      if (smaller.length < MIN_KATA) {
+        continue;
+      }
+
+      const biggerSet =
+        new Set(bigger);
+
+      const semuaAda =
+        smaller.every(function (t) {
+          return biggerSet.has(t);
+        });
+
+      if (semuaAda) {
+
+        candidatesBySource[i].push(j);
+        candidatesByDest[j].push(i);
+
+      }
+
+    }
+
+  }
+
+  const hasil = [];
+
+  for (let i = 0; i < sourceEntries.length; i++) {
+
+    if (candidatesBySource[i].length !== 1) {
+      continue;
+    }
+
+    const j =
+      candidatesBySource[i][0];
+
+    if (candidatesByDest[j].length !== 1) {
+      continue;
+    }
+
+    hasil.push({
+      sourceIndex: i,
+      destRowNumber: destEntries[j].rowNumber,
+      nominal: sourceEntries[i].nominal
+    });
+
+  }
+
+  return hasil;
 
 }
 
