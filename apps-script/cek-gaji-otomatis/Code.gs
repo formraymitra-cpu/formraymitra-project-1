@@ -2995,12 +2995,10 @@ const CONFIG_NOMINAL_TRANSFER = {
     "PENGECEKAN",
 
     /*
-     * Tebakan untuk kasus "UPPD KAB. BLORA PENGECEKAN PTSL" /
-     * "UPPD KAB. BATANG PENGECEKAN PTSL" yang masih terpotong di
-     * layar saat dicek -- kalau ternyata bukan "PTSL", ganti kata
-     * ini dengan kata yang sebenarnya muncul di sheet sumber.
+     * Dipakai untuk "UPPD KAB. BLORA PENGECEKAN PTSP" /
+     * "UPPD KAB. BATANG PENGECEKAN PTSP".
      */
-    "PTSL"
+    "PTSP"
 
     /*
      * CONTOH KATA BARU:
